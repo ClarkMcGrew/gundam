@@ -12,7 +12,7 @@
     "rng_seed"  : 12257,
     "num_threads" : 8,
     "num_throws"  : 1E4,
-    "sample_topology" : ["cc0pi", "cc1pi+", "ccother", "bkg"],
+    "sample_topology" : ["cc0pi", "cc1pi+", "ccother", "bkg", "OOFV", "null"],
     "flux_cov" : {
         "file" : "flux_numu_cov_nd280_ANDREW.root",
         "matrix" : "flux_numu_cov",

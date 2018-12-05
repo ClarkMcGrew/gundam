@@ -45,6 +45,7 @@ struct HL2FileOpt
     unsigned int num_branches;
     std::vector<int> cuts;
     std::map<int, std::vector<int>> samples;
+    std::map<int, int> topologymap;
 
     HL2TreeVar sel_var;
     HL2TreeVar tru_var;
@@ -169,6 +170,10 @@ int main(int argc, char** argv)
             for(const auto& kv : temp_json)
                 f.samples.emplace(std::make_pair(std::stoi(kv.first), kv.second));
             
+            std::map<std::string, int> temp_json_top = file["topologymap"];
+            for(const auto& kv : temp_json_top)
+                f.topologymap.emplace(std::make_pair(std::stoi(kv.first), kv.second));
+            
             f.sel_var = ParseHL2Var(file["sel_var"], true);
             f.tru_var = ParseHL2Var(file["tru_var"], false);
 
@@ -191,6 +196,12 @@ int main(int argc, char** argv)
             for(const auto& b : kv.second)
                 std::cout << b << " ";
             std::cout << std::endl;
+        }
+
+        std::cout << TAG << "Highland2 topology mapping:" << std::endl;
+        for(const auto& kv : file.topologymap)
+        {
+            std::cout << TAG << "Topology " << kv.first << ": " << kv.second << std::endl;
         }
 
         TFile* hl2_file = TFile::Open(file.fname_input.c_str(), "READ");
@@ -245,6 +256,11 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
+            for(const auto& kv : file.topologymap)
+            {
+                if(topology == kv.second) topology = kv.first;
+            }
+
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
@@ -281,6 +297,11 @@ int main(int argc, char** argv)
 
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
+
+            for(const auto& kv : file.topologymap)
+            {
+                if(topology_true == kv.second) topology_true = kv.first;
+            }
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
