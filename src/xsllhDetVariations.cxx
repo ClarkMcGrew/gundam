@@ -18,6 +18,7 @@
 #include "TMatrixTSym.h"
 #include "TStyle.h"
 #include "TTree.h"
+#include "TColor.h"
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -34,7 +35,7 @@ struct FileOptions
     unsigned int num_samples;
     unsigned int num_toys;
     unsigned int num_syst;
-    std::vector<int> cuts;
+    // std::vector<int> cuts;
     std::map<int, std::vector<int>> samples;
     std::vector<BinManager> bin_manager;
 };
@@ -96,6 +97,8 @@ int main(int argc, char** argv)
 
     std::vector<std::string> var_names = j["var_names"].get<std::vector<std::string>>();
 
+    unsigned int num_use_samples = 0;
+
     std::vector<FileOptions> v_files;
     for(const auto& file : j["files"])
     {
@@ -108,7 +111,7 @@ int main(int argc, char** argv)
             f.num_toys    = file["num_toys"];
             f.num_syst    = file["num_syst"];
             f.num_samples = file["num_samples"];
-            f.cuts        = file["cuts"].get<std::vector<int>>();
+            // f.cuts        = file["cuts"].get<std::vector<int>>();
 
             std::map<std::string, std::vector<int>> temp_json = file["samples"];
             for(const auto& kv : temp_json)
@@ -119,6 +122,8 @@ int main(int argc, char** argv)
                 f.bin_manager.emplace_back(BinManager(kv.second));
 
             v_files.emplace_back(f);
+
+            num_use_samples += f.samples.size();
         }
     }
 
@@ -143,6 +148,7 @@ int main(int argc, char** argv)
     std::cout << TAG << "Initalizing histograms." << std::endl;
     std::vector<std::vector<TH1F>> v_hists;
     std::vector<TH1F> v_avg;
+    // std::vector<TH1F> v_err;
     for(const auto& file : v_files)
     {
         for(const auto& kv : file.samples)
@@ -159,14 +165,16 @@ int main(int argc, char** argv)
                 if(do_projection)
                 {
                     std::vector<double> v_bins = bm.GetBinVector(var_plot);
-                    v_temp.emplace_back(
-                        TH1F(ss.str().c_str(), ss.str().c_str(), v_bins.size() - 1, &v_bins[0]));
+                    v_temp.emplace_back( TH1F(ss.str().c_str(), ss.str().c_str(), v_bins.size() - 1, &v_bins[0]) );
                     if(t == 0)
                     {
                         ss.str("");
                         ss << file.detector << "_sample" << sam << "_avg";
-                        v_avg.emplace_back(TH1F(ss.str().c_str(), ss.str().c_str(),
-                                                v_bins.size() - 1, &v_bins[0]));
+                        v_avg.emplace_back( TH1F(ss.str().c_str(), ss.str().c_str(), v_bins.size() - 1, &v_bins[0]) );
+
+                        // ss.str("");
+                        // ss << file.detector << "_sample" << sam << "_err";
+                        // v_err.emplace_back( TH1F(ss.str().c_str(), ss.str().c_str(), v_bins.size() - 1, &v_bins[0]) );
                     }
                 }
                 else
@@ -176,8 +184,11 @@ int main(int argc, char** argv)
                     {
                         ss.str("");
                         ss << file.detector << "_sample" << sam << "_avg";
-                        v_avg.emplace_back(
-                            TH1F(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins));
+                        v_avg.emplace_back( TH1F(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins) );
+
+                        // ss.str("");
+                        // ss << file.detector << "_sample" << sam << "_err";
+                        // v_err.emplace_back( TH1F(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins) );
                     }
                 }
             }
@@ -192,7 +203,8 @@ int main(int argc, char** argv)
     unsigned int offset   = 0;
     for(const auto& file : v_files)
     {
-        int accum_level[file.num_toys][file.num_samples];
+        // int accum_level[file.num_toys][file.num_samples];
+        int sample[file.num_toys];
         float hist_variables[nvars][file.num_toys];
         float weight_syst_total_noflux[file.num_toys];
         float weight_syst[file.num_toys][file.num_syst];
@@ -214,7 +226,8 @@ int main(int argc, char** argv)
         TFile* file_input = TFile::Open(file.fname_input.c_str(), "READ");
         TTree* tree_event = (TTree*)file_input->Get(file.tree_name.c_str());
 
-        tree_event->SetBranchAddress("accum_level", accum_level);
+        // tree_event->SetBranchAddress("accum_level", accum_level);
+        tree_event->SetBranchAddress("sample_fgd2layer_xsec", sample);
         tree_event->SetBranchAddress("weight_syst", weight_syst);
         tree_event->SetBranchAddress("weight_syst_total_noflux", weight_syst_total_noflux);
         for(unsigned int i = 0; i < nvars; ++i)
@@ -238,7 +251,8 @@ int main(int argc, char** argv)
                     unsigned int s = kv.first;
                     for(const auto& branch : kv.second)
                     {
-                        if(accum_level[t][branch] > file.cuts[branch])
+                        // if(accum_level[t][branch] > file.cuts[branch])
+                        if(sample[t]==branch)
                         {
                             float idx = -1;
                             if(do_projection)
@@ -358,6 +372,10 @@ int main(int argc, char** argv)
     TFile* file_output = TFile::Open(fname_output.c_str(), "RECREATE");
     file_output->cd();
 
+    // Save distributions into output file
+    // one plot for each detector and sample
+    // in red:   each histogram
+    // in black: average or them
     offset = 0;
     gStyle->SetOptStat(0);
     for(const auto& file : v_files)
@@ -396,6 +414,34 @@ int main(int argc, char** argv)
     {
         cov_mat.Write(cov_mat_name.c_str());
         cor_mat.Write(cor_mat_name.c_str());
+        for(unsigned int s = 0; s < num_use_samples; ++s)
+        {
+            std::stringstream ss;
+            ss << "sample" << s;
+            v_avg[s].Write(ss.str().c_str());
+            // v_err[s].Write(ss.str().c_str());
+        }
+
+        gStyle -> SetOptStat(0);
+        // Set the color palette
+        const Int_t NRGBs = 3;
+        const Int_t NCont = 20;
+        Double_t stops[NRGBs] = { 0.00, 0.50, 1.00 };
+        Double_t red[NRGBs]   = { 0.00, 1.00, 1.00 };
+        Double_t green[NRGBs] = { 0.00, 1.00, 0.00 };
+        Double_t blue[NRGBs]  = { 1.00, 1.00, 0.00 };
+        TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
+
+        TCanvas cov("Covariance","Covariance", 1200, 1200);
+        cov_mat.Draw("colz");
+        if(do_print)
+            cov.Print("covariance.pdf");
+
+        TCanvas corr("Correlation","Correlation", 1200, 1200);
+        cor_mat.Draw("colz");
+        // cor_mat.SetMinimum(-1.0);
+        if(do_print)
+            corr.Print("correlation.pdf");
     }
 
     file_output->Close();

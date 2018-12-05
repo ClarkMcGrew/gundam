@@ -25,6 +25,7 @@ struct HL2TreeVar
     std::string reaction;
     std::string topology;
     std::string target;
+    std::string fgdtarget;
     std::string nutype;
     std::string enu_true;
     std::string enu_reco;
@@ -115,6 +116,7 @@ int main(int argc, char** argv)
     int reaction, reaction_true;
     int topology, topology_true;
     int target, target_true;
+    int fgdtarget, fgdtarget_true;
     int cut_branch;
     float enu_true, enu_reco;
     float q2_true, q2_reco;
@@ -122,31 +124,33 @@ int main(int argc, char** argv)
     float D2True, D2Reco;
     float weight, weight_true;
 
-    out_seltree -> Branch("nutype", &nutype, "nutype/I");
-    out_seltree -> Branch("reaction", &reaction, "reaction/I");
-    out_seltree -> Branch("topology", &topology, "topology/I");
-    out_seltree -> Branch("target", &target, "target/I");
-    out_seltree -> Branch("cut_branch", &cut_branch, "cut_branch/I");
-    out_seltree -> Branch("enu_true", &enu_true, "enu_true/F");
-    out_seltree -> Branch("enu_reco", &enu_reco, "enu_reco/F");
-    out_seltree -> Branch("q2_true", &q2_true, "q2_true/F");
-    out_seltree -> Branch("q2_reco", &q2_reco, "q2_reco/F");
-    out_seltree -> Branch("D1True", &D1True, "D1True/F");
-    out_seltree -> Branch("D1Reco", &D1Reco, "D1Reco/F");
-    out_seltree -> Branch("D2True", &D2True, "D2True/F");
-    out_seltree -> Branch("D2Reco", &D2Reco, "D2Reco/F");
-    out_seltree -> Branch("weight", &weight, "weight/F");
+    out_seltree -> Branch("nutype",    &nutype,    "nutype/I");
+    out_seltree -> Branch("reaction",  &reaction,  "reaction/I");
+    out_seltree -> Branch("topology",  &topology,  "topology/I");
+    out_seltree -> Branch("target",    &target,    "target/I");
+    out_seltree -> Branch("fgdtarget", &fgdtarget, "fgdtarget/I");
+    out_seltree -> Branch("cut_branch",&cut_branch,"cut_branch/I");
+    out_seltree -> Branch("enu_true",  &enu_true,  "enu_true/F");
+    out_seltree -> Branch("enu_reco",  &enu_reco,  "enu_reco/F");
+    out_seltree -> Branch("q2_true",   &q2_true,   "q2_true/F");
+    out_seltree -> Branch("q2_reco",   &q2_reco,   "q2_reco/F");
+    out_seltree -> Branch("D1True",    &D1True,    "D1True/F");
+    out_seltree -> Branch("D1Reco",    &D1Reco,    "D1Reco/F");
+    out_seltree -> Branch("D2True",    &D2True,    "D2True/F");
+    out_seltree -> Branch("D2Reco",    &D2Reco,    "D2Reco/F");
+    out_seltree -> Branch("weight",    &weight,    "weight/F");
 
-    out_trutree -> Branch("nutype", &nutype_true, "nutype/I");
-    out_trutree -> Branch("reaction", &reaction_true, "reaction/I");
-    out_trutree -> Branch("topology", &topology_true, "topology/I");
-    out_trutree -> Branch("target", &target_true, "target/I");
-    out_trutree -> Branch("cut_branch", &cut_branch, "cut_branch/I");
-    out_trutree -> Branch("enu_true", &enu_true, "enu_true/F");
-    out_trutree -> Branch("q2_true", &q2_true, "q2_true/F");
-    out_trutree -> Branch("D1True", &D1True, "D1True/F");
-    out_trutree -> Branch("D2True", &D2True, "D2True/F");
-    out_trutree -> Branch("weight", &weight_true, "weight/F");
+    out_trutree -> Branch("nutype",     &nutype_true,    "nutype/I");
+    out_trutree -> Branch("reaction",   &reaction_true,  "reaction/I");
+    out_trutree -> Branch("topology",   &topology_true,  "topology/I");
+    out_trutree -> Branch("target",     &target_true,    "target/I");
+    out_trutree -> Branch("fgdtarget",  &fgdtarget_true, "fgdtarget/I");
+    out_trutree -> Branch("cut_branch", &cut_branch,     "cut_branch/I");
+    out_trutree -> Branch("enu_true",   &enu_true,       "enu_true/F");
+    out_trutree -> Branch("q2_true",    &q2_true,        "q2_true/F");
+    out_trutree -> Branch("D1True",     &D1True,         "D1True/F");
+    out_trutree -> Branch("D2True",     &D2True,         "D2True/F");
+    out_trutree -> Branch("weight",     &weight_true,    "weight/F");
 
     std::vector<HL2FileOpt> v_files;
     for(const auto& file : j["highland_files"])
@@ -159,12 +163,12 @@ int main(int argc, char** argv)
             f.tru_tree = file["tru_tree"];
             f.file_id = file["file_id"];
             f.num_branches = file["num_branches"];
-            f.cuts = file["cut_level"].get<std::vector<int>>();
+            // f.cuts = file["cut_level"].get<std::vector<int>>();
 
             std::map<std::string, std::vector<int>> temp_json = file["samples"];
             for(const auto& kv : temp_json)
                 f.samples.emplace(std::make_pair(std::stoi(kv.first), kv.second));
-
+            
             f.sel_var = ParseHL2Var(file["sel_var"], true);
             f.tru_var = ParseHL2Var(file["tru_var"], false);
 
@@ -193,20 +197,23 @@ int main(int argc, char** argv)
         TTree* hl2_seltree = (TTree*)hl2_file -> Get(file.sel_tree.c_str());
         TTree* hl2_trutree = (TTree*)hl2_file -> Get(file.tru_tree.c_str());
 
-        int accum_level[1][file.num_branches];
+        // int accum_level[1][file.num_branches];
+        int sample[1];
 
-        hl2_seltree -> SetBranchAddress("accum_level", &accum_level);
-        hl2_seltree -> SetBranchAddress(file.sel_var.nutype.c_str(), &nutype);
-        hl2_seltree -> SetBranchAddress(file.sel_var.reaction.c_str(), &reaction);
-        hl2_seltree -> SetBranchAddress(file.sel_var.topology.c_str(), &topology);
-        hl2_seltree -> SetBranchAddress(file.sel_var.target.c_str(), &target);
-        hl2_seltree -> SetBranchAddress(file.sel_var.D1Reco.c_str(), &D1Reco);
-        hl2_seltree -> SetBranchAddress(file.sel_var.D2Reco.c_str(), &D2Reco);
-        hl2_seltree -> SetBranchAddress(file.sel_var.D1True.c_str(), &D1True);
-        hl2_seltree -> SetBranchAddress(file.sel_var.D2True.c_str(), &D2True);
-        hl2_seltree -> SetBranchAddress(file.sel_var.enu_true.c_str(), &enu_true);
-        hl2_seltree -> SetBranchAddress(file.sel_var.enu_reco.c_str(), &enu_reco);
-        hl2_seltree -> SetBranchAddress(file.sel_var.weight.c_str(), &weight);
+        // hl2_seltree -> SetBranchAddress("accum_level", &accum_level);
+        hl2_seltree -> SetBranchAddress("sample_fgd2layer_xsec",        &sample);
+        hl2_seltree -> SetBranchAddress(file.sel_var.nutype.c_str(),    &nutype);
+        hl2_seltree -> SetBranchAddress(file.sel_var.reaction.c_str(),  &reaction);
+        hl2_seltree -> SetBranchAddress(file.sel_var.topology.c_str(),  &topology);
+        hl2_seltree -> SetBranchAddress(file.sel_var.target.c_str(),    &target);
+        hl2_seltree -> SetBranchAddress(file.sel_var.fgdtarget.c_str(), &fgdtarget);
+        hl2_seltree -> SetBranchAddress(file.sel_var.D1Reco.c_str(),    &D1Reco);
+        hl2_seltree -> SetBranchAddress(file.sel_var.D2Reco.c_str(),    &D2Reco);
+        hl2_seltree -> SetBranchAddress(file.sel_var.D1True.c_str(),    &D1True);
+        hl2_seltree -> SetBranchAddress(file.sel_var.D2True.c_str(),    &D2True);
+        hl2_seltree -> SetBranchAddress(file.sel_var.enu_true.c_str(),  &enu_true);
+        hl2_seltree -> SetBranchAddress(file.sel_var.enu_reco.c_str(),  &enu_reco);
+        hl2_seltree -> SetBranchAddress(file.sel_var.weight.c_str(),    &weight);
 
         long int npassed = 0;
         long int nevents = hl2_seltree -> GetEntries();
@@ -222,7 +229,8 @@ int main(int argc, char** argv)
             {
                 for(const auto& branch : kv.second)
                 {
-                    if(accum_level[0][branch] > file.cuts[branch])
+                    // if(accum_level[0][branch] > file.cuts[branch])
+                    if(sample[0]==branch)
                     {
                         cut_branch = kv.first;
                         event_passed = true;
@@ -253,14 +261,15 @@ int main(int argc, char** argv)
         }
         std::cout << TAG << "Selected events passing cuts: " << npassed << std::endl;
 
-        hl2_trutree -> SetBranchAddress(file.tru_var.nutype.c_str(), &nutype_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.reaction.c_str(), &reaction_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.topology.c_str(), &topology_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.target.c_str(), &target_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.D1True.c_str(), &D1True);
-        hl2_trutree -> SetBranchAddress(file.tru_var.D2True.c_str(), &D2True);
-        hl2_trutree -> SetBranchAddress(file.tru_var.enu_true.c_str(), &enu_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.weight.c_str(), &weight_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.nutype.c_str(),    &nutype_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.reaction.c_str(),  &reaction_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.topology.c_str(),  &topology_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.target.c_str(),    &target_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.fgdtarget.c_str(), &fgdtarget_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.D1True.c_str(),    &D1True);
+        hl2_trutree -> SetBranchAddress(file.tru_var.D2True.c_str(),    &D2True);
+        hl2_trutree -> SetBranchAddress(file.tru_var.enu_true.c_str(),  &enu_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.weight.c_str(),    &weight_true);
 
         nevents = hl2_trutree -> GetEntries();
         std::cout << TAG << "Reading truth events tree." << std::endl
@@ -298,15 +307,16 @@ template <typename T>
 HL2TreeVar ParseHL2Var(T j, bool reco_info)
 {
     HL2TreeVar v;
-    v.reaction = j["reaction"];
-    v.topology = j["topology"];
-    v.target   = j["target"];
-    v.nutype   = j["nutype"];
-    v.enu_true = j["enu_true"];
-    v.weight = j["weight"];
+    v.reaction    = j["reaction"];
+    v.topology    = j["topology"];
+    v.target      = j["target"];
+    v.fgdtarget   = j["fgdtarget"];
+    v.nutype      = j["nutype"];
+    v.enu_true    = j["enu_true"];
+    v.weight      = j["weight"];
 
-    v.D1True = j["D1True"];
-    v.D2True = j["D2True"];
+    v.D1True      = j["D1True"];
+    v.D2True      = j["D2True"];
 
     if(reco_info)
     {
