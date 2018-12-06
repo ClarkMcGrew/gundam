@@ -1,0 +1,14 @@
+{
+    "output" : {
+        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_fluxcovmat.root",
+        "matrix" : "flux_numu_cov",
+        "binning" : "flux_binning"
+    },
+
+    "input" : {
+        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/flux_covariance_banff_13av2.root",
+        "matrix" : "total_flux_cov",
+        "binning" : "nd5_numode_numu_bins"
+            }
+    }
+}

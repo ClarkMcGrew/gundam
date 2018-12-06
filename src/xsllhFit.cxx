@@ -139,7 +139,7 @@ int main(int argc, char** argv)
     std::cout << TAG << "Reading and collecting events." << std::endl;
     selTree.GetEvents(samples, parser.signal_definition, false);
 
-    std::cout << TAG << "Getting sample breakdown by topology." << std::endl;
+    std::cout << TAG << "Getting sample breakdown by reaction." << std::endl;
     for(auto& sample : samples)
         sample -> GetSampleBreakdown(fout, "nominal", topology, false);
 
@@ -178,18 +178,16 @@ int main(int argc, char** argv)
     fluxpara.InitEventMap(samples, 0);
     fitpara.push_back(&fluxpara);
 
-//LM COMMENTED OUT FOR TESING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // //Xsec model parameters
-    // XsecParameters xsecpara("par_xsec");
-    // xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
-    // xsecpara.SetThrow(parser.xsec_cov.do_throw);
-    // for(const auto& opt : parser.detectors)
-    // {
-    //     if(opt.use_detector)
-    //         xsecpara.AddDetector(opt.name, opt.xsec);
-    // }
-    // xsecpara.InitEventMap(samples, 0);
-    // fitpara.push_back(&xsecpara);
+    XsecParameters xsecpara("par_xsec");
+    xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+    xsecpara.SetThrow(parser.xsec_cov.do_throw);
+    for(const auto& opt : parser.detectors)
+    {
+        if(opt.use_detector)
+            xsecpara.AddDetector(opt.name, opt.xsec);
+    }
+    xsecpara.InitEventMap(samples, 0);
+    fitpara.push_back(&xsecpara);
 
     std::cout << TAG << "Setup Detector Covariance" << std::endl;
     TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
