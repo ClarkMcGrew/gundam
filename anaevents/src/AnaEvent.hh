@@ -17,6 +17,7 @@ class AnaEvent
             m_topology = -1;
             m_reaction = -1;
             m_target   = -1;
+            m_fgdtarget   = -1;
             m_sample   = -1;
             m_signal   = false;
             m_sig_type = -1;
@@ -42,6 +43,9 @@ class AnaEvent
 
         void SetTarget(int val){ m_target = val; }
         int GetTarget(){ return m_target; }
+
+        void SetFgdTarget(int val){ m_fgdtarget = val; }
+        int GetFgdTarget(){ return m_fgdtarget; }
 
         void SetSampleType(int val){ m_sample = val; }
         int GetSampleType(){ return m_sample; }
@@ -98,6 +102,7 @@ class AnaEvent
                       << "Topology    " << GetTopology() << std::endl
                       << "Reaction    " << GetReaction() << std::endl
                       << "Target      " << GetTarget() << std::endl
+                      << "FGD Target  " << GetFgdTarget() << std::endl
                       << "Flavor      " << GetFlavor() << std::endl
                       << "Sample      " << GetSampleType() << std::endl
                       << "Signal      " << GetSignalType() << std::endl
@@ -119,6 +124,8 @@ class AnaEvent
                 return m_reaction;
             else if(var == "target")
                 return m_target;
+            else if(var == "fgdtarget")
+                return m_fgdtarget;
             else if(var == "flavor")
                 return m_flavor;
             else if(var == "sample")
@@ -135,6 +142,7 @@ class AnaEvent
         int m_topology;    //final state topology type
         int m_reaction;    //event interaction mode
         int m_target;      //target nuclei
+        int m_fgdtarget;   //target nuclei and topology, used for O+C analysis
         int m_sample;      //sample type (aka cutBranch)
         int m_sig_type;
         bool m_signal;     //flag if signal event

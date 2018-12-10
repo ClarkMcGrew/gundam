@@ -17,9 +17,6 @@
 #include "TMatrixT.h"
 #include "TMatrixDSym.h"
 
-// using TMatrixD = TMatrixT<double>;
-// using TMatrixDSym = TMatrixTSym<double>;
-
 #include "json.hpp"
 using json = nlohmann::json;
 
@@ -95,14 +92,12 @@ int main(int argc, char** argv)
     std::string output_bin_name = j["output"]["binning"];
 
 
-    // Get flux covariance matrix from file
-    TMatrixDSym *flux_cov = (TMatrixDSym*)in_file -> Get(input_mat_name.c_str());
-    
-
     // Get binning from file
     TAxis *axis_bins = (TAxis*)in_file -> Get(input_bin_name.c_str());
     const unsigned int nbins = axis_bins -> GetNbins();
     
+    std::cout << TAG << "Number of bins :" << nbins << std::endl;
+
     // Get bin edges and store them into an array
     TArrayD root_array = *(axis_bins -> GetXbins());
     double* bin_array = root_array.GetArray();
@@ -112,9 +107,23 @@ int main(int argc, char** argv)
 
     TH1D *h_binning = new TH1D(output_bin_name.c_str(), output_bin_name.c_str(), nbins, bin_array);
 
+
+    // Get flux covariance matrix from file
+    TMatrixDSym *flux_cov_tot = (TMatrixDSym*)in_file -> Get(input_mat_name.c_str());
+    TMatrixDSym flux_cov(nbins);
+
+    for(int i=0; i<nbins; i++)
+        for(int j=0; j<nbins; j++)
+            flux_cov(i,j) = (*flux_cov_tot)(i,j);
+    
+    std::cout << TAG << "Total covariance matrix dimension :" << flux_cov_tot -> GetNcols() <<"x" << flux_cov_tot -> GetNcols() << std::endl;
+    std::cout << TAG << "Covariance submatrix dimension :" << flux_cov.GetNcols() <<"x" << flux_cov.GetNcols() << std::endl;
+
+
+
     // Write matrix and binning into file
     out_file -> cd();
-    flux_cov  -> Write(output_mat_name.c_str());
+    flux_cov.Write(output_mat_name.c_str());
     h_binning -> Write(output_bin_name.c_str());
 
     out_file -> Close();

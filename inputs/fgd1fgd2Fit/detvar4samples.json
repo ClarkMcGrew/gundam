@@ -5,7 +5,7 @@
             "tree_name" : "all_syst",
             "detector": "FGD",
             "num_toys" : 100,
-            "num_syst" : 39,
+            "num_syst" : 29,
             "num_samples" : 33,
             "samples" : {"0": [1,2,3,4,5,9,10,11], "1": [6], "2": [7], "3": [8], "4": [12,13,14,15,16,20,21,22], "5": [17], "6": [18], "7": [19], "8": [23,24,25,26,27,31,32,33], "9": [28], "10": [29], "11": [30] },
             "sample_binning" : {
@@ -32,7 +32,7 @@
     "var_names" : ["selmu_costheta", "selmu_mom"],
     "projection" : false,
     "plot_variable" : "selmu_mom",
-    "pdf_print" : true,
+    "pdf_print" : false,
     "weight_cut" : 10,
     "covariance" : true,
     "covariance_name" : "cov_mat",

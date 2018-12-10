@@ -178,17 +178,19 @@ int main(int argc, char** argv)
     fluxpara.InitEventMap(samples, 0);
     fitpara.push_back(&fluxpara);
 
-    XsecParameters xsecpara("par_xsec");
-    xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
-    xsecpara.SetThrow(parser.xsec_cov.do_throw);
-    for(const auto& opt : parser.detectors)
-    {
-        if(opt.use_detector)
-            xsecpara.AddDetector(opt.name, opt.xsec);
-    }
-    xsecpara.InitEventMap(samples, 0);
-    fitpara.push_back(&xsecpara);
+    //Xsec model parameters
+    // XsecParameters xsecpara("par_xsec");
+    // xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+    // xsecpara.SetThrow(parser.xsec_cov.do_throw);
+    // for(const auto& opt : parser.detectors)
+    // {
+    //     if(opt.use_detector)
+    //         xsecpara.AddDetector(opt.name, opt.xsec);
+    // }
+    // xsecpara.InitEventMap(samples, 0);
+    // fitpara.push_back(&xsecpara);
 
+    //Detector parameters
     std::cout << TAG << "Setup Detector Covariance" << std::endl;
     TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
     TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());

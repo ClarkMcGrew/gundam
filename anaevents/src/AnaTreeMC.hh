@@ -30,6 +30,7 @@ private:
     int topology;
     int reaction;
     int target;
+    int fgdtarget;
     float D1True;
     float D1Reco;
     float D2True;

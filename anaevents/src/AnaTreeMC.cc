@@ -34,6 +34,7 @@ void AnaTreeMC::SetBranches()
     fChain->SetBranchAddress("topology", &topology);
     fChain->SetBranchAddress("reaction", &reaction);
     fChain->SetBranchAddress("target", &target);
+    fChain->SetBranchAddress("fgdtarget", &fgdtarget);
     fChain->SetBranchAddress("D1True", &D1True);
     fChain->SetBranchAddress("D1Reco", &D1Reco);
     fChain->SetBranchAddress("D2True", &D2True);
@@ -74,6 +75,7 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
         ev.SetTopology(topology); // mectopology (i.e. CC0Pi,CC1Pi etc)
         ev.SetReaction(reaction); // reaction (i.e. CCQE,CCRES etc)
         ev.SetTarget(target);
+        ev.SetFgdTarget(fgdtarget);
         ev.SetTrueEnu(enu_true);
         ev.SetRecoEnu(enu_reco);
         ev.SetTrueD1(D1True);
