@@ -81,7 +81,7 @@
             "template_par" : [
                 {
                     "name" : "CC0pi",
-                    "binning" : "tn337_binning.txt",
+                    "binning" : "ingrid_true_binning.txt",
                     "signal" : {"topology" : [0,1,2]},
                     "use" : true
                 }
@@ -143,7 +143,7 @@
             "cut_branch" : 10,
             "name": "INGRID",
             "detector" : "INGRID",
-            "binning" : "ingrid_binning.txt",
+            "binning" : "ingrid_reco_binning.txt",
             "use_sample" : false
         }
     ]

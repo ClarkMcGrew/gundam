@@ -49,8 +49,21 @@ struct HL2FileOpt
     HL2TreeVar tru_var;
 };
 
+struct INGFileOpt
+{
+    std::string fname_input;
+    std::string event_tree;
+    unsigned int file_id;
+    unsigned int sample;
+    unsigned int branch;
+};
+
 template <typename T>
 HL2TreeVar ParseHL2Var(T json_obj, bool flag);
+
+int GetIngridNutype(bool anti, bool nue);
+int GetIngridReaction(int code);
+int GetIngridTopology(int code);
 
 int main(int argc, char** argv)
 {
@@ -286,6 +299,137 @@ int main(int argc, char** argv)
         hl2_file -> Close();
     }
 
+    std::cout << TAG << "Reading INGRID files..." << std::endl;
+    std::vector<INGFileOpt> v_files_ing;
+    for(const auto& file : j["ingrid_files"])
+    {
+        if(file["use"])
+        {
+            INGFileOpt f;
+            f.fname_input = file["fname"];
+            f.event_tree = file["event_tree"];
+            f.file_id = file["file_id"];
+            f.sample = file["sample"];
+            f.branch = file["branch"];
+
+            v_files_ing.emplace_back(f);
+        }
+    }
+
+    for(const auto& file : v_files_ing)
+    {
+        std::cout << TAG << "Reading file: " << file.fname_input << std::endl
+                  << TAG << "File ID: " << file.file_id << std::endl
+                  << TAG << "Events tree: " << file.event_tree << std::endl
+                  << TAG << "Sample: " << file.sample << std::endl
+                  << TAG << "Branch: " << file.branch << std::endl;
+
+        TFile* ing_file = TFile::Open(file.fname_input.c_str(), "READ");
+        TTree* ing_tree = (TTree*)ing_file -> Get(file.event_tree.c_str());
+
+        int interaction_type, fsi_int;
+        int muon_track, selected_sample;
+        float enu, event_weight;
+        float pmu_true, angle_true;
+        float pmu_reco, angle_reco;
+        bool is_anti, is_nue;
+
+        ing_tree -> SetBranchAddress("InteractionType", &interaction_type);
+        ing_tree -> SetBranchAddress("FSIInt", &fsi_int);
+        ing_tree -> SetBranchAddress("SelectedSample", &selected_sample);
+        ing_tree -> SetBranchAddress("MuonCandidateTrack", &muon_track);
+        ing_tree -> SetBranchAddress("Enu", &enu);
+        ing_tree -> SetBranchAddress("IsAnti", &is_anti);
+        ing_tree -> SetBranchAddress("IsNuE", &is_nue);
+        ing_tree -> SetBranchAddress("weight", &event_weight);
+        ing_tree -> SetBranchAddress("TrueMomentumMuon", &pmu_true);
+        ing_tree -> SetBranchAddress("TrueAngleMuon", &angle_true);
+
+        const float deg_to_rad = TMath::Pi() / 180;
+        const float iron_carbon_ratio = 7.640777;
+        float iron_track0, plastic_track0, angle_track0;
+        float iron_track1, plastic_track1, angle_track1;
+        float iron_track2, plastic_track2, angle_track2;
+
+        ing_tree -> SetBranchAddress("TrackAngle_track0", &angle_track0);
+        ing_tree -> SetBranchAddress("IronDistance_track0", &iron_track0);
+        ing_tree -> SetBranchAddress("PlasticDistance_track0", &plastic_track0);
+        ing_tree -> SetBranchAddress("TrackAngle_track1", &angle_track1);
+        ing_tree -> SetBranchAddress("IronDistance_track1", &iron_track1);
+        ing_tree -> SetBranchAddress("PlasticDistance_track1", &plastic_track1);
+        ing_tree -> SetBranchAddress("TrackAngle_track2", &angle_track2);
+        ing_tree -> SetBranchAddress("IronDistance_track2", &iron_track2);
+        ing_tree -> SetBranchAddress("PlasticDistance_track2", &plastic_track2);
+
+        long int nevents = ing_tree -> GetEntries();
+        std::cout << TAG << "Reading events tree." << std::endl
+                  << TAG << "Num. events: " << nevents << std::endl;
+
+        for(int i = 0; i < nevents; ++i)
+        {
+            ing_tree -> GetEntry(i);
+
+            switch(muon_track)
+            {
+                case 0:
+                    pmu_reco = iron_track0 + (plastic_track0 / iron_carbon_ratio);
+                    angle_reco = angle_track0;
+                    break;
+                case 1:
+                    pmu_reco = iron_track1 + (plastic_track1 / iron_carbon_ratio);
+                    angle_reco = angle_track1;
+                    break;
+                case 2:
+                    pmu_reco = iron_track2 + (plastic_track2 / iron_carbon_ratio);
+                    angle_reco = angle_track2;
+                    break;
+                default:
+                    pmu_reco = -999;
+                    angle_reco = -999;
+                    break;
+            }
+
+            //D1Reco = (pmu_reco * 0.0114127 + 0.230608) * 1000;
+            D1Reco = pmu_reco;
+            D1True = pmu_true * 1000;
+            D2Reco = TMath::Cos(angle_reco * deg_to_rad);
+            D2True = TMath::Cos(angle_true * deg_to_rad);
+
+            nutype = GetIngridNutype(is_anti, is_nue);
+            topology = GetIngridTopology(fsi_int);
+            reaction = GetIngridReaction(interaction_type);
+            target = 6;
+
+            enu_true = enu;
+            enu_reco = enu;
+
+            double emu_true = std::sqrt(pmu_true * pmu_true + mu_mass * mu_mass);
+            q2_true = 2.0 * enu_true * (emu_true - pmu_true * TMath::Cos(angle_true * deg_to_rad))
+                - mu_mass * mu_mass;
+
+            double emu_reco = std::sqrt(pmu_reco * pmu_reco + mu_mass * mu_mass);
+            q2_reco = 2.0 * enu_reco * (emu_reco - pmu_reco * TMath::Cos(angle_reco * deg_to_rad))
+                - mu_mass * mu_mass;
+
+            cut_branch = file.branch;
+            weight = event_weight;
+
+            if(selected_sample == file.sample)
+                out_seltree -> Fill();
+
+            nutype_true = nutype;
+            reaction_true = reaction;
+            topology_true = topology;
+            target_true = target;
+            cut_branch = file.branch * -1;
+            weight_true = weight;
+
+            out_trutree -> Fill();
+            if(i % 2000 == 0 || i == (nevents-1))
+                pbar.Print(i, nevents-1);
+        }
+    }
+
     out_file -> cd();
     out_file -> Write();
     out_file -> Close();
@@ -316,4 +460,65 @@ HL2TreeVar ParseHL2Var(T j, bool reco_info)
     }
 
     return v;
+}
+
+int GetIngridNutype(bool anti, bool nue)
+{
+    if(nue)
+        return anti ? 3 : 2;
+    else
+        return anti ? 1 : 0;
+}
+
+int GetIngridReaction(int code)
+{
+    int reaction = -1;
+
+    if(code == 1)
+        reaction = 0;
+    else if(code == 2)
+        reaction = 9;
+    else if(code == 11 || code == 12 || code == 13)
+        reaction = 1;
+    else if(code == 21 || code == 26)
+        reaction = 2;
+    else if(code == 16)
+        reaction = 3;
+    else if(code > 30 || code < 53)
+        reaction = 4;
+    else if(code < 0)
+        reaction = 5;
+
+    return reaction;
+}
+
+int GetIngridTopology(int code)
+{
+    int topology;
+    switch(code)
+    {
+        case 0:
+            topology = 0;
+            break;
+        case 1:
+            topology = 1;
+            break;
+        case 2:
+            topology = 2;
+            break;
+        case 3:
+            topology = 3;
+            break;
+        case 4:
+            topology = 5;
+            break;
+        case 5:
+            topology = 4;
+            break;
+        default:
+            topology = 5;
+            break;
+    }
+
+    return topology;
 }
