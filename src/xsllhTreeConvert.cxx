@@ -392,7 +392,8 @@ int main(int argc, char** argv)
             //D1Reco = (pmu_reco * 0.0114127 + 0.230608) * 1000;
             D1Reco = pmu_reco;
             D1True = pmu_true * 1000;
-            D2Reco = TMath::Cos(angle_reco * deg_to_rad);
+            D2Reco = angle_reco;
+            //D2Reco = TMath::Cos(angle_reco * deg_to_rad);
             D2True = TMath::Cos(angle_true * deg_to_rad);
 
             nutype = GetIngridNutype(is_anti, is_nue);
@@ -414,7 +415,7 @@ int main(int argc, char** argv)
             cut_branch = file.branch;
             weight = event_weight;
 
-            if(selected_sample == file.sample)
+            if(selected_sample == file.sample && pmu_true > 0.0)
                 out_seltree -> Fill();
 
             nutype_true = nutype;

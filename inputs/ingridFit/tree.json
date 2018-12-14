@@ -14,7 +14,7 @@
             "num_branches" : 10,
             "cut_level" : [7,8,9,8,7,5,4,7,8,7],
             "samples" : {"0": [0], "1": [1], "2": [2], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7], "8": [8], "9": [9]},
-            "use" : false,
+            "use" : true,
             "sel_var" : {
                 "reaction" : "reaction",
                 "topology" : "mectopology",
@@ -76,7 +76,7 @@
 
     "ingrid_files" : [
         {
-            "fname" : "/home/andrew/T2K/xsLLhFitter/inputs/ingridFit/ingrid_cc0pi_selection.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/ingrid_cc0pi_selection.root",
             "file_id" : 0,
             "event_tree" : "wtree",
             "sample" : 0,

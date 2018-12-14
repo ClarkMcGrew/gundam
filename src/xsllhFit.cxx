@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     sigfitpara.InitEventMap(samples, 0);
     fitpara.push_back(&sigfitpara);
 
-    //Flux parameters
+    /*
     FluxParameters fluxpara("par_flux");
     fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
     fluxpara.SetThrow(parser.flux_cov.do_throw);
@@ -206,6 +206,7 @@ int main(int argc, char** argv)
     }
     detpara.InitEventMap(samples, 0);
     fitpara.push_back(&detpara);
+    */
 
     //Instantiate fitter obj
     XsecFitter xsecfit(fout, seed, threads);
