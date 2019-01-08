@@ -1,17 +1,17 @@
 {
     "data_file" : "xsllh_nominal.root",
     "mc_file"   : "xsllh_nominal.root",
-    "output_file" : "/outputs/test.root",
+    "output_file" : "/outputs/fit_onlyFitPar.root",
     "xsec_file" : "",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
-    "fit_type"  : 0,
+    "fit_type"  : 1,
     "stat_fluc" : false,
     "zero_syst" : false,
     "data_POT"  : 1.0,
     "mc_POT"    : 1.0,
     "rng_seed"  : 12257,
     "num_threads" : 8,
-    "num_throws"  : 1E4,
+    "num_throws"  : 1E2,
     "sample_topology" : ["cc0pi", "cc1pi+", "ccother", "bkg", "OOFV", "null", "sandmu"],
     "flux_cov" : {
         "file" : "xsllh_fluxcovmat.root",
@@ -30,7 +30,7 @@
         "variance" : 0.99
     },
     "xsec_cov" : {
-        "file" : "xsllh_xseccovmat_ANDREW.root",
+        "file" : "xsllh_xseccovmat.root",
         "matrix" : "xsec_cov",
         "throw"  : false,
         "decomp" : false,
@@ -48,10 +48,14 @@
             "flux_hist" : "",
             "flux_integral" : 1.12E13,
             "flux_error" : 0.085,
-            "xsec_config" : "ptheta_dials_ANDREW.json",
+            "xsec_config" : "ptheta_dials.json",
             "binning" : "tn338_binning.txt",
-            "ntargets_val" : 5.9E29,
-            "ntargets_err" : 0.0067,
+            "ntargets_val" : 3.726E29,
+            "ntargets_err" : 0.0048,
+            "ntargets_O_val" : 1.291E29,
+            "ntargets_O_err" : 0.0073,
+            "ntargets_C_val" : 3.726E29,
+            "ntargets_C_err" : 0.0048,
             "template_par" : [
                 {
                     "name" : "CC0piCarbon",
@@ -64,12 +68,6 @@
                     "binning" : "tn338_binning.txt",
                     "signal" : {"fgdtarget" : [0]},
                     "use" : true
-                },
-                {
-                    "name" : "CC0pi",
-                    "binning" : "tn338_binning.txt",
-                    "signal" : {"topology" : [0]},
-                    "use" : false
                 }
             ],
             "use_detector" : true
