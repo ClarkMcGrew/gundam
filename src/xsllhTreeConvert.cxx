@@ -269,6 +269,13 @@ int main(int argc, char** argv)
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
                 - mu_mass * mu_mass;
 
+            ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
+            // if(target == 6) weight = 1.3*weight; // uncomment to add 30% of carbon events
+            // if(target == 6) weight = 0.7*weight; // uncomment to add -30% of carbon events
+            // if(target == 8) weight = 1.3*weight; // uncomment to add 30% of oxygen events
+            // if(target == 8) weight = 0.7*weight; // uncomment to add -30% of oxygen events
+            ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
+
             if(event_passed)
                 out_seltree -> Fill();
 

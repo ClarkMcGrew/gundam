@@ -206,7 +206,7 @@ int main(int argc, char** argv)
         // int accum_level[file.num_toys][file.num_samples];
         int sample[file.num_toys];
         float hist_variables[nvars][file.num_toys];
-        float weight_syst_total_noflux[file.num_toys];
+        float weight_syst_total[file.num_toys];
         float weight_syst[file.num_toys][file.num_syst];
 
         std::cout << TAG << "Opening file: " << file.fname_input << std::endl
@@ -229,7 +229,7 @@ int main(int argc, char** argv)
         // tree_event->SetBranchAddress("accum_level", accum_level);
         tree_event->SetBranchAddress("sample_fgd2layer_xsec", sample);
         tree_event->SetBranchAddress("weight_syst", weight_syst);
-        tree_event->SetBranchAddress("weight_syst_total_noflux", weight_syst_total_noflux);
+        tree_event->SetBranchAddress("weight_syst_total", weight_syst_total);
         for(unsigned int i = 0; i < nvars; ++i)
             tree_event->SetBranchAddress(var_names[i].c_str(), hist_variables[i]);
 
@@ -266,7 +266,7 @@ int main(int argc, char** argv)
                             }
 
                             float weight = do_single_syst ? weight_syst[t][syst_idx]
-                                                          : weight_syst_total_noflux[t];
+                                                          : weight_syst_total[t];
                             if(weight > 0.0 && weight < weight_cut)
                             {
                                 v_hists[s + offset][t].Fill(idx, weight);

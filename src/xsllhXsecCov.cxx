@@ -1,3 +1,6 @@
+// USAGE:
+// xsllhXsecCov -i ../inputs/fgd1fgd2Fit/xsec_cov_LUCIE.txt -o ../inputs/fgd1fgd2Fit/xsllh_xseccovmat.root
+
 #include <cmath>
 #include <fstream>
 #include <iomanip>

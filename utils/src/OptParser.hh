@@ -53,6 +53,10 @@ struct DetOpt
     double flux_error;
     double ntargets_val;
     double ntargets_err;
+    // double ntargets_O_val;
+    // double ntargets_O_err;
+    // double ntargets_C_val;
+    // double ntargets_C_err;
     bool use_detector;
 };
 

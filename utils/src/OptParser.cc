@@ -79,6 +79,10 @@ bool OptParser::ParseJSON(std::string json_file)
         d.flux_error = detector["flux_error"];
         d.ntargets_val = detector["ntargets_val"];
         d.ntargets_err = detector["ntargets_err"];
+        // d.ntargets_O_val = detector["ntargets_O_val"];
+        // d.ntargets_O_err = detector["ntargets_O_err"];
+        // d.ntargets_C_val = detector["ntargets_C_val"];
+        // d.ntargets_C_err = detector["ntargets_C_err"];
         d.use_detector = detector["use_detector"];
         detectors.push_back(d);
 

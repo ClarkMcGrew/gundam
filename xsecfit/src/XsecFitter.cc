@@ -153,6 +153,14 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return;
     }
 
+
+    std::cout << "LM ***** fit_type == " << fit_type << " *****" << std::endl;
+    std::cout << "fit_type = kAsimovFit   == " << kAsimovFit   << " and kAsimov   == " << kAsimov   << " *****" << std::endl;
+    std::cout << "fit_type = kExternalFit == " << kExternalFit << " and kExternal == " << kExternal << " *****" << std::endl;
+    std::cout << "fit_type = kDataFit     == " << kDataFit     << " and kData     == " << kData     << " *****" << std::endl;
+    std::cout << "fit_type = kToyFit      == " << kToyFit      << "                                 *****" << std::endl;
+
+
     if(fit_type == kAsimovFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)

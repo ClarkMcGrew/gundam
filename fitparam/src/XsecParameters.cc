@@ -14,7 +14,7 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
     if(Npar == 0)
     {
         std::cerr << ERR << "In XsecParameters::InitEventMap\n"
-                  << ERR << "No parameters delcared. Not building event map."
+                  << ERR << "No parameters declared. Not building event map."
                   << std::endl;
     }
     m_dial_evtmap.clear();

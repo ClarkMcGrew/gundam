@@ -201,7 +201,7 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
     m_hpred->Scale(m_norm);
     m_hmc->Scale(m_norm);
     m_hsig->Scale(m_norm);
-
+    
     if(datatype == 0 || datatype == -1)
         return;
 

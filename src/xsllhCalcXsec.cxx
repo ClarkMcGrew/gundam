@@ -269,6 +269,7 @@ int main(int argc, char** argv)
             std::cout << TAG << "Adding detector for cross section: " << det.name << std::endl;
             XsecExtractor x(det.name, det.binning, ++seed);
             x.SetNumTargets(det.ntargets_val, det.ntargets_err);
+            // x.SetNumTargets(det.ntargets_O_val, det.ntargets_O_err, det.ntargets_C_val, det.ntargets_err);
             x.SetFluxVar(det.flux_integral, det.flux_error);
             xsec_calc.emplace(std::make_pair(det.name, x));
             xsec_order.emplace_back(det.name);
