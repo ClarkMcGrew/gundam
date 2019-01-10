@@ -1,5 +1,5 @@
 {
-    "input_dir" : "/inputs/fgd1fgd2/splines/",
+    "input_dir" : "/inputs/fgd1fgd2Fit/",
     "dimensions" : [580, 58],
     "dials" : [
         {
@@ -109,7 +109,7 @@
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
             "binning" : "tn338_binning.txt",
-            "splines" : "splines/manffres_splines.root",
+            "splines" : "splines/manfres_splines.root",
             "use" : true
         },
         {
@@ -159,12 +159,12 @@
             "limit_lo" : 0.00,
             "limit_hi" : 3.00,
             "binning" : "tn338_binning.txt",
-            "splines" : "splines/ncother_near_0_splines.root",
+            "splines" : "splines/ncoth_splines.root",
             "use" : true
         },
         {
             "name" : "FSI_INEL_LO",
-            "nominal" : 0.00,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : -0.7,
             "limit_hi" : 2.8,
@@ -174,7 +174,7 @@
         },
         {
             "name" : "FSI_INEL_HI",
-            "nominal" : 0.00,
+            "nominal" : 1.80,
             "step" : 0.05,
             "limit_lo" : -0.8,
             "limit_hi" : 2.35,
@@ -184,7 +184,7 @@
         },
         {
             "name" : "FSI_PI_PROD",
-            "nominal" : 0.00,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : -0.8,
             "limit_hi" : 3.5,
@@ -194,7 +194,7 @@
         },
         {
             "name" : "FSI_PI_ABS",
-            "nominal" : 0.00,
+            "nominal" : 1.10,
             "step" : 0.05,
             "limit_lo" : -0.8,
             "limit_hi" : 2.8,
@@ -204,7 +204,7 @@
         },
         {
             "name" : "FSI_CEX_LO",
-            "nominal" : 0.00,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : -0.8,
             "limit_hi" : 3.9,
@@ -214,7 +214,7 @@
         },
         {
             "name" : "FSI_CEX_HI",
-            "nominal" : 0.00,
+            "nominal" : 1.80,
             "step" : 0.05,
             "limit_lo" : -0.8,
             "limit_hi" : 1.96,

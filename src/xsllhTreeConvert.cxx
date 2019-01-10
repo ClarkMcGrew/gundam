@@ -270,6 +270,7 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
+            // if(target == 6) weight = 10.0*weight; // uncomment to carbon events
             // if(target == 6) weight = 1.3*weight; // uncomment to add 30% of carbon events
             // if(target == 6) weight = 0.7*weight; // uncomment to add -30% of carbon events
             // if(target == 8) weight = 1.3*weight; // uncomment to add 30% of oxygen events

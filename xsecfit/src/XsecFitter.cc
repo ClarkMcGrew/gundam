@@ -153,7 +153,6 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return;
     }
 
-
     std::cout << "LM ***** fit_type == " << fit_type << " *****" << std::endl;
     std::cout << "fit_type = kAsimovFit   == " << kAsimovFit   << " and kAsimov   == " << kAsimov   << " *****" << std::endl;
     std::cout << "fit_type = kExternalFit == " << kExternalFit << " and kExternal == " << kExternal << " *****" << std::endl;
@@ -279,7 +278,7 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
 
     for(int s = 0; s < m_samples.size(); ++s)
     {
-        const unsigned int N  = m_samples[s]->GetN();
+        const unsigned int N  = m_samples[s]->GetN(); //LM : N = get number of events
         const std::string det = m_samples[s]->GetDetector();
 #pragma omp parallel for num_threads(m_threads)
         for(unsigned int i = 0; i < N; ++i)
@@ -290,7 +289,7 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
                 m_fitpara[j]->ReWeight(ev, det, s, i, fitpar_throw[j]);
         }
 
-        m_samples[s]->FillEventHist(kAsimov);
+        m_samples[s]->FillEventHist(kAsimov, stat_fluc);
         m_samples[s]->FillEventHist(kReset);
         chi2_stat += m_samples[s]->CalcChi2();
     }

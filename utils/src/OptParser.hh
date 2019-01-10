@@ -85,6 +85,10 @@ class OptParser
         int num_threads;
         int num_throws;
 
+        bool use_fit_param;
+        bool use_flux_param;
+        bool use_det_param;
+        bool use_xsec_param;
         bool stat_fluc;
         bool zero_syst;
         bool regularise;

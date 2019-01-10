@@ -1,6 +1,6 @@
 {
     "output" : {
-        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_nominal.root",
+        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_nominal_10Carbon.root",
         "sel_tree" : "selectedEvents",
         "tru_tree" : "trueEvents"
     },

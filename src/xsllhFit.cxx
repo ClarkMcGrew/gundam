@@ -162,52 +162,73 @@ int main(int argc, char** argv)
             sigfitpara.AddDetector(opt.name, parser.signal_definition);
             //sigfitpara.AddDetector(opt.name, opt.binning);
     }
-    sigfitpara.InitEventMap(samples, 0);
-    fitpara.push_back(&sigfitpara);
+    if(parser.use_fit_param)
+    {
+        std::cout << TAG << "Adding template parameters." << std::endl;
+        sigfitpara.InitEventMap(samples, 0);
+        fitpara.push_back(&sigfitpara);
+    }
+    else{ std::cout << TAG << "Not using template parameters." << std::endl; }
 
     //Flux parameters
-    // FluxParameters fluxpara("par_flux");
-    // fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
-    // fluxpara.SetThrow(parser.flux_cov.do_throw);
-    // fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
-    // for(const auto& opt : parser.detectors)
-    // {
-    //     if(opt.use_detector)
-    //         fluxpara.AddDetector(opt.name, enubins);
-    // }
-    // fluxpara.InitEventMap(samples, 0);
-    // fitpara.push_back(&fluxpara);
+    FluxParameters fluxpara("par_flux");
+    fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
+    fluxpara.SetThrow(parser.flux_cov.do_throw);
+    fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
+    for(const auto& opt : parser.detectors)
+    {
+        if(opt.use_detector)
+            fluxpara.AddDetector(opt.name, enubins);
+    }
+    if(parser.use_flux_param)
+    {
+        std::cout << TAG << "Adding flux parameters." << std::endl;
+        fluxpara.InitEventMap(samples, 0);
+        fitpara.push_back(&fluxpara);
+    }
+    else{ std::cout << TAG << "Not using flux parameters." << std::endl; }
 
     //Xsec model parameters
-    // XsecParameters xsecpara("par_xsec");
-    // xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
-    // xsecpara.SetThrow(parser.xsec_cov.do_throw);
-    // for(const auto& opt : parser.detectors)
-    // {
-    //     if(opt.use_detector)
-    //         xsecpara.AddDetector(opt.name, opt.xsec);
-    // }
-    // xsecpara.InitEventMap(samples, 0);
-    // fitpara.push_back(&xsecpara);
+    XsecParameters xsecpara("par_xsec");
+    xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+    xsecpara.SetThrow(parser.xsec_cov.do_throw);
+    for(const auto& opt : parser.detectors)
+    {
+        if(opt.use_detector)
+            xsecpara.AddDetector(opt.name, opt.xsec);
+    }
+    if(parser.use_xsec_param)
+    {
+        std::cout << TAG << "Adding xsec model parameters." << std::endl;
+        xsecpara.InitEventMap(samples, 0);
+        fitpara.push_back(&xsecpara);
+    }
+    else{ std::cout << TAG << "Not using xsec model parameters." << std::endl; }
 
     //Detector parameters
-    // std::cout << TAG << "Setup Detector Covariance" << std::endl;
-    // TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
-    // TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());
-    // TMatrixDSym cov_det = *cov_det_in;
-    // file_detcov -> Close();
+    std::cout << TAG << "Setup Detector Covariance" << std::endl;
+    TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
+    TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());
+    TMatrixDSym cov_det = *cov_det_in;
+    file_detcov -> Close();
 
-    // DetParameters detpara("par_det");
-    // detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
-    // detpara.SetThrow(parser.det_cov.do_throw);
-    // detpara.SetInfoFrac(parser.det_cov.info_frac);
-    // for(const auto& opt : parser.detectors)
-    // {
-    //     if(opt.use_detector)
-    //         detpara.AddDetector(opt.name, samples, true);
-    // }
-    // detpara.InitEventMap(samples, 0);
-    // fitpara.push_back(&detpara);
+    DetParameters detpara("par_det");
+    detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
+    detpara.SetThrow(parser.det_cov.do_throw);
+    detpara.SetInfoFrac(parser.det_cov.info_frac);
+    for(const auto& opt : parser.detectors)
+    {
+        if(opt.use_detector)
+            detpara.AddDetector(opt.name, samples, true);
+    }
+    if(parser.use_det_param)
+    {
+        std::cout << TAG << "Adding detector parameters." << std::endl;
+        detpara.InitEventMap(samples, 0);
+        fitpara.push_back(&detpara);
+    }
+    else{ std::cout << TAG << "Not using detector parameters." << std::endl; }
+
 
     //Instantiate fitter obj
     XsecFitter xsecfit(fout, seed, threads);

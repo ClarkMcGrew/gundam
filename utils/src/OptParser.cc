@@ -33,6 +33,10 @@ bool OptParser::ParseJSON(std::string json_file)
     fname_xsec = j["xsec_file"].get<std::string>();
 
     fit_type = j["fit_type"];
+    use_fit_param  = j["use_fit_param"];
+    use_flux_param = j["use_flux_param"];
+    use_det_param  = j["use_det_param"];
+    use_xsec_param = j["use_xsec_param"];
     stat_fluc = j["stat_fluc"];
     zero_syst = j["zero_syst"];
     data_POT = j["data_POT"];
