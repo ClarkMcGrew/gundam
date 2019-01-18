@@ -1,7 +1,7 @@
 {
-    "data_file" : "xsllh_nominal_10Carbon.root",
+    "data_file" : "xsllh_nominal.root",
     "mc_file"   : "xsllh_nominal.root",
-    "output_file" : "/outputs/fit1_FitPar_10Carbon.root",
+    "output_file" : "/outputs/fit1_test.root",
     "xsec_file" : "",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
@@ -9,21 +9,21 @@
     "use_flux_param" : false,
     "use_det_param"  : false,
     "use_xsec_param" : false,
-    "stat_fluc" : false,
+    "stat_fluc" : true,
     "zero_syst" : false,
     "data_POT"  : 1.0,
     "mc_POT"    : 1.0,
     "rng_seed"  : 12257,
-    "num_threads" : 8,
+    "num_threads" : 16,
     "num_throws"  : 1E4,
-    "sample_topology" : ["cc0pi", "cc1pi+", "ccother", "bkg", "OOFV", "null", "sandmu"],
+    "sample_topology" : ["cc0pi", "cc1pi", "ccother", "bkg", "oofv"],
     "flux_cov" : {
         "file" : "xsllh_fluxcovmat.root",
         "matrix" : "flux_numu_cov",
         "binning" : "flux_binning",
         "throw"  : false,
         "decomp" : true,
-        "variance" : 1.00
+        "variance" : 0.99
     },
     "det_cov" : {
         "file" : "xsllh_detcovmat.root",

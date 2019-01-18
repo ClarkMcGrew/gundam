@@ -37,7 +37,7 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 
                 //int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev -> GetTopology(), ev -> GetReaction()},
                 //                                       std::vector<double>{q2});
-                int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
+                int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction(), ev->GetTarget()},
                                                        std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
 
                 if(idx == BADBIN)

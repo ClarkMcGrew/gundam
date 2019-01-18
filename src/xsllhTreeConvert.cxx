@@ -46,6 +46,7 @@ struct HL2FileOpt
     std::vector<int> cuts;
     std::map<int, std::vector<int>> samples;
     std::map<int, int> topologymap;
+    std::map<int, std::vector<int>> targetmap;
 
     HL2TreeVar sel_var;
     HL2TreeVar tru_var;
@@ -116,7 +117,7 @@ int main(int argc, char** argv)
     int nutype, nutype_true;
     int reaction, reaction_true;
     int topology, topology_true;
-    int target, target_true;
+    int target, target_true, h2target, h2target_true;
     int fgdtarget, fgdtarget_true;
     int cut_branch;
     float enu_true, enu_reco;
@@ -166,14 +167,19 @@ int main(int argc, char** argv)
             f.num_branches = file["num_branches"];
             // f.cuts = file["cut_level"].get<std::vector<int>>();
 
-            std::map<std::string, std::vector<int>> temp_json = file["samples"];
-            for(const auto& kv : temp_json)
+            std::map<std::string, std::vector<int>> temp_json_samp = file["samples"];
+            for(const auto& kv : temp_json_samp)
                 f.samples.emplace(std::make_pair(std::stoi(kv.first), kv.second));
             
             std::map<std::string, int> temp_json_top = file["topologymap"];
             for(const auto& kv : temp_json_top)
                 f.topologymap.emplace(std::make_pair(std::stoi(kv.first), kv.second));
             
+            std::map<std::string, std::vector<int>> temp_json_targ = file["targetmap"];
+            for(const auto& kv : temp_json_targ)
+                f.targetmap.emplace(std::make_pair(std::stoi(kv.first), kv.second));
+            
+
             f.sel_var = ParseHL2Var(file["sel_var"], true);
             f.tru_var = ParseHL2Var(file["tru_var"], false);
 
@@ -204,6 +210,15 @@ int main(int argc, char** argv)
             std::cout << TAG << "Topology " << kv.first << ": " << kv.second << std::endl;
         }
 
+        std::cout << TAG << "Highland2 target mapping:" << std::endl;
+        for(const auto& kv : file.targetmap)
+        {
+            std::cout << TAG << "Sample " << kv.first << ": ";
+            for(const auto& b : kv.second)
+                std::cout << b << " ";
+            std::cout << std::endl;
+        }
+
         TFile* hl2_file = TFile::Open(file.fname_input.c_str(), "READ");
         TTree* hl2_seltree = (TTree*)hl2_file -> Get(file.sel_tree.c_str());
         TTree* hl2_trutree = (TTree*)hl2_file -> Get(file.tru_tree.c_str());
@@ -216,7 +231,7 @@ int main(int argc, char** argv)
         hl2_seltree -> SetBranchAddress(file.sel_var.nutype.c_str(),    &nutype);
         hl2_seltree -> SetBranchAddress(file.sel_var.reaction.c_str(),  &reaction);
         hl2_seltree -> SetBranchAddress(file.sel_var.topology.c_str(),  &topology);
-        hl2_seltree -> SetBranchAddress(file.sel_var.target.c_str(),    &target);
+        hl2_seltree -> SetBranchAddress(file.sel_var.target.c_str(),    &h2target);
         hl2_seltree -> SetBranchAddress(file.sel_var.fgdtarget.c_str(), &fgdtarget);
         hl2_seltree -> SetBranchAddress(file.sel_var.D1Reco.c_str(),    &D1Reco);
         hl2_seltree -> SetBranchAddress(file.sel_var.D2Reco.c_str(),    &D2Reco);
@@ -261,6 +276,14 @@ int main(int argc, char** argv)
                 if(topology == kv.second) topology = kv.first;
             }
 
+            for(const auto& kv : file.targetmap)
+            {
+                for(const auto& h2t : kv.second)
+                {
+                    if(h2target == h2t) target = kv.first;
+                }
+            }
+
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
@@ -270,11 +293,11 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
-            // if(target == 6) weight = 10.0*weight; // uncomment to carbon events
-            // if(target == 6) weight = 1.3*weight; // uncomment to add 30% of carbon events
-            // if(target == 6) weight = 0.7*weight; // uncomment to add -30% of carbon events
-            // if(target == 8) weight = 1.3*weight; // uncomment to add 30% of oxygen events
-            // if(target == 8) weight = 0.7*weight; // uncomment to add -30% of oxygen events
+            // if(h2target == 6) weight = 10.0*weight; // uncomment to carbon events
+            // if(h2target == 6) weight = 1.3*weight; // uncomment to add 30% of carbon events
+            // if(h2target == 6) weight = 0.7*weight; // uncomment to add -30% of carbon events
+            // if(h2target == 8) weight = 1.3*weight; // uncomment to add 30% of oxygen events
+            // if(h2target == 8) weight = 0.7*weight; // uncomment to add -30% of oxygen events
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
             if(event_passed)
@@ -288,7 +311,7 @@ int main(int argc, char** argv)
         hl2_trutree -> SetBranchAddress(file.tru_var.nutype.c_str(),    &nutype_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.reaction.c_str(),  &reaction_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.topology.c_str(),  &topology_true);
-        hl2_trutree -> SetBranchAddress(file.tru_var.target.c_str(),    &target_true);
+        hl2_trutree -> SetBranchAddress(file.tru_var.target.c_str(),    &h2target_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.fgdtarget.c_str(), &fgdtarget_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.D1True.c_str(),    &D1True);
         hl2_trutree -> SetBranchAddress(file.tru_var.D2True.c_str(),    &D2True);
@@ -309,6 +332,14 @@ int main(int argc, char** argv)
             for(const auto& kv : file.topologymap)
             {
                 if(topology_true == kv.second) topology_true = kv.first;
+            }
+
+            for(const auto& kv : file.targetmap)
+            {
+                for(const auto& h2t : kv.second)
+                {
+                    if(h2target == h2t) target = kv.first;
+                }
             }
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);

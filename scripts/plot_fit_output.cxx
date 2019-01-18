@@ -9,11 +9,10 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
 
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
-    // std::vector<std::string> par_name = {"par_fit", "par_flux", "par_xsec", "par_det"};
     // const int Npar = 4;
     // std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
     // const int Npar = 2;
-    // std::string par_name[Npar] = {"par_fit", "par_flux"};
+    // std::string par_name[Npar] = {"par_fit", "par_xsec"};
     const int Npar = 1;
     std::string par_name[Npar] = {"par_fit"};
 
@@ -93,7 +92,7 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
         TCanvas *c = new TCanvas("c", "c", 1400, 900);
         gStyle -> SetOptTitle(0);
 
-        h_err_final -> GetYaxis() -> SetRangeUser(0.0, 0.3);
+        h_err_final -> GetYaxis() -> SetRangeUser(0.0, 1.3*(h_err_final->GetMaximum()) );
 
 
         h_err_prior -> SetLineColor(kBlue);
@@ -186,59 +185,59 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
 
 
 
-    std::cout << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-    std::cout << "------------- Drawing pull -------------" << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-    std::cout << std::endl;
+    // std::cout << std::endl;
+    // std::cout << "----------------------------------------" << std::endl;
+    // std::cout << "------------- Drawing pull -------------" << std::endl;
+    // std::cout << "----------------------------------------" << std::endl;
+    // std::cout << std::endl;
 
-    // for(const auto& name : par_name)
-    for(int j = 0; j<Npar; j++)
-    {
-        name = par_name[j];
-        std::cout << "----- for " << name << " -----" << std::endl;
+    // // for(const auto& name : par_name)
+    // for(int j = 0; j<Npar; j++)
+    // {
+    //     name = par_name[j];
+    //     std::cout << "----- for " << name << " -----" << std::endl;
         
-        ss.str("");
-        ss << "hist_" << name << "_prior";
-        TH1D* h_pri = (TH1D*)file -> Get(ss.str().c_str());
+    //     ss.str("");
+    //     ss << "hist_" << name << "_prior";
+    //     TH1D* h_pri = (TH1D*)file -> Get(ss.str().c_str());
 
-        ss.str("");
-        ss << "hist_" << name << "_result";
-        TH1D* h_fin = (TH1D*)file -> Get(ss.str().c_str());
+    //     ss.str("");
+    //     ss << "hist_" << name << "_result";
+    //     TH1D* h_fin = (TH1D*)file -> Get(ss.str().c_str());
 
-        ss.str("");
-        ss << "hist_" << name << "_error_final";
-        TH1D* h_err_fin = (TH1D*)file -> Get(ss.str().c_str());
+    //     ss.str("");
+    //     ss << "hist_" << name << "_error_final";
+    //     TH1D* h_err_fin = (TH1D*)file -> Get(ss.str().c_str());
 
-        // Compute pull = (h_prior - h_final)/error_final
-        TH1D* h_pull = (TH1D*)h_pri -> Clone("h_pull");
+    //     // Compute pull = (h_prior - h_final)/error_final
+    //     TH1D* h_pull = (TH1D*)h_pri -> Clone("h_pull");
         
-        h_fin -> Scale(-1.);
-        h_pull  -> Add(h_fin);
-        h_pull  -> Divide(h_err_fin);
+    //     h_fin -> Scale(-1.);
+    //     h_pull  -> Add(h_fin);
+    //     h_pull  -> Divide(h_err_fin);
 
 
-        TCanvas *c = new TCanvas("c", "c", 1400, 900);
-        gStyle -> SetOptTitle(0);
-        // h_pull -> SetName("(par_prior - par_final) / err_final")
-        // h_pull -> SetTitle("(par_prior - par_final) / err_final;;")
+    //     TCanvas *c = new TCanvas("c", "c", 1400, 900);
+    //     gStyle -> SetOptTitle(0);
+    //     // h_pull -> SetName("(par_prior - par_final) / err_final")
+    //     // h_pull -> SetTitle("(par_prior - par_final) / err_final;;")
 
-        h_pull -> GetYaxis() -> SetRangeUser(-2.0, 2.0);
-        h_pull -> SetLineColor(kRed);
-        h_pull -> SetLineWidth(2);
+    //     h_pull -> GetYaxis() -> SetRangeUser(-2.0, 2.0);
+    //     h_pull -> SetLineColor(kRed);
+    //     h_pull -> SetLineWidth(2);
         
-        h_pull -> Draw("hist");
+    //     h_pull -> Draw("hist");
 
-        TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
-        legend -> SetFillColor(0);
-        legend -> AddEntry(h_pull, "Pull","l");
-        legend -> Draw();
+    //     TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
+    //     legend -> SetFillColor(0);
+    //     legend -> AddEntry(h_pull, "Pull","l");
+    //     legend -> Draw();
 
-        ss.str("");
-        ss << output_dir << name << "_pull_" << file_name_output << ".pdf";
-        c -> Print(ss.str().c_str());
-        delete c;
-    }
+    //     ss.str("");
+    //     ss << output_dir << name << "_pull_" << file_name_output << ".pdf";
+    //     c -> Print(ss.str().c_str());
+    //     delete c;
+    // }
 
     std::cout << std::endl;
 

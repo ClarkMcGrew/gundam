@@ -1,11 +1,11 @@
 {
     "files" : [
         {
-            "fname_input" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6B/output_run4a_mc_100toys.root",
+            "fname_input" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6B/output_run2to4_mc_100toys.root",
             "tree_name" : "all_syst",
             "detector": "FGD",
             "num_toys" : 100,
-            "num_syst" : 29,
+            "num_syst" : 27,
             "num_samples" : 33,
             "samples" : {"0": [1,2,3,4,5,9,10,11], "1": [6], "2": [7], "3": [8], "4": [12,13,14,15,16,20,21,22], "5": [17], "6": [18], "7": [19], "8": [23,24,25,26,27,31,32,33], "9": [28], "10": [29], "11": [30] },
             "sample_binning" : {
