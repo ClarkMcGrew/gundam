@@ -10,37 +10,39 @@
 // Compute the pull for each parameter
 void pull_study()
 {
+	std::cout << "------------------------" << std::endl;
+	std::cout << "----- Begin script -----" << std::endl;
+
 	plotStyle();
 
 	int ntoys = 100;
 	int nbins = 58;
 
 	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_onlyFitPar_toy";
+	//string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_AllPar_toy";
 
 
-	// Plot the pull distribution for each toy
-	// for(int toyi = 1; toyi <= ntoys; toyi++)
-	// {
-	// 	pull_of_one_toy(toyi, nbins, GenFilename);
-	// }
+	std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
 
-	// parameters_of_each_toy(ntoys, nbins, GenFilename);
+	//for(int toyi = 1; toyi <= ntoys; toyi++)
+	//{
+	//	pull_of_one_toy(toyi, nbins, GenFilename);
+	//}
+
+	//std::cout << "----- Plot the parameter values of each toy -----" << std::endl;
+
+	//parameters_of_each_toy(ntoys, nbins, GenFilename);
 
 
 	std::vector< Double_t > pull_and_sigma_in_bin_j;
-	// TH1D *h_pull_mean_O   = new TH1D("h_pull_mean_O", "Pull per oxygen parameters", nbins, 0, nbins);
-	// TH1D *h_pull_mean_C   = new TH1D("h_pull_mean_C", "Pull per carbon parameters", nbins, 0, nbins);
-	// TH1D *h_pull_sigma_O  = new TH1D("h_pull_sigma_O", "Pull width per oxygen parameters", nbins, 0, nbins);
-	// TH1D *h_pull_sigma_C  = new TH1D("h_pull_sigma_C", "Pull width per carbon parameters", nbins, 0, nbins);
-	// TH1D *h_pull_O        = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -5, 5);
-	// TH1D *h_pull_C        = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -5, 5);
-
 	TH1D *h_pull_mean   = new TH1D("h_pull_mean", "Template parameter pull", nbins, 0, nbins);
 	TH1D *h_pull_sigma  = new TH1D("h_pull_sigma", "Pull width", nbins, 0, nbins);
-	TH1D *h_pull_O        = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -2, 2);
-	TH1D *h_pull_C        = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -2, 2);
+	TH1D *h_pull_O        = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -2.5, 2.5);
+	TH1D *h_pull_C        = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -2.5, 2.5);
 
-	// Loop over the parameters
+
+	std::cout << "----- Loop over the parameters to compute the mean among toys -----" << std::endl;
+
 	for(int j = 1; j <= nbins; j++)
 	{
 		pull_and_sigma_in_bin_j = pull_of_one_bin(j, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
@@ -63,14 +65,14 @@ void pull_study()
 
 	}
 
-std::cout << "DEBUG 1" << std::endl;
+
+	std::cout << "----- Do a Gaussian fit -----" << std::endl;
 
 	h_pull_O -> Fit("gaus");
 	h_pull_C -> Fit("gaus");
 
 
-std::cout << "DEBUG 2" << std::endl;
-
+	std::cout << "----- Plot results -----" << std::endl;
 
 	TCanvas *c_pull_mean = new TCanvas("c_pull_mean","Parameter pull",900,500);
 	h_pull_mean -> SetTitle("Pull; Parameter number; ");
@@ -124,7 +126,9 @@ std::cout << "DEBUG 2" << std::endl;
 
 	c_pull_C -> Print("histos/pull_distribution_C.pdf");
 
-std::cout << "DEBUG 3" << std::endl;
+
+	std::cout << "----- End script -----" << std::endl;
+	std::cout << "----------------------" << std::endl;
 
 }
 
