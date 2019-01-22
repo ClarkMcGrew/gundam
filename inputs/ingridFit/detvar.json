@@ -1,7 +1,7 @@
 {
     "files" : [
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/highland_systematics.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/hl_files/fgd1/highland_systematics.root",
             "tree_name" : "all_syst",
             "detector": "FGD1",
             "num_toys" : 500,
@@ -21,7 +21,7 @@
             "use" : true
         },
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/highland_systematics.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/hl_files/fgd2/highland_systematics.root",
             "tree_name" : "all_syst",
             "detector": "FGD2",
             "num_toys" : 500,

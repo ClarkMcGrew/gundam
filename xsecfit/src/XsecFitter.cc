@@ -214,8 +214,14 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
 
     TMatrixDSym cor_matrix(ndim);
     for(int r = 0; r < ndim; ++r)
+    {
         for(int c = 0; c < ndim; ++c)
+        {
             cor_matrix[r][c] = cov_matrix[r][c] / std::sqrt(cov_matrix[r][r] * cov_matrix[c][c]);
+            if(std::isnan(cor_matrix[r][c]))
+                cor_matrix[r][c] = 0;
+        }
+    }
 
     TVectorD postfit_param(ndim, &par_val_vec[0]);
     std::vector<std::vector<double>> res_pars;

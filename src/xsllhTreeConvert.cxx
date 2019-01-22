@@ -329,10 +329,12 @@ int main(int argc, char** argv)
 
         int interaction_type, fsi_int;
         int muon_track, selected_sample;
+        int track_sample;
         float enu, event_weight;
         float pmu_true, angle_true;
         float pmu_reco, angle_reco;
         bool is_anti, is_nue;
+        bool new_event;
 
         ing_tree -> SetBranchAddress("InteractionType", &interaction_type);
         ing_tree -> SetBranchAddress("FSIInt", &fsi_int);
@@ -341,22 +343,27 @@ int main(int argc, char** argv)
         ing_tree -> SetBranchAddress("Enu", &enu);
         ing_tree -> SetBranchAddress("IsAnti", &is_anti);
         ing_tree -> SetBranchAddress("IsNuE", &is_nue);
+        ing_tree -> SetBranchAddress("NewEvent", &new_event);
         ing_tree -> SetBranchAddress("weight", &event_weight);
         ing_tree -> SetBranchAddress("TrueMomentumMuon", &pmu_true);
         ing_tree -> SetBranchAddress("TrueAngleMuon", &angle_true);
 
         const float deg_to_rad = TMath::Pi() / 180;
         const float iron_carbon_ratio = 7.640777;
+        int sample_track0, sample_track1, sample_track2;
         float iron_track0, plastic_track0, angle_track0;
         float iron_track1, plastic_track1, angle_track1;
         float iron_track2, plastic_track2, angle_track2;
 
+        ing_tree -> SetBranchAddress("Sample_track0", &sample_track0);
         ing_tree -> SetBranchAddress("TrackAngle_track0", &angle_track0);
         ing_tree -> SetBranchAddress("IronDistance_track0", &iron_track0);
         ing_tree -> SetBranchAddress("PlasticDistance_track0", &plastic_track0);
+        ing_tree -> SetBranchAddress("Sample_track2", &sample_track1);
         ing_tree -> SetBranchAddress("TrackAngle_track1", &angle_track1);
         ing_tree -> SetBranchAddress("IronDistance_track1", &iron_track1);
         ing_tree -> SetBranchAddress("PlasticDistance_track1", &plastic_track1);
+        ing_tree -> SetBranchAddress("Sample_track2", &sample_track2);
         ing_tree -> SetBranchAddress("TrackAngle_track2", &angle_track2);
         ing_tree -> SetBranchAddress("IronDistance_track2", &iron_track2);
         ing_tree -> SetBranchAddress("PlasticDistance_track2", &plastic_track2);
@@ -374,18 +381,22 @@ int main(int argc, char** argv)
                 case 0:
                     pmu_reco = iron_track0 + (plastic_track0 / iron_carbon_ratio);
                     angle_reco = angle_track0;
+                    track_sample = sample_track0;
                     break;
                 case 1:
                     pmu_reco = iron_track1 + (plastic_track1 / iron_carbon_ratio);
                     angle_reco = angle_track1;
+                    track_sample = sample_track1;
                     break;
                 case 2:
                     pmu_reco = iron_track2 + (plastic_track2 / iron_carbon_ratio);
                     angle_reco = angle_track2;
+                    track_sample = sample_track2;
                     break;
                 default:
                     pmu_reco = -999;
                     angle_reco = -999;
+                    track_sample = 0;
                     break;
             }
 
@@ -399,7 +410,7 @@ int main(int argc, char** argv)
             nutype = GetIngridNutype(is_anti, is_nue);
             topology = GetIngridTopology(fsi_int);
             reaction = GetIngridReaction(interaction_type);
-            target = 6;
+            target = 8;
 
             enu_true = enu;
             enu_reco = enu;
@@ -415,7 +426,7 @@ int main(int argc, char** argv)
             cut_branch = file.branch;
             weight = event_weight;
 
-            if(selected_sample == file.sample && pmu_true > 0.0)
+            if(selected_sample == file.sample && pmu_true > 0.0 && track_sample < 4)
                 out_seltree -> Fill();
 
             nutype_true = nutype;
@@ -425,7 +436,9 @@ int main(int argc, char** argv)
             cut_branch = file.branch * -1;
             weight_true = weight;
 
-            out_trutree -> Fill();
+            if(pmu_true > 0.0 && track_sample < 4)
+                out_trutree -> Fill();
+
             if(i % 2000 == 0 || i == (nevents-1))
                 pbar.Print(i, nevents-1);
         }

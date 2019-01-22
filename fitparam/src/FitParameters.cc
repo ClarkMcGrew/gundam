@@ -163,6 +163,7 @@ void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsampl
         std::cout << "Ev ST: " << event -> GetSignalType() << std::endl;
         std::cout << "Ev TP: " << event -> GetTopology() << std::endl;
         std::cout << "Ev TG: " << event -> GetTarget() << std::endl;
+        std::cout << "Ev CB: " << event -> GetSampleType() << std::endl;
         std::cout << "Bin  : " << bin << std::endl;
         std::cout << "Off  : " << m_sig_offset.at(event->GetSignalType()) << std::endl;
         */

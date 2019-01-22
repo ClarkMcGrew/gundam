@@ -165,7 +165,6 @@ int main(int argc, char** argv)
     sigfitpara.InitEventMap(samples, 0);
     fitpara.push_back(&sigfitpara);
 
-    /*
     FluxParameters fluxpara("par_flux");
     fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
     fluxpara.SetThrow(parser.flux_cov.do_throw);
@@ -178,6 +177,7 @@ int main(int argc, char** argv)
     fluxpara.InitEventMap(samples, 0);
     fitpara.push_back(&fluxpara);
 
+    /*
     XsecParameters xsecpara("par_xsec");
     xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
     xsecpara.SetThrow(parser.xsec_cov.do_throw);
@@ -219,13 +219,10 @@ int main(int argc, char** argv)
     xsecfit.InitFitter(fitpara);
     std::cout << TAG << "Fitter initialised." << std::endl;
 
-    /*
-    for(int i = 0; i < sigfitpara.GetNpar(); ++i)
-    {
-        xsecfit.FixParameter("par_fit_ND280_" + std::to_string(i), 1.0);
-        xsecfit.FixParameter("par_fit_INGRID_" + std::to_string(i), 1.0);
-    }
-    */
+    xsecfit.FixParameter("par_fit_sig1_0", 1.0);
+    xsecfit.FixParameter("par_fit_sig1_1", 1.0);
+    xsecfit.FixParameter("par_fit_sig1_6", 1.0);
+    xsecfit.FixParameter("par_fit_sig1_11", 1.0);
 
     if(!dry_run)
         xsecfit.Fit(samples, parser.fit_type, parser.stat_fluc);
