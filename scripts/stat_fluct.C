@@ -21,23 +21,32 @@ void stat_fluct()
 
 
 	Double_t fluct = 0;
-	TH1D *h_fluct   = new TH1D("h_fluct",   "Statistical fluctuations of parameters", nbins, 0, nbins);
+	Double_t Mean, Mean_err, Sigma, Sigma_err;
+	TH1D *h_fluct = new TH1D("h_fluct",  "Statistical fluctuations of parameters", nbins, 0, nbins);
+	TH1D *h_par   = new TH1D("h_par",    "Parameter values", nbins, 0, nbins);
 
 	// Loop over the bins
 	for(int j = 1; j <= nbins; j++)
 	{
-		fluct = stat_fluct_of_one_bin(j, ntoys, GenFilename);
-		h_fluct -> SetBinContent(j, fluct);
+		stat_fluct_of_one_bin(j, ntoys, GenFilename, Mean, Mean_err, Sigma, Sigma_err);
+		h_fluct -> SetBinContent(j, Sigma);
+		h_fluct -> SetBinError(j, Sigma_err);
+		h_par   -> SetBinContent(j, Mean);
+		h_par   -> SetBinError(j, Mean_err);
 	}
 
 
 	TCanvas *c_fluct = new TCanvas("c_fluct","Fluctuation of template parameters",1000,500);
 	c_fluct -> SetGrid();
-	h_fluct -> SetLineColor(kRed);
 	h_fluct -> SetStats(kFALSE);
 	h_fluct -> SetTitle("; Template parameters; Statistical fluctuation");
 
-	h_fluct -> Draw("hist");
+	h_fluct -> SetMarkerColor(kRed);
+	h_fluct -> SetMarkerStyle(kFullCircle);
+	h_fluct -> SetFillColor(kRed-9);
+	h_fluct -> SetFillStyle(3144);
+
+	h_fluct -> Draw("P E2");
 
 	// legend = new TLegend(0.63, 0.76, 0.87, 0.9);
 	// legend->SetFillColor(0);
@@ -60,7 +69,7 @@ void stat_fluct()
 
 
 // Compute the statistical fluctuation in one bin
-Double_t stat_fluct_of_one_bin(int bin, int Ntoys, string genFilename, bool draw_distr = 0)
+void stat_fluct_of_one_bin(int bin, int Ntoys, string genFilename, Double_t &mean, Double_t &mean_err, Double_t &sigma, Double_t &sigma_err, bool draw_distr = 0)
 {
 	string filename;
 	TFile *fin;
@@ -101,9 +110,9 @@ Double_t stat_fluct_of_one_bin(int bin, int Ntoys, string genFilename, bool draw
 	// Double_t sigma_err = fitfct->GetParError(2);
 
 	// Get mean and RMS values from histogram
-	Double_t mean      = h_param_values_in_bin -> GetMean();
+	         mean      = h_param_values_in_bin -> GetMean();
 	Double_t mean_err  = h_param_values_in_bin -> GetMeanError();
-	Double_t sigma     = h_param_values_in_bin -> GetRMS();
+	         sigma     = h_param_values_in_bin -> GetRMS();
 	Double_t sigma_err = h_param_values_in_bin -> GetRMSError();
 
 
@@ -122,7 +131,6 @@ Double_t stat_fluct_of_one_bin(int bin, int Ntoys, string genFilename, bool draw
 				<< " *** sigma = " << sigma << " +/- " << sigma_err << std::endl;
 
 	delete h_param_values_in_bin;
-	return sigma;
 }
 
 

@@ -18,8 +18,8 @@ void pull_study()
 	int ntoys = 100;
 	int nbins = 58;
 
-	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_onlyFitPar_toy";
-	//string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_AllPar_toy";
+	// string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_onlyFitPar_toy";
+	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_AllPar_toy";
 
 
 	std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
@@ -106,7 +106,7 @@ void pull_study()
 	legend->AddEntry(h_pull_sigma,"Pull sigma","p");
 	legend->Draw(); 
 
-	c_pull_mean -> Print("histos/pull_mean_and_sigma.pdf");
+	c_pull_mean -> Print("histos/pullstudy/pull_mean_and_sigma.pdf");
 
 
 	TCanvas *c_pull_O = new TCanvas("c_pull_O","Pull distribution for oxygen parameters",800,500);
@@ -116,7 +116,7 @@ void pull_study()
 	h_pull_O -> Draw();
 
 
-	c_pull_O -> Print("histos/pull_distribution_O.pdf");
+	c_pull_O -> Print("histos/pullstudy/pull_distribution_O.pdf");
 
 	TCanvas *c_pull_C = new TCanvas("c_pull_C","Pull distribution for carbon parameters",800,500);
 	h_pull_C -> SetTitle(" ; Pull distribution for carbon parameters; ");
@@ -124,7 +124,7 @@ void pull_study()
 
 	h_pull_C -> Draw();
 
-	c_pull_C -> Print("histos/pull_distribution_C.pdf");
+	c_pull_C -> Print("histos/pullstudy/pull_distribution_C.pdf");
 
 
 	std::cout << "----- End script -----" << std::endl;
@@ -181,19 +181,19 @@ std::vector< Double_t > pull_of_one_bin(int bin, int Ntoys, string genFilename, 
 		h_pull_values_in_bin -> SetTitle( Form("Pull distribution of parameter %d; Pull; ", bin-1) );
 		h_pull_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_pull_distribution -> Print( Form("histos/pull_distribution_of_param_%d.pdf", bin-1) );
+		c_pull_distribution -> Print( Form("histos/pullstudy/pull_distribution_of_param_%d.pdf", bin-1) );
 
 		TCanvas *c_param_distribution = new TCanvas("c_param_distribution", Form("Parameter c_%d distribution", bin-1),900,600);
 		h_param_values_in_bin -> SetTitle( Form("Parameter c_%d distribution; Parameter value; ", bin-1) );
 		h_param_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_param_distribution -> Print( Form("histos/param_distribution_%d.pdf", bin-1) );
+		c_param_distribution -> Print( Form("histos/pullstudy/param_distribution_%d.pdf", bin-1) );
 
 		TCanvas *c_paramerr_distribution = new TCanvas("c_paramerr_distribution", Form("Error on parameter c_%d distribution", bin-1),900,600);
 		h_paramerr_values_in_bin -> SetTitle( Form("Error on parameter c_%d distribution; Parameter error; ", bin-1) );
 		h_paramerr_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_paramerr_distribution -> Print( Form("histos/paramerr_distribution_%d.pdf", bin-1) );
+		c_paramerr_distribution -> Print( Form("histos/pullstudy/paramerr_distribution_%d.pdf", bin-1) );
 
 		// sleep(1);
 	}
@@ -253,7 +253,7 @@ void pull_of_one_toy(int toy, int Nbins, string genFilename)
 	h_pull_values -> SetTitle( Form("Pull distribution for toy %d; Pull; ", toy) );
 	h_pull_values -> Draw("hist");
 	// fitfct -> Draw("same");
-	c_pull_distribution -> Print( Form("histos/pull_distribution_for_toy_%d.pdf", toy) );
+	c_pull_distribution -> Print( Form("histos/pullstudy/pull_distribution_for_toy_%d.pdf", toy) );
 
 	sleep(1);
 
@@ -289,7 +289,7 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 
 		fin->Close();
 
-		TFile *outfile = new TFile("fitparam_for_each_toy.root", "UPDATE");
+		TFile *outfile = new TFile("outputs/fitparam_for_each_toy.root", "UPDATE");
 		if (outfile->IsOpen() ) printf("Output file opened successfully\n");
 		
 		h_param_toyi -> SetName(Form("param_for_toy_%d", toyi));
@@ -303,7 +303,7 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 		std::cout << "End of toy i = " << toyi << std::endl;
 	}
 	
-	TFile *param_file = new TFile("fitparam_for_each_toy.root", "READ");
+	TFile *param_file = new TFile("outputs/fitparam_for_each_toy.root", "READ");
 	
 	// Draw parameters
 	TCanvas *c_parameters = new TCanvas("c_parameters", "Parameters for each toy",2000,1200);
@@ -311,7 +311,7 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 	{
 		(TH1D*)param_file->Get(Form("param_for_toy_%d", toyi)) -> Draw("hist same");	
 	}
-	c_parameters -> Print("histos/parameters_for_each_toy.pdf");
+	c_parameters -> Print("histos/pullstudy/parameters_for_each_toy.pdf");
 
 }
 

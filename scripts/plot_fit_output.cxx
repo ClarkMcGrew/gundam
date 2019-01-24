@@ -11,12 +11,10 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
 
     const int Npar = 4;
     std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
-    // const int Npar = 2;
-    // std::string par_name[Npar] = {"par_fit", "par_xsec"};
     // const int Npar = 1;
     // std::string par_name[Npar] = {"par_fit"};
 
-    std::string output_dir = "../outputs/asimov/";
+    std::string output_dir = "histos/fitteroutput/asimov/";
 
     std::string name;
     std::stringstream ss;

@@ -91,7 +91,7 @@ public:
     }
 
 private:
-    void GenerateToyData(int toy_type, bool stat_fluc = false);
+    void GenerateToyData(bool stat_fluc = false);
     double FillSamples(std::vector<std::vector<double>>& new_pars, int datatype = 0);
     void SaveParams(const std::vector<std::vector<double>>& new_pars);
     void SaveEvents(int fititer);

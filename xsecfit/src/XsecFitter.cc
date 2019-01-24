@@ -177,7 +177,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     }
     else if(fit_type == kToyFit)
     {
-        GenerateToyData(0, stat_fluc);
+        GenerateToyData(stat_fluc);
     }
     else
     {
@@ -262,7 +262,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     std::cout << TAG << "Fit routine finished. Results saved." << std::endl;
 }
 
-void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
+void XsecFitter::GenerateToyData(bool stat_fluc)
 {
     double chi2_stat = 0.0;
     double chi2_syst = 0.0;
