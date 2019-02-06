@@ -85,6 +85,10 @@ protected:
     TH1D* m_hpred;
     TH1D* m_hdata;
     TH1D* m_hsig;
+    TH1D* m_hsig_true_C; //LM
+    TH1D* m_hsig_true_O; //LM
+    TH1D* m_hsig_pred_C; //LM
+    TH1D* m_hsig_pred_O; //LM
 
     const std::string TAG = color::GREEN_STR + "[AnaSample]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + "[ERROR]: " + color::RESET_STR;

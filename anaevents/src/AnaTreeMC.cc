@@ -64,6 +64,11 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
     long int nentries = fChain->GetEntries();
     long int nbytes   = 0;
 
+std::vector< double > NsignalEvents(3);
+NsignalEvents[0] = 0;
+NsignalEvents[1] = 0;
+NsignalEvents[2] = 0;
+
     std::cout << TAG << "Reading events...\n";
     for(long int jentry = 0; jentry < nentries; jentry++)
     {
@@ -110,6 +115,7 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
             {
                 ev.SetSignalType(signal_type);
                 ev.SetSignalEvent();
+                NsignalEvents[signal_type]++;
                 break;
             }
             signal_type++;
@@ -123,7 +129,13 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
 
         if(jentry % 2000 == 0 || jentry == (nentries - 1))
             pbar.Print(jentry, nentries - 1);
+
+        // ev.Print();
     }
+
+    std::cout << "*****LM DEBUG : NsignalEvents[0] = " << NsignalEvents[0]
+                          << ", NsignalEvents[1] = " << NsignalEvents[1] 
+                          << ", NsignalEvents[2] = " << NsignalEvents[2] << std::endl;
 
     for(auto& sample : ana_samples)
         sample->PrintStats();

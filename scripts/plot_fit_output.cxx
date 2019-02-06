@@ -3,21 +3,24 @@
 // .L plot_fit_output.cxx
 // plot_fit_output("input.root", "out_name")
 
-void plot_fit_output(const std::string& file_name_input, const std::string& file_name_output)
+void plot_fit_output(const std::string& file_name)
 {
     gStyle -> SetOptStat(0);
+
+    const std::string output_dir = "histos/fitteroutput/asimov/";
+    const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());
+
+    std::string name;
+    std::stringstream ss;
+
 
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
     const int Npar = 4;
     std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
+    //std::string par_name[Npar] = {"par_fit", "par_xsec"};
     // const int Npar = 1;
     // std::string par_name[Npar] = {"par_fit"};
-
-    std::string output_dir = "histos/fitteroutput/asimov/";
-
-    std::string name;
-    std::stringstream ss;
 
     // std::cout << std::endl;
     // std::cout << "-------------------------------------------" << std::endl;
@@ -59,7 +62,7 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
     //     legend -> Draw();
 
     //     ss.str("");
-    //     ss << output_dir << name << "_results_" << file_name_output << ".pdf";
+    //     ss << output_dir << name << "_results_" << file_name << ".pdf";
     //     c -> Print(ss.str().c_str());
     //     delete c;
     // }
@@ -108,7 +111,7 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
         legend -> Draw();
 
         ss.str("");
-        ss << output_dir << name << "_errors_" << file_name_output << ".pdf";
+        ss << output_dir << name << "_errors_" << file_name << ".pdf";
         c -> Print(ss.str().c_str());
         delete c;
     }
@@ -167,6 +170,9 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
         h_prior -> Draw("P E2");
         h_final -> Draw("P E2 same");
 
+        if(name == "par_xsec") // for xsec parameters
+            gPad->SetLogy();
+
         TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
         legend -> SetFillColor(0);
         legend -> AddEntry(h_prior, "Prior","p");
@@ -174,7 +180,7 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
         legend -> Draw();
 
         ss.str("");
-        ss << output_dir << name << "_overlay_" << file_name_output << ".pdf";
+        ss << output_dir << name << "_overlay_" << file_name << ".pdf";
         c -> Print(ss.str().c_str());
         delete c;
     }
@@ -232,11 +238,67 @@ void plot_fit_output(const std::string& file_name_input, const std::string& file
     //     legend -> Draw();
 
     //     ss.str("");
-    //     ss << output_dir << name << "_pull_" << file_name_output << ".pdf";
+    //     ss << output_dir << name << "_pull_" << file_name << ".pdf";
     //     c -> Print(ss.str().c_str());
     //     delete c;
     // }
 
+
+
+
+
+
+    std::cout << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "------------- Drawing chi2 -------------" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << std::endl;
+    
+    
+    TH1D* h_chi2_stat = (TH1D*)file -> Get("chi2_stat_periter");
+    TH1D* h_chi2_sys  = (TH1D*)file -> Get("chi2_sys_periter");
+    TH1D* h_chi2_reg  = (TH1D*)file -> Get("chi2_reg_periter");
+    TH1D* h_chi2_tot  = (TH1D*)file -> Get("chi2_tot_periter");
+
+    TCanvas *c = new TCanvas("c", "c", 1400, 900);
+    gStyle -> SetOptTitle(0);
+
+    // gPad->SetLogy();
+
+    h_chi2_stat -> SetLineColor(kBlue+1);
+    h_chi2_sys  -> SetLineColor(kRed+1);
+    h_chi2_reg  -> SetLineColor(kGreen+2);
+    h_chi2_tot  -> SetLineColor(kBlack);
+    h_chi2_tot  -> SetLineWidth(2);
+
+    double max = h_chi2_stat->GetMaximum();
+    double min = h_chi2_sys->GetMinimum();
+    std::cout << "min = " << min << ", max = " << max << std::endl;
+
+    h_chi2_stat-> GetYaxis() -> SetRangeUser(1.1*min, 1.1*max);
+    h_chi2_sys -> GetYaxis() -> SetRangeUser(1.1*min, 1.1*max);
+    h_chi2_tot -> GetYaxis() -> SetRangeUser(1.1*min, 1.1*max);
+
+    h_chi2_stat -> Draw("hist");
+    h_chi2_sys  -> Draw("hist same");
+    // h_chi2_reg  -> Draw("hist same");
+    h_chi2_tot  -> Draw("hist same");
+
+    TLegend* legend = new TLegend(0.55,0.75,0.9,0.9);
+    legend -> SetFillColor(0);
+    legend -> AddEntry(h_chi2_stat, "chi2 stat","l");
+    legend -> AddEntry(h_chi2_sys , "chi2 sys","l");
+    // legend -> AddEntry(h_chi2_reg , "chi2 reg","l");
+    legend -> AddEntry(h_chi2_tot , "chi2 total","l");
+    legend -> Draw();
+
+    ss.str("");
+    ss << output_dir << "chi2_" << file_name << ".pdf";
+    c -> Print(ss.str().c_str());
+    // delete c;
+    
+
+    std::cout << "----------------------------------------" << std::endl;
     std::cout << std::endl;
 
 }

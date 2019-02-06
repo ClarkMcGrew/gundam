@@ -7,7 +7,7 @@
 
     "highland_files" : [
         {
-            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6B/output_run4a_mc_100toys.root",
+            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6B/output_run4a_mc_500toys.root",
             "file_id" : 0,
             "sel_tree" : "default",
             "tru_tree" : "truth",

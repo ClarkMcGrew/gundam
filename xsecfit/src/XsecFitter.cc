@@ -106,7 +106,8 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     m_fcn    = new ROOT::Math::Functor(this, &XsecFitter::CalcLikelihood, m_npar);
 
     m_fitter->SetFunction(*m_fcn);
-    m_fitter->SetPrintLevel(2);
+    m_fitter->SetPrintLevel(2); //Orig 
+    // m_fitter->SetPrintLevel(3); //LM
     m_fitter->SetMaxIterations(1E6);
     m_fitter->SetMaxFunctionCalls(1E9);
     m_fitter->SetTolerance(1E-4);
@@ -384,9 +385,12 @@ double XsecFitter::CalcLikelihood(const double* par)
         {
             std::cout << TAG << "Chi2 contribution from " << m_fitpara[i]->GetName() << " is "
                       << m_fitpara[i]->GetChi2(vec) << std::endl;
+
         }
     }
-
+    if(chi2_sys<0)
+        std::cout << WAR << "NEGATIVE chi2 sys = " << chi2_sys << std::endl;
+            
     double chi2_stat = FillSamples(new_pars, kMC);
     vec_chi2_stat.push_back(chi2_stat);
     vec_chi2_sys.push_back(chi2_sys);
@@ -441,11 +445,12 @@ void XsecFitter::SaveFinalEvents(int fititer, std::vector<std::vector<double>>& 
             topology  = ev->GetTopology();
             reaction  = ev->GetReaction();
             target    = ev->GetTarget();
+            fgdtarget = ev->GetFgdTarget();
             nutype    = ev->GetFlavor();
             D1Reco    = ev->GetRecoD1();
             D2Reco    = ev->GetRecoD2();
             weightNom = (ev->GetEvWght()) * (ev->GetEvWghtMC());
-            weightMC  = ev->GetEvWghtMC();
+            weightMC  = ev->GetEvWghtMC(); // input weights
             weight    = ev->GetEvWght() * m_potratio;
             outtree->Fill();
         }

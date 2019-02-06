@@ -94,12 +94,6 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
         {
             AnaEvent* ev = sample[s] -> GetEvent(i);
 
-            // SIGNAL DEFINITION TIME
-            // Warning, important hard coding up ahead:
-            // This is where your signal is actually defined, i.e. what you want to extract an xsec for
-            // N.B In Sara's original code THIS WAS THE OTHER WAY AROUND i.e. this if statement asked what was NOT your signal
-            // Bare that in mind if you've been using older versions of the fitter.
-
             if(ev -> isSignalEvent())
             {
                 double D1 = ev -> GetTrueD1();

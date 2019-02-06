@@ -67,6 +67,7 @@ public:
     Int_t topology;
     Int_t reaction;
     Int_t target;
+    Int_t fgdtarget;
     Float_t D1Reco;
     Float_t D2Reco;
     Float_t weight;
@@ -76,18 +77,19 @@ public:
     void InitOutputTree()
     {
         // Set branches
-        outtree->Branch("nutype", &nutype, "nutype/I");
-        outtree->Branch("reaction", &reaction, "reaction/I");
-        outtree->Branch("target", &target, "target/I");
-        outtree->Branch("sample", &sample, "cutBranch/I");
-        outtree->Branch("topology", &topology, "topology/I");
-        outtree->Branch("D1True", &D1true, ("D1True/F"));
-        outtree->Branch("D1Reco", &D1Reco, ("D1Rec/F"));
-        outtree->Branch("D2True", &D2true, ("D2True/F"));
-        outtree->Branch("D2Reco", &D2Reco, ("D2Rec/F"));
-        outtree->Branch("weight", &weight, "weight/F");
-        outtree->Branch("weightNom", &weightNom, "weightNom/F");
-        outtree->Branch("weightMC", &weightMC, "weightMC/F");
+        outtree->Branch("nutype",   &nutype,    "nutype/I");
+        outtree->Branch("reaction", &reaction,  "reaction/I");
+        outtree->Branch("target",   &target,    "target/I");
+        outtree->Branch("fgdtarget",&fgdtarget, "fgdtarget/I");
+        outtree->Branch("sample",   &sample,    "cutBranch/I");
+        outtree->Branch("topology", &topology,  "topology/I");
+        outtree->Branch("D1True",   &D1true,   ("D1True/F"));
+        outtree->Branch("D1Reco",   &D1Reco,   ("D1Rec/F"));
+        outtree->Branch("D2True",   &D2true,   ("D2True/F"));
+        outtree->Branch("D2Reco",   &D2Reco,   ("D2Rec/F"));
+        outtree->Branch("weight",   &weight,    "weight/F");
+        outtree->Branch("weightNom",&weightNom, "weightNom/F");
+        outtree->Branch("weightMC", &weightMC,  "weightMC/F");
     }
 
 private:
@@ -122,5 +124,6 @@ private:
 
     const std::string TAG = color::YELLOW_STR + "[XsecFitter]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + color::BOLD_STR + "[ERROR]: " + color::RESET_STR;
+    const std::string WAR = color::RED_STR + "[WARNING]: " + color::RESET_STR;
 };
 #endif

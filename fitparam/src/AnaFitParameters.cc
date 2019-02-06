@@ -57,10 +57,14 @@ void AnaFitParameters::SetCovarianceMatrix(const TMatrixDSym& covmat, bool decom
     double det = 0;
     TDecompLU inv_test;
     TMatrixD inv_matrix(*covariance);
+    TMatrixD product_matrix(*covariance);
     if(inv_test.InvertLU(inv_matrix, 1E-48, &det))
     {
         covarianceI->SetMatrixArray(inv_matrix.GetMatrixArray());
         std::cout << TAG << "Covariance matrix inverted successfully." << std::endl;
+        // std::cout << TAG << "Covariance * InvCovariance = " << std::endl;
+        // product_matrix.Mult(*covariance,*covarianceI);
+        // product_matrix.Print();
     }
     else
     {
@@ -97,8 +101,7 @@ double AnaFitParameters::GetChi2(const std::vector<double>& params) const
     {
         for(int j = 0; j < covarianceI->GetNrows(); j++)
         {
-            chi2
-                += (params[i] - pars_prior[i]) * (params[j] - pars_prior[j]) * (*covarianceI)(i, j);
+            chi2 += (params[i] - pars_prior[i]) * (params[j] - pars_prior[j]) * (*covarianceI)(i, j);
         }
     }
 

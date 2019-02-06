@@ -23,11 +23,15 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
                   << std::endl;
     }
 
-    m_hpred    = nullptr;
-    m_hmc      = nullptr;
-    m_hmc_true = nullptr;
-    m_hsig     = nullptr;
-    m_hdata    = nullptr;
+    m_hpred       = nullptr;
+    m_hmc         = nullptr;
+    m_hmc_true    = nullptr;
+    m_hsig        = nullptr;
+    m_hsig_true_C = nullptr;
+    m_hsig_true_O = nullptr;
+    m_hsig_pred_C = nullptr;
+    m_hsig_pred_O = nullptr;
+    m_hdata       = nullptr;
 
     MakeHistos(); // with default binning
 
@@ -46,6 +50,14 @@ AnaSample::~AnaSample()
         delete m_hdata;
     if(m_hsig != nullptr)
         delete m_hsig;
+    if(m_hsig_true_C != nullptr)
+        delete m_hsig_true_C;
+    if(m_hsig_true_O != nullptr)
+        delete m_hsig_true_O;
+    if(m_hsig_pred_C != nullptr)
+        delete m_hsig_pred_C;
+    if(m_hsig_pred_O != nullptr)
+        delete m_hsig_pred_O;
 }
 
 void AnaSample::SetBinning(const std::string& binning)
@@ -143,6 +155,30 @@ void AnaSample::MakeHistos()
                       Form("%s_mc_trueSignal", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hsig->SetDirectory(0);
 
+    if(m_hsig_true_C != nullptr)
+        delete m_hsig_true_C;
+    m_hsig_true_C = new TH1D(Form("%s_mc_trueSignal_C", m_name.c_str()),
+                             Form("%s_mc_trueSignal_C", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hsig_true_C->SetDirectory(0);
+
+    if(m_hsig_pred_C != nullptr)
+        delete m_hsig_pred_C;
+    m_hsig_pred_C = new TH1D(Form("%s_mc_recoSignal_C", m_name.c_str()),
+                             Form("%s_mc_recoSignal_C", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hsig_pred_C->SetDirectory(0);
+
+    if(m_hsig_true_O != nullptr)
+        delete m_hsig_true_O;
+    m_hsig_true_O = new TH1D(Form("%s_mc_trueSignal_O", m_name.c_str()),
+                             Form("%s_mc_trueSignal_O", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hsig_true_O->SetDirectory(0);
+
+    if(m_hsig_pred_O != nullptr)
+        delete m_hsig_pred_O;
+    m_hsig_pred_O = new TH1D(Form("%s_mc_recoSignal_O", m_name.c_str()),
+                             Form("%s_mc_recoSignal_O", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hsig_pred_O->SetDirectory(0);
+
     std::cout << TAG << m_nbins << " bins inside MakeHistos()." << std::endl;
 }
 
@@ -178,6 +214,14 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         m_hmc_true->Reset();
     if(m_hsig != nullptr)
         m_hsig->Reset();
+    if(m_hsig_true_C != nullptr)
+        m_hsig_true_C->Reset();
+    if(m_hsig_true_O != nullptr)
+        m_hsig_true_O->Reset();
+    if(m_hsig_pred_C != nullptr)
+        m_hsig_pred_C->Reset();
+    if(m_hsig_pred_O != nullptr)
+        m_hsig_pred_O->Reset();
 
     for(std::size_t i = 0; i < m_events.size(); ++i)
     {
@@ -187,20 +231,44 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         double D2_true = m_events[i].GetTrueD2();
         double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
 
-        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
+        int anybin_index_rec  = GetBinIndex(D1_rec,  D2_rec);
         int anybin_index_true = GetBinIndex(D1_true, D2_true);
 
-        m_hpred->Fill(anybin_index_rec + 0.5, wght);
-        m_hmc->Fill(anybin_index_rec + 0.5, wght);
-        m_hmc_true->Fill(anybin_index_true + 0.5, wght);
+        m_hpred    -> Fill(anybin_index_rec  + 0.5, wght);
+        m_hmc      -> Fill(anybin_index_rec  + 0.5, wght);
+        m_hmc_true -> Fill(anybin_index_true + 0.5, wght);
 
         if(m_events[i].isSignalEvent())
-            m_hsig->Fill(anybin_index_true + 0.5, wght);
+        {
+            m_hsig -> Fill(anybin_index_true + 0.5, wght);
+
+            if(m_events[i].GetSignalType() == 0)
+            {
+                m_hsig_pred_C -> Fill(anybin_index_rec  + 0.5, wght);
+                m_hsig_true_C -> Fill(anybin_index_true + 0.5, wght);
+            }
+            else if(m_events[i].GetSignalType() == 1)
+            {
+                m_hsig_pred_O -> Fill(anybin_index_rec  + 0.5, wght);
+                m_hsig_true_O -> Fill(anybin_index_true + 0.5, wght);
+            }
+            else
+            {
+                std::cerr << "[ERROR]: In AnaSample::FillEventHist()\n"
+                          << "[ERROR]: Signal definition has more than 2 elements."
+                          << "[ERROR]: This part is hard-coded and need some changes." << std::endl;
+            }
+        }
+
     }
 
-    m_hpred->Scale(m_norm);
-    m_hmc->Scale(m_norm);
-    m_hsig->Scale(m_norm);
+    m_hpred       -> Scale(m_norm);
+    m_hmc         -> Scale(m_norm);
+    m_hsig        -> Scale(m_norm);
+    m_hsig_true_C -> Scale(m_norm);
+    m_hsig_true_O -> Scale(m_norm);
+    m_hsig_pred_C -> Scale(m_norm);
+    m_hsig_pred_O -> Scale(m_norm);
     
     if(datatype == 0 || datatype == -1)
         return;
@@ -347,13 +415,19 @@ double AnaSample::CalcChi2() const
 void AnaSample::Write(TDirectory* dirout, const std::string& bsname, int fititer)
 {
     dirout->cd();
-    m_hpred->Write(Form("%s_pred", bsname.c_str()));
-    m_hmc_true->Write(Form("%s_true", bsname.c_str()));
+
+    m_hpred       -> Write(Form("%s_pred",   bsname.c_str()));
+    m_hsig_pred_C -> Write(Form("%s_pred_C", bsname.c_str()));
+    m_hsig_pred_O -> Write(Form("%s_pred_O", bsname.c_str()));
+    m_hmc_true    -> Write(Form("%s_true",   bsname.c_str()));
+    m_hsig_true_C -> Write(Form("%s_true_C", bsname.c_str()));
+    m_hsig_true_O -> Write(Form("%s_true_O", bsname.c_str()));
+    
     if(fititer == 0)
     {
-        m_hmc->Write(Form("%s_mc", bsname.c_str()));
+        m_hmc         -> Write(Form("%s_mc",   bsname.c_str()));
         if(m_hdata != nullptr)
-            m_hdata->Write(Form("%s_data", bsname.c_str()));
+            m_hdata -> Write(Form("%s_data", bsname.c_str()));
     }
 }
 
