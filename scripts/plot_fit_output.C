@@ -1,9 +1,8 @@
 // Usage :
-// root
-// .L plot_fit_output.cxx
-// plot_fit_output("fit1_statFluc")
+// root 'plot_fit_output.C("fit1_statFluc")'
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 void plot_fit_output(const std::string& file_name = "fit1_statFluc")
 {
