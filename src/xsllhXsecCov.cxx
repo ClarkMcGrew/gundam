@@ -175,6 +175,12 @@ int main(int argc, char** argv)
         std::string name = matrix_name + "_cov";
         xsec_cov.Write(name.c_str());
     }
+    else
+    {
+        std::cout << TAG << "!!! Matrix is NOT invertible !!!" << std::endl;
+        std::string name = matrix_name + "_cov";
+        xsec_cov.Write(name.c_str());
+    }
 
     if(do_correlation)
     {

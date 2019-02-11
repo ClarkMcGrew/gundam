@@ -128,9 +128,12 @@ void DrawDetCov(	int NsamplesTot = 24,
 	// }
 
 	//=== Draw correlation matrix
-	TCanvas *c3 = new TCanvas("c3","c3",1000,900);
+	// TCanvas *c3 = new TCanvas("c3","c3",1000,900);
+	TCanvas *c3 = new TCanvas("c3","c3",700,600);
 	c3 -> Draw();
 	cor_mat -> Draw("colz");
+
+	// cor_mat -> SetMinimum(-1);
 
 	for(int il=0; il<Nsamples; il++) orline[il]  -> Draw();
 	for(int il=0; il<Nsamples; il++) verline[il] -> Draw();
@@ -141,5 +144,6 @@ void DrawDetCov(	int NsamplesTot = 24,
 
 	c2->Print("plots/covariancematrices/DetCovMatrix.pdf");
 	c3->Print("plots/covariancematrices/DetCorrMatrix.pdf");
+	c3->Print("plots/covariancematrices/DetCorrMatrix.png");
 
 }

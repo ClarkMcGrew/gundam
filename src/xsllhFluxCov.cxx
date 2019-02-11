@@ -96,7 +96,7 @@ int main(int argc, char** argv)
     TAxis *axis_bins = (TAxis*)in_file -> Get(input_bin_name.c_str());
     const unsigned int nbins = axis_bins -> GetNbins();
     
-    std::cout << TAG << "Number of bins :" << nbins << std::endl;
+    std::cout << TAG << "Number of bins : " << nbins << std::endl;
 
     // Get bin edges and store them into an array
     TArrayD root_array = *(axis_bins -> GetXbins());
@@ -116,8 +116,8 @@ int main(int argc, char** argv)
         for(int j=0; j<nbins; j++)
             flux_cov(i,j) = (*flux_cov_tot)(i,j);
     
-    std::cout << TAG << "Total covariance matrix dimension :" << flux_cov_tot -> GetNcols() <<"x" << flux_cov_tot -> GetNcols() << std::endl;
-    std::cout << TAG << "Covariance submatrix dimension :" << flux_cov.GetNcols() <<"x" << flux_cov.GetNcols() << std::endl;
+    std::cout << TAG << "Total covariance matrix dimension : " << flux_cov_tot -> GetNcols() <<"x" << flux_cov_tot -> GetNcols() << std::endl;
+    std::cout << TAG << "Covariance submatrix dimension : " << flux_cov.GetNcols() <<"x" << flux_cov.GetNcols() << std::endl;
 
 
 

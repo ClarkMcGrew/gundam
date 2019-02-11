@@ -8,7 +8,7 @@ void plot_fit_output(const std::string& file_name = "fit1_statFluc")
 {
     gStyle -> SetOptStat(0);
 
-    const std::string output_dir = "histos/fitteroutput/asimov/";
+    const std::string output_dir = "plots/fitteroutput/asimov/";
     const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());
 
     std::string name;
@@ -17,9 +17,10 @@ void plot_fit_output(const std::string& file_name = "fit1_statFluc")
 
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
-    const int Npar = 4;
-    std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
-    //std::string par_name[Npar] = {"par_fit", "par_xsec"};
+    // const int Npar = 4;
+    // std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
+    const int Npar = 2;
+    std::string par_name[Npar] = {"par_fit", "par_xsec"};
     // const int Npar = 1;
     // std::string par_name[Npar] = {"par_fit"};
 

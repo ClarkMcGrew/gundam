@@ -106,11 +106,12 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     m_fcn    = new ROOT::Math::Functor(this, &XsecFitter::CalcLikelihood, m_npar);
 
     m_fitter->SetFunction(*m_fcn);
-    m_fitter->SetPrintLevel(2); //Orig 
-    // m_fitter->SetPrintLevel(3); //LM
+    // m_fitter->SetPrintLevel(2); //Orig 
+    m_fitter->SetPrintLevel(3); //LM
     m_fitter->SetMaxIterations(1E6);
     m_fitter->SetMaxFunctionCalls(1E9);
-    m_fitter->SetTolerance(1E-4);
+    m_fitter->SetTolerance(1E-4); //Orig
+    // m_fitter->SetTolerance(1E-3); //LM
 
     for(int i = 0; i < m_npar; ++i)
     {

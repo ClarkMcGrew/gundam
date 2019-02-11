@@ -172,16 +172,18 @@ int main(int argc, char** argv)
 
     //Flux parameters
     FluxParameters fluxpara("par_flux");
-    fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
-    fluxpara.SetThrow(parser.flux_cov.do_throw);
-    fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
-    for(const auto& opt : parser.detectors)
-    {
-        if(opt.use_detector)
-            fluxpara.AddDetector(opt.name, enubins);
-    }
     if(parser.use_flux_param)
     {
+        fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
+        fluxpara.SetThrow(parser.flux_cov.do_throw);
+        fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                fluxpara.AddDetector(opt.name, enubins);
+        }
+    // if(parser.use_flux_param)
+    // {
         std::cout << TAG << "Adding flux parameters." << std::endl;
         fluxpara.InitEventMap(samples, 0);
         fitpara.push_back(&fluxpara);
@@ -190,15 +192,17 @@ int main(int argc, char** argv)
 
     //Xsec model parameters
     XsecParameters xsecpara("par_xsec");
-    xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
-    xsecpara.SetThrow(parser.xsec_cov.do_throw);
-    for(const auto& opt : parser.detectors)
-    {
-        if(opt.use_detector)
-            xsecpara.AddDetector(opt.name, opt.xsec);
-    }
     if(parser.use_xsec_param)
     {
+        xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+        xsecpara.SetThrow(parser.xsec_cov.do_throw);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                xsecpara.AddDetector(opt.name, opt.xsec);
+        }
+    // if(parser.use_xsec_param)
+    // {
         std::cout << TAG << "Adding xsec model parameters." << std::endl;
         xsecpara.InitEventMap(samples, 0);
         fitpara.push_back(&xsecpara);
@@ -213,16 +217,18 @@ int main(int argc, char** argv)
     file_detcov -> Close();
 
     DetParameters detpara("par_det");
-    detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
-    detpara.SetThrow(parser.det_cov.do_throw);
-    detpara.SetInfoFrac(parser.det_cov.info_frac);
-    for(const auto& opt : parser.detectors)
-    {
-        if(opt.use_detector)
-            detpara.AddDetector(opt.name, samples, true);
-    }
     if(parser.use_det_param)
     {
+        detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
+        detpara.SetThrow(parser.det_cov.do_throw);
+        detpara.SetInfoFrac(parser.det_cov.info_frac);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                detpara.AddDetector(opt.name, samples, true);
+        }
+    // if(parser.use_det_param)
+    // {
         std::cout << TAG << "Adding detector parameters." << std::endl;
         detpara.InitEventMap(samples, 0);
         fitpara.push_back(&detpara);

@@ -8,7 +8,7 @@
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.43,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/maccqe_splines.root",
             "use" : true
         },
@@ -18,7 +18,7 @@
             "step" : 0.05,
             "limit_lo" : 200.02,
             "limit_hi" : 274.99,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/pf_c_splines.root",
             "use" : true
         },
@@ -28,7 +28,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/mec_c_splines.root",
             "use" : true
         },
@@ -38,7 +38,7 @@
             "step" : 0.05,
             "limit_lo" : 12.01,
             "limit_hi" : 41.98,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/eb_c_splines.root",
             "use" : true
         },
@@ -48,7 +48,7 @@
             "step" : 0.05,
             "limit_lo" : 200.01,
             "limit_hi" : 274.98,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/pf_o_splines.root",
             "use" : true
         },
@@ -58,7 +58,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/mec_o_splines.root",
             "use" : true
         },
@@ -68,7 +68,7 @@
             "step" : 0.05,
             "limit_lo" : 12.0,
             "limit_hi" : 42.0,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/eb_o_splines.root",
             "use" : true
         },
@@ -78,7 +78,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/mec_shape_o_splines.root",
             "use" : true
         },
@@ -88,7 +88,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/mec_shape_c_splines.root",
             "use" : true
         },
@@ -98,7 +98,7 @@
             "step" : 0.05,
             "limit_lo" : 0.53,
             "limit_hi" : 1.49,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/ca5_splines.root",
             "use" : true
         },
@@ -108,7 +108,7 @@
             "step" : 0.05,
             "limit_lo" : 0.53,
             "limit_hi" : 1.37,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/manffres_splines.root",
             "use" : true
         },
@@ -118,7 +118,7 @@
             "step" : 0.05,
             "limit_lo" : 0.04,
             "limit_hi" : 2.56,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/bgres_splines.root",
             "use" : true
         },
@@ -128,7 +128,7 @@
             "step" : 0.05,
             "limit_lo" : 0.91,
             "limit_hi" : 1.09,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/ccnue_splines.root",
             "use" : true
         },
@@ -138,7 +138,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 2.20,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/dis_splines.root",
             "use" : true
         },
@@ -148,7 +148,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/cccoh_o_splines.root",
             "use" : true
         },
@@ -158,7 +158,7 @@
             "step" : 0.05,
             "limit_lo" : 0.01,
             "limit_hi" : 4.00,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/ncother_splines.root",
             "use" : true
         },
@@ -168,7 +168,7 @@
             "step" : 0.05,
             "limit_lo" : 0.58,
             "limit_hi" : 2.23,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_inel_lo_splines.root",
             "use" : true
         },
@@ -178,7 +178,7 @@
             "step" : 0.05,
             "limit_lo" : 0.68,
             "limit_hi" : 2.33,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_pi_abs_splines.root",
             "use" : true
         },
@@ -188,7 +188,7 @@
             "step" : 0.05,
             "limit_lo" : 0.58,
             "limit_hi" : 2.71,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_cex_lo_splines.root",
             "use" : true
         },
@@ -198,7 +198,7 @@
             "step" : 0.05,
             "limit_lo" : 0.58,
             "limit_hi" : 2.50,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_pi_prod_splines.root",
             "use" : true
         },
@@ -208,7 +208,7 @@
             "step" : 0.05,
             "limit_lo" : 1.38,
             "limit_hi" : 2.82,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_inel_hi_splines.root",
             "use" : true
         },
@@ -218,7 +218,7 @@
             "step" : 0.05,
             "limit_lo" : 1.38,
             "limit_hi" : 2.64,
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "splines" : "splines/fsi_cex_hi_splines.root",
             "use" : true
         }
