@@ -67,6 +67,13 @@
     ],
     "samples" : [
         {
+            "cut_branch" : -1,
+            "name" : "truth",
+            "detector" : "ND280",
+            "binning" : "tn338_binning.txt",
+            "use_sample" : true
+        },
+        {
             "cut_branch" : 0,
             "name" : "FGD1muTPC",
             "detector" : "ND280",
