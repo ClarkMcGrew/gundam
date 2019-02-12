@@ -20,8 +20,8 @@ XsecCalc::XsecCalc(const std::string& json_config)
     std::string input_dir
         = std::string(std::getenv("XSLLHFITTER")) + j["input_dir"].get<std::string>();
 
-    input_file = input_dir + j["input_fit_file"].get<std::string>();
-    output_file = j["output_file"].get<std::string>();
+    input_file  = input_dir + j["input_fit_file"].get<std::string>();
+    output_file = input_dir + j["output_file"].get<std::string>();
     //extra_hists = input_dir + j["extra_hists"].get<std::string>();
 
     extra_hists = j.value("extra_hists", "");

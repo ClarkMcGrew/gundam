@@ -1,7 +1,7 @@
 {
     "input_dir" : "/outputs/",
     "input_fit_file" : "fit1_test.root",
-    "output_file" : "xsec.root",
+    "output_file" : "outputs/xsec.root",
     "extra_hists" : "extra_hists.txt",
     "num_toys" : 500,
     "rng_seed" : 12257,
