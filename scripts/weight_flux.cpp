@@ -1,10 +1,10 @@
-void weight_flux(const std::string& flux_path)
+void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av2/")
 {
-    const double run2_pot = 0.079263;
+    const double run2_pot  = 0.079263;
     const double run3b_pot = 0.021727;
     const double run3c_pot = 0.136447;
-    const double run4_pot = 0.342548;
-    const double total = run2_pot + run3b_pot + run3c_pot + run4_pot;
+    const double run4_pot  = 0.342548;
+    const double total     = run2_pot + run3b_pot + run3c_pot + run4_pot;
 
     std::cout << "POT Info (10^21)" << std::endl;
     std::cout << "Run2 : " << run2_pot << std::endl;
@@ -38,7 +38,7 @@ void weight_flux(const std::string& flux_path)
     h_flux_total_numu -> Add(h_flux_run3c);
     h_flux_total_numu -> Add(h_flux_run4);
 
-    TH1D* h_flux_nom_numu = nullptr;
+    TH1D* h_flux_nom_numu;
 
     //const unsigned int nbins = 11;
     //double flux_bins[nbins+1] = {0.0, 0.4, 0.5, 0.6, 0.7, 1.0, 1.5, 2.5, 3.5, 5.0, 7.0, 30.0};
@@ -47,8 +47,10 @@ void weight_flux(const std::string& flux_path)
                             1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
     h_flux_nom_numu = (TH1D*)h_flux_total_numu -> Rebin(nbins, "h_flux_nom_numu", flux_bins);
 
-    TFile* output = TFile::Open("./weighted_flux13av2_run2-4.root", "RECREATE");
+    TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/weighted_flux13av2_run2-4.root", "RECREATE");
     output -> cd();
     h_flux_total_numu -> Write("flux_fine");
     h_flux_nom_numu -> Write("flux_rebin");
+
+    std::cout << "Reweighted flux integral = " << h_flux_nom_numu -> Integral() << std::endl;
 }

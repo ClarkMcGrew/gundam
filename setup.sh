@@ -24,6 +24,7 @@ echo "[INFO]: XSLLHFITTER root expected at: ${XSLLHFITTER}"
 source ${XSLLHFITTER}/cmake/CMakeSetup.sh
 
 echo "[INFO]: ROOT Version `root-config --version` from: ${ROOTSYS}"
+echo "[INFO]: gcc Version `gcc --version` from: ${CXX}"
 
 if [ ! -e ${BUILDSETUP} ]; then
   echo "[INFO]: Cannot find build setup script where expected: ${BUILDSETUP}"

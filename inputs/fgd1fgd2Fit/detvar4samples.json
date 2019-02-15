@@ -9,18 +9,18 @@
             "num_samples" : 33,
             "samples" : {"0": [1,2,3,4,5,9,10,11], "1": [6], "2": [7], "3": [8], "4": [12,13,14,15,16,20,21,22], "5": [17], "6": [18], "7": [19], "8": [23,24,25,26,27,31,32,33], "9": [28], "10": [29], "11": [30] },
             "sample_binning" : {
-                "0" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "1" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "2" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "3" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "4" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "5" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "6" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "7" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "8" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "9" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "10" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt",
-                "11" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning.txt"
+                "0" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "1" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "2" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "3" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "4" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "5" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "6" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "7" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "8" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "9" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "10" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt",
+                "11" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning.txt"
             },
             "use" : true
         }

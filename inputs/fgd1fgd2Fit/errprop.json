@@ -1,31 +1,30 @@
 {
-    "input_dir" : "/outputs/",
-    "input_fit_file" : "fit1_test.root",
-    "output_file" : "outputs/xsec.root",
-    "extra_hists" : "extra_hists.txt",
-    "num_toys" : 500,
+    "input_fit_file" : "/outputs/fit1_test.root",
+    "output_file" : "/outputs/xsec_fit1_test.root",
+    "extra_hists" : "/inputs/fgd1fgd2Fit/extra_hists.txt",
+    "num_toys" : 10,
     "rng_seed" : 12257,
-    "sel_config" : "config.json",
-    "tru_config" : "config.json",
+    "sel_config" : "/inputs/fgd1fgd2Fit/config.json",
+    "tru_config" : "/inputs/fgd1fgd2Fit/config.json",
     "sig_norm" : {
         "CC0piCarbon" : {
-            "flux_file" : "weighted_flux13av2_run2-4.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-4.root",
             "flux_hist" : "flux_rebin",
             "flux_int"  : 1.12E13,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
-            "num_targets_val" : 5.9E29,
-            "num_targets_err" : 0.0067,
+            "num_targets_val" : 7.439E29,
+            "num_targets_err" : 0.0048,
             "relative_err" : true
         },
         "CC0piOxygen" : {
-            "flux_file" : "weighted_flux13av2_run2-4.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-4.root",
             "flux_hist" : "flux_rebin",
             "flux_int"  : 1.12E13,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
-            "num_targets_val" : 5.9E29,
-            "num_targets_err" : 0.0067,
+            "num_targets_val" : 2.581E29,
+            "num_targets_err" : 0.0073,
             "relative_err" : true
         }
     }

@@ -5,8 +5,8 @@
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
     "use_fit_param"  : true,
-    "use_flux_param" : false,
-    "use_det_param"  : false,
+    "use_flux_param" : true,
+    "use_det_param"  : true,
     "use_xsec_param" : true,
     "stat_fluc" : true,
     "zero_syst" : false,
@@ -26,7 +26,7 @@
     "det_cov" : {
         "file" : "xsllh_detcovmat.root",
         "matrix" : "cov_mat",
-        "binning" : "tn338_binning.txt",
+        "binning" : "tn337_binning.txt",
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99
@@ -47,17 +47,17 @@
         {
             "name" : "ND280",
             "xsec_config" : "ptheta_dials.json",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "template_par" : [
                 {
                     "name" : "CC0piCarbon",
-                    "binning" : "tn338_binning.txt",
+                    "binning" : "tn337_binning.txt",
                     "signal" : {"fgdtarget" : [3]},
                     "use" : true
                 },
                 {
                     "name" : "CC0piOxygen",
-                    "binning" : "tn338_binning.txt",
+                    "binning" : "tn337_binning.txt",
                     "signal" : {"fgdtarget" : [0]},
                     "use" : true
                 }
@@ -70,175 +70,175 @@
             "cut_branch" : -1,
             "name" : "truth",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 0,
             "name" : "FGD1muTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 1,
             "name" : "FGD1muTPCpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 2,
             "name" : "FGD1muTPCpFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 3,
             "name" : "FGD1muFGDpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 4,
             "name" : "FGD1muFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 5,
             "name" : "FGD1CC1pi",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 6,
             "name" : "FGD1CCDIS",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 7,
             "name" : "FGD1CC1piMichelEle",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 8,
             "name" : "FGD2xmuTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 9,
             "name" : "FGD2xmuTPCpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 10,
             "name" : "FGD2xmuTPCpFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 11,
             "name" : "FGD2xmuFGDpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 12,
             "name" : "FGD2xmuFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 13,
             "name" : "FGD2xCC1pi",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 14,
             "name" : "FGD2xCCDIS",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 15,
             "name" : "FGD2xCC1piMichelEle",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 16,
             "name" : "FGD2ymuTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 17,
             "name" : "FGD2ymuTPCpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 18,
             "name" : "FGD2ymuTPCpFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 19,
             "name" : "FGD2ymuFGDpTPC",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 20,
             "name" : "FGD2ymuFGD",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 21,
             "name" : "FGD2yCC1pi",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 22,
             "name" : "FGD2yCCDIS",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         },
         {
             "cut_branch" : 23,
             "name" : "FGD2yCC1piMichelEle",
             "detector" : "ND280",
-            "binning" : "tn338_binning.txt",
+            "binning" : "tn337_binning.txt",
             "use_sample" : true
         }
     ]

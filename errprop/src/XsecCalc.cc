@@ -17,22 +17,21 @@ XsecCalc::XsecCalc(const std::string& json_config)
     json j;
     f >> j;
 
-    std::string input_dir
-        = std::string(std::getenv("XSLLHFITTER")) + j["input_dir"].get<std::string>();
+    std::string working_dir = std::string(std::getenv("XSLLHFITTER"));
 
-    input_file  = input_dir + j["input_fit_file"].get<std::string>();
-    output_file = input_dir + j["output_file"].get<std::string>();
-    //extra_hists = input_dir + j["extra_hists"].get<std::string>();
+    input_file  = working_dir + j["input_fit_file"].get<std::string>();
+    output_file = working_dir + j["output_file"].get<std::string>();
+    //extra_hists = working_dir + j["extra_hists"].get<std::string>();
 
     extra_hists = j.value("extra_hists", "");
     if(!extra_hists.empty())
-        extra_hists = input_dir + extra_hists;
+        extra_hists = working_dir + extra_hists;
 
     num_toys = j["num_toys"];
     rng_seed = j["rng_seed"];
 
-    std::string sel_json_config = input_dir + j["sel_config"].get<std::string>();
-    std::string tru_json_config = input_dir + j["tru_config"].get<std::string>();
+    std::string sel_json_config = working_dir + j["sel_config"].get<std::string>();
+    std::string tru_json_config = working_dir + j["tru_config"].get<std::string>();
 
     std::cout << TAG << "Input file from fit: " << input_file << std::endl
               << TAG << "Output xsec file: " << output_file << std::endl
@@ -50,7 +49,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
     true_events = new FitObj(tru_json_config, "trueEvents", true);
     total_signal_bins = selected_events->GetNumSignalBins();
 
-    InitNormalization(j["sig_norm"], input_dir);
+    InitNormalization(j["sig_norm"], working_dir);
     std::cout << TAG << "Finished initialization." << std::endl;
 }
 
@@ -107,7 +106,7 @@ void XsecCalc::InitToyThrower()
     }
 }
 
-void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string input_dir)
+void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string working_dir)
 {
 
     for(const auto& sig_def : selected_events->GetSignalDef())
@@ -132,7 +131,7 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string inpu
             SigNorm n;
             n.name = sig_def.name;
             n.detector = sig_def.detector;
-            n.flux_file = s["flux_file"];
+            n.flux_file = working_dir + s["flux_file"].get<std::string>();
             n.flux_name = s["flux_hist"];
             n.flux_int = s["flux_int"];
             n.flux_err = s["flux_err"];
@@ -159,7 +158,7 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string inpu
                       << TAG << "Num. targets err: " << n.num_targets_err << std::endl
                       << TAG << "Relative err: " << std::boolalpha << n.is_rel_err << std::endl;
 
-            std::string temp_fname = input_dir + n.flux_file;
+            std::string temp_fname = n.flux_file;
             TFile* temp_file = TFile::Open(temp_fname.c_str(), "READ");
             temp_file->cd();
             TH1D* temp_hist = (TH1D*)temp_file->Get(n.flux_name.c_str());

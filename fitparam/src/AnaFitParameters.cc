@@ -1,4 +1,5 @@
 #include "AnaFitParameters.hh"
+#include "TFile.h"
 
 AnaFitParameters::AnaFitParameters()
     : m_name("")
@@ -42,7 +43,7 @@ void AnaFitParameters::SetCovarianceMatrix(const TMatrixDSym& covmat, bool decom
     if(decompose)
     {
         m_decompose  = true;
-        eigen_decomp = new EigenDecomp(covmat);
+        eigen_decomp = new EigenDecomp(covmat, kSVD);
         original_cov = new TMatrixDSym(covmat);
         covariance   = new TMatrixDSym(eigen_decomp->GetEigenCovMat());
         covarianceI  = new TMatrixDSym(eigen_decomp->GetEigenCovMat());
@@ -74,14 +75,13 @@ void AnaFitParameters::SetCovarianceMatrix(const TMatrixDSym& covmat, bool decom
         return;
     }
 
+    // TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/test_cov_matrix.root", "RECREATE");
+    // output -> cd();
+    // covariance -> Write("covariance");
+
     std::cout << TAG << "Covariance matrix size: " << covariance->GetNrows()
               << " x " << covariance->GetNrows() << " for " << this->m_name << std::endl;
-    /*
-    std::cout << "[SetCovarianceMatrix]: Inverted Cov mat: " << std::endl;
-    covarianceI->Print();
-    std::cout << "[SetCovarianceMatrix]: Cov mat: " << std::endl;
-    covariance->Print();
-    */
+              
 }
 
 double AnaFitParameters::GetChi2(const std::vector<double>& params) const
