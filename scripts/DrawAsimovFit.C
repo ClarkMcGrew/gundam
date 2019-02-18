@@ -16,7 +16,7 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawAsimovFit(string inputname = "fit1_onlyTemPar_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning_GeV_format.txt")
+void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning_GeV_format.txt")
 {
 
 	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());

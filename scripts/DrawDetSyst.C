@@ -13,7 +13,7 @@ void DrawDetSyst()
 	
 	string infile = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_detcovmat_4samples.root";
 	// string infile = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_detcovmat.root";
-	string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning_format.txt";
+	string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning_format.txt";
 
 	//=== Set binning using BinningTools class                                                                                
 	BinningTools bin;

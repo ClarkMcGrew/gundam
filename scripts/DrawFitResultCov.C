@@ -9,10 +9,10 @@ void DrawFitResultCov(string inputname = "fit1")
 {
 	string infile = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
 
-	int NbinsAna = 29;
+	int NbinsAna = 58;
 	int NbinsFlux = 20;  
 	int NbinsXsec = 22;
-	int NbinsDet = 696;                                                   
+	int NbinsDet = 3*8*NbinsAna;                                                   
 
 	int Nbins = 2*NbinsAna + NbinsXsec + NbinsDet + NbinsFlux;
 
@@ -136,7 +136,7 @@ void DrawFitResultCov(string inputname = "fit1")
 
 
 	// c2->Print("plots/covariancematrices/FinalCovMatrix.pdf");
-	c3->Print("plots/covariancematrices/FinalCorrMatrix.pdf");
-	c3->Print("plots/covariancematrices/FinalCorrMatrix.png");
+	c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.pdf", inputname.c_str()));
+	c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.png", inputname.c_str()));
 
 }
