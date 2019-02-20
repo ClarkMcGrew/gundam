@@ -54,7 +54,6 @@ bool OptParser::ParseJSON(std::string json_file)
 
     det_cov.fname = input_dir + j["det_cov"]["file"].get<std::string>();
     det_cov.matrix = j["det_cov"]["matrix"];
-    det_cov.binning = j["det_cov"]["binning"];
     det_cov.do_throw = j["det_cov"]["throw"];
     det_cov.decompose = j["det_cov"]["decomp"];
     det_cov.info_frac = j["det_cov"]["variance"];

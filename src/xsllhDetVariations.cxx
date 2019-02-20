@@ -352,7 +352,11 @@ int main(int argc, char** argv)
         for(unsigned int i = 0; i < num_elements; ++i)
         {
             if(cov_mat(i, i) <= 0.0)
+            {
+                std::cout << TAG << "Empty bin or negative value !!!"
+                                 << "Covariance diag element " << " = " << cov_mat(i, i) << " --> now set to 1.0 ; for bin i = " << i << std::endl;
                 cov_mat(i, i) = 1.0;
+            }
         }
 
         for(unsigned int i = 0; i < num_elements; ++i)
@@ -414,6 +418,10 @@ int main(int argc, char** argv)
     {
         cov_mat.Write(cov_mat_name.c_str());
         cor_mat.Write(cor_mat_name.c_str());
+
+        std::cout << TAG << "Final covariance matrix dimension = "   << cov_mat.GetNrows() << std::endl;
+        std::cout << TAG << "Final covariance matrix determinant = " << cov_mat.Determinant() << std::endl;
+
         for(unsigned int s = 0; s < num_use_samples; ++s)
         {
             std::stringstream ss;

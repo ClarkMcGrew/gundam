@@ -16,7 +16,7 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn337_binning_GeV_format.txt")
+void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
 	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
@@ -153,7 +153,16 @@ void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t
 	std::cout << "=== Set binning with a temp histogram" << std::endl;
 
 	vector<TH1D*> h_tmp;
-	TString h_title[] = {"-1 < cos#theta < 0.0","0.0 < cos#theta < 0.6", "0.6 < cos#theta < 0.75", "0.75 < cos#theta < 0.86", "0.86 < cos#theta < 0.93", "0.93 < cos#theta < 1.0"};
+	TString h_title[] = { "-1  < cos#theta < 0.2",
+	                     "0.2  < cos#theta < 0.6",
+	                     "0.6  < cos#theta < 0.7",
+	                     "0.7  < cos#theta < 0.8",
+	                     "0.8  < cos#theta < 0.85",
+	                     "0.85 < cos#theta < 0.9",
+	                     "0.9  < cos#theta < 0.94",
+	                     "0.94 < cos#theta < 0.98",
+	                     "0.98 < cos#theta < 1.0"
+	                 };
 
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
@@ -222,8 +231,8 @@ void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t
 
 	for(int ifgd = 0; ifgd < Nfgd; ifgd++)
 	{
-		c_asimov[ifgd] = new TCanvas(Form("AsimovFit_in_FGD%d",ifgd+1),Form("AsimovFit_in_FGD%d", ifgd+1),1700,800);
-		c_asimov[ifgd] -> Divide(3,2);
+		c_asimov[ifgd] = new TCanvas(Form("AsimovFit_in_FGD%d",ifgd+1),Form("AsimovFit_in_FGD%d", ifgd+1),1700,1000);
+		c_asimov[ifgd] -> Divide(3,3);
 
 		double* ymax = new double[Nbins_costh];
 

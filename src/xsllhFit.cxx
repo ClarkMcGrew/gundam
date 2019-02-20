@@ -181,8 +181,6 @@ int main(int argc, char** argv)
             if(opt.use_detector)
                 fluxpara.AddDetector(opt.name, enubins);
         }
-    // if(parser.use_flux_param)
-    // {
         std::cout << TAG << "Adding flux parameters." << std::endl;
         fluxpara.InitEventMap(samples, 0);
         fitpara.push_back(&fluxpara);
@@ -200,8 +198,6 @@ int main(int argc, char** argv)
             if(opt.use_detector)
                 xsecpara.AddDetector(opt.name, opt.xsec);
         }
-    // if(parser.use_xsec_param)
-    // {
         std::cout << TAG << "Adding xsec model parameters." << std::endl;
         xsecpara.InitEventMap(samples, 0);
         fitpara.push_back(&xsecpara);
@@ -226,8 +222,6 @@ int main(int argc, char** argv)
             if(opt.use_detector)
                 detpara.AddDetector(opt.name, samples, true);
         }
-    // if(parser.use_det_param)
-    // {
         std::cout << TAG << "Adding detector parameters." << std::endl;
         detpara.InitEventMap(samples, 0);
         fitpara.push_back(&detpara);

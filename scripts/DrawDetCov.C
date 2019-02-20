@@ -7,30 +7,41 @@
 
 void DrawDetCov(	int NsamplesTot = 24,
 					string infile = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_detcovmat.root",
-					string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/tn338_binning_format.txt")
+					string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_format.txt")
 {
+
+	TFile *findetcov = TFile::Open(infile.c_str());
+
+	//==== setup enu bins and covm for flux 
+	TMatrixDSym *cov_mat = (TMatrixDSym*)findetcov -> Get("cov_mat");
+	TMatrixDSym *cor_mat = (TMatrixDSym*)findetcov -> Get("cor_mat");
 
 	//====================================================================================================                      
 	//=== Set binning using BinningTools class                                                                                
-	BinningTools bin;
-	bin.SetBinning(fbinning.c_str());
-	int Nbins = bin.GetNbins();//Total number of bins
+	// BinningTools bin;
+	// bin.SetBinning(fbinning.c_str());
+	int Nbins[] = {58, 58, 58, 58, 25, 58, 58, 58,
+		           58, 58, 58, 58, 25, 58, 58, 58,
+		           58, 58, 58, 58, 25, 58, 58, 58 };
+
 	int Nsamples = NsamplesTot - 1;
-	int Nfgds = 3;                                                             
+	int Nfgds = 3;
+	int Nmatdim = cov_mat -> GetNrows();
 
 	//====================================================================================================                      
 	//=== Set boundary lines between samples                                                                               
 	double boundary[Nsamples];
-	for(int il=0; il<Nsamples; il++)
+	boundary[0] = Nbins[0];
+	for(int il=1; il<Nsamples; il++)
 	{
-		boundary[il] = Nbins * (il+1);
+		boundary[il] = boundary[il-1] + Nbins[il];
 	}
 
 	//=== Draw an horizontal line for each angular boundaries                                                                   
 	TLine *orline[Nsamples];
 	for(int il = 0; il < Nsamples; il++)
 	{
-		orline[il] = new TLine(boundary[il], 0, boundary[il], Nbins*(Nsamples+1) );
+		orline[il] = new TLine(boundary[il], 0, boundary[il], Nmatdim );
 		orline[il] -> SetLineWidth(1);
 		orline[il] -> SetLineStyle(2);
 	}
@@ -39,7 +50,7 @@ void DrawDetCov(	int NsamplesTot = 24,
 	TLine *verline[Nsamples];
 	for(int il = 0; il < Nsamples; il++)
 	{
-		verline[il] = new TLine(0, boundary[il], Nbins*(Nsamples+1), boundary[il] );
+		verline[il] = new TLine(0, boundary[il], Nmatdim, boundary[il] );
 		verline[il] -> SetLineWidth(1);
 		verline[il] -> SetLineStyle(2);
 	}
@@ -48,17 +59,23 @@ void DrawDetCov(	int NsamplesTot = 24,
 	//====================================================================================================                      
 	//=== Set boundary lines between FGDs                                                                               
 	double boundaryfgd[Nfgds-1];
-	int Nsamplesperfgd = NsamplesTot/Nfgds;
+	int  Nbinsperfgd[3] = {0, 0, 0};
 	for(int il=0; il<Nfgds-1; il++)
 	{
-		boundaryfgd[il] = Nsamplesperfgd * Nbins * (il+1);
+		for(int i=0; i<NsamplesTot/3; i++)
+		{
+			Nbinsperfgd[il] += Nbins[i + il*(NsamplesTot/3)];
+		}
 	}
+	boundaryfgd[0] =  Nbinsperfgd[0];
+	boundaryfgd[1] =  Nbinsperfgd[0] + Nbinsperfgd[1];
+	
 
 	//=== Draw an horizontal line for each angular boundaries                                                                   
 	TLine *orlinefgd[Nfgds-1];
 	for(int il = 0; il < Nfgds-1; il++)
 	{
-		orlinefgd[il] = new TLine(boundaryfgd[il], 0, boundaryfgd[il], Nbins*(Nsamples+1) );
+		orlinefgd[il] = new TLine(boundaryfgd[il], 0, boundaryfgd[il], Nmatdim );
 		orlinefgd[il] -> SetLineWidth(3);
 		orlinefgd[il] -> SetLineStyle(2);
 	}
@@ -67,7 +84,7 @@ void DrawDetCov(	int NsamplesTot = 24,
 	TLine *verlinefgd[Nfgds-1];
 	for(int il = 0; il < Nfgds-1; il++)
 	{
-		verlinefgd[il] = new TLine(0, boundaryfgd[il], Nbins*(Nsamples+1), boundaryfgd[il] );
+		verlinefgd[il] = new TLine(0, boundaryfgd[il], Nmatdim, boundaryfgd[il] );
 		verlinefgd[il] -> SetLineWidth(3);
 		verlinefgd[il] -> SetLineStyle(2);
 	}
@@ -80,12 +97,6 @@ void DrawDetCov(	int NsamplesTot = 24,
 	CommonStyle();
 
 	//======================================================================================================
-
-	TFile *findetcov = TFile::Open(infile.c_str());
-
-	//==== setup enu bins and covm for flux 
-	TMatrixDSym *cov_mat = (TMatrixDSym*)findetcov -> Get("cov_mat");
-	TMatrixDSym *cor_mat = (TMatrixDSym*)findetcov -> Get("cor_mat");
 
 	gStyle->SetPadRightMargin(0.15);
 	gStyle->SetPadLeftMargin(0.1);
@@ -128,8 +139,8 @@ void DrawDetCov(	int NsamplesTot = 24,
 	// }
 
 	//=== Draw correlation matrix
-	// TCanvas *c3 = new TCanvas("c3","c3",1000,900);
-	TCanvas *c3 = new TCanvas("c3","c3",700,600);
+	TCanvas *c3 = new TCanvas("c3","c3",1000,900);
+	// TCanvas *c3 = new TCanvas("c3","c3",700,600);
 	c3 -> Draw();
 	cor_mat -> Draw("colz");
 
