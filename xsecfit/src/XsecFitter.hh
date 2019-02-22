@@ -46,6 +46,7 @@ public:
     void FixParameter(const std::string& par_name, const double& value);
     void Fit(const std::vector<AnaSample*>& samples, int fit_type, bool stat_fluc);
 
+    void SetMinSettings(const MinSettings& ms);
     void SetSeed(int seed);
     void SetZeroSyst(bool flag) { m_zerosyst = flag; }
     void SetTopology(const std::vector<std::string> vec_top) { v_topology = vec_top; }
@@ -93,7 +94,7 @@ public:
     }
 
 private:
-    void GenerateToyData(bool stat_fluc = false);
+    void GenerateToyData(int toy_type, bool stat_fluc = false);
     double FillSamples(std::vector<std::vector<double>>& new_pars, int datatype = 0);
     void SaveParams(const std::vector<std::vector<double>>& new_pars);
     void SaveEvents(int fititer);
@@ -122,6 +123,7 @@ private:
     std::vector<AnaFitParameters*> m_fitpara;
     std::vector<AnaSample*> m_samples;
 
+    MinSettings min_settings;
     const std::string TAG = color::YELLOW_STR + "[XsecFitter]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + color::BOLD_STR + "[ERROR]: " + color::RESET_STR;
     const std::string WAR = color::RED_STR + "[WARNING]: " + color::RESET_STR;

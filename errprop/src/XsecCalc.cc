@@ -527,7 +527,7 @@ void XsecCalc::SaveSignalHist(TFile* file)
             std::string name = v_normalization.at(id).name + "_cos_bin" + std::to_string(k);
             TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
 
-            for(int l = 1; l <= temp.GetNbinsX(); ++l)
+            for(int l = 1; l <= temp.GetNbinsX()+1; ++l)
             {
                 temp.SetBinContent(l, signal_best_fit.at(id).GetBinContent(l+offset));
                 temp.SetBinError(l, signal_best_fit.at(id).GetBinError(l+offset));

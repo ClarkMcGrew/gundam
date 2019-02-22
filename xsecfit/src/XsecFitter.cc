@@ -14,6 +14,14 @@ XsecFitter::XsecFitter(TDirectory* dirout, const int seed, const int num_threads
     , m_calls(0)
 {
     gRandom = rng;
+
+    min_settings.minimizer = "Minuit2";
+    min_settings.algorithm = "Migrad";
+    min_settings.print_level = 2;
+    min_settings.strategy  = 1;
+    min_settings.tolerance = 1E-4;
+    min_settings.max_iter  = 1E6;
+    min_settings.max_fcn   = 1E9;
 }
 
 XsecFitter::XsecFitter(TDirectory* dirout, const int seed)
@@ -61,6 +69,19 @@ void XsecFitter::FixParameter(const std::string& par_name, const double& value)
     }
 }
 
+void XsecFitter::SetMinSettings(const MinSettings& ms)
+{
+    min_settings = ms;
+    if(m_fitter != nullptr)
+    {
+        m_fitter->SetStrategy(min_settings.strategy);
+        m_fitter->SetPrintLevel(min_settings.print_level);
+        m_fitter->SetTolerance(min_settings.tolerance);
+        m_fitter->SetMaxIterations(min_settings.max_iter);
+        m_fitter->SetMaxFunctionCalls(min_settings.max_fcn);
+    }
+}
+
 void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
 {
     m_fitpara = fitpara;
@@ -102,16 +123,24 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     std::cout << "    Number of parameters = " << m_npar << std::endl;
     std::cout << "===========================================" << std::endl;
 
-    m_fitter = ROOT::Math::Factory::CreateMinimizer("Minuit2", "Migrad");
+    std::cout << TAG << "Minimizer settings..." << std::endl
+              << TAG << "Minimizer: " << min_settings.minimizer << std::endl
+              << TAG << "Algorithm: " << min_settings.algorithm << std::endl
+              << TAG << "Strategy : " << min_settings.strategy << std::endl
+              << TAG << "Print Lvl: " << min_settings.print_level << std::endl
+              << TAG << "Tolerance: " << min_settings.tolerance << std::endl
+              << TAG << "Max Iterations: " << min_settings.max_iter << std::endl
+              << TAG << "Max Fcn Calls : " << min_settings.max_fcn << std::endl;
+
+    m_fitter = ROOT::Math::Factory::CreateMinimizer(min_settings.minimizer.c_str(), min_settings.algorithm.c_str());
     m_fcn    = new ROOT::Math::Functor(this, &XsecFitter::CalcLikelihood, m_npar);
 
     m_fitter->SetFunction(*m_fcn);
-    // m_fitter->SetPrintLevel(2); //Orig 
-    m_fitter->SetPrintLevel(3); //LM
-    m_fitter->SetMaxIterations(1E6);
-    m_fitter->SetMaxFunctionCalls(1E9);
-    m_fitter->SetTolerance(1E-4); //Orig
-    // m_fitter->SetTolerance(1E-3); //LM
+    m_fitter->SetStrategy(min_settings.strategy);
+    m_fitter->SetPrintLevel(min_settings.print_level);
+    m_fitter->SetTolerance(min_settings.tolerance);
+    m_fitter->SetMaxIterations(min_settings.max_iter);
+    m_fitter->SetMaxFunctionCalls(min_settings.max_fcn);
 
     for(int i = 0; i < m_npar; ++i)
     {
@@ -121,6 +150,11 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
         if(par_fixed[i] == true)
             m_fitter->FixVariable(i);
     }
+
+    std::cout << TAG << "Number of defined parameters: " << m_fitter->NDim() << std::endl
+              << TAG << "Number of free parameters   : " << m_fitter->NFree() << std::endl
+              << TAG << "Number of fixed parameters  : " << m_fitter->NDim() - m_fitter->NFree()
+              << std::endl;
 
     TH1D h_prefit("hist_prefit_par_all", "hist_prefit_par_all", m_npar, 0, m_npar);
     int num_par = 1;
@@ -155,6 +189,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return;
     }
 
+
     std::cout << "LM ***** fit_type == " << fit_type << " *****" << std::endl;
     std::cout << "fit_type = kAsimovFit   == " << kAsimovFit   << " and kAsimov   == " << kAsimov   << " *****" << std::endl;
     std::cout << "fit_type = kExternalFit == " << kExternalFit << " and kExternal == " << kExternal << " *****" << std::endl;
@@ -179,7 +214,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     }
     else if(fit_type == kToyFit)
     {
-        GenerateToyData(stat_fluc);
+        GenerateToyData(0, stat_fluc);
     }
     else
     {
@@ -190,11 +225,40 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
 
     SaveEvents(m_calls);
 
+    bool did_converge = false;
     std::cout << TAG << "Fit prepared." << std::endl;
-    std::cout << TAG << "Calling MIGRAD ..." << std::endl;
-    m_fitter->Minimize();
-    std::cout << TAG << "Calling HESSE ..." << std::endl;
-    m_fitter->Hesse();
+    std::cout << TAG << "Calling Minimize, running " << min_settings.algorithm << std::endl;
+    did_converge = m_fitter->Minimize();
+
+    if(!did_converge)
+    {
+        std::cout << ERR << "Fit did not converge while running " << min_settings.algorithm
+                  << std::endl;
+        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl
+                  << ERR << "Exiting." << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << TAG << "Fit converged." << std::endl
+                  << TAG << "Status code: " << m_fitter->Status() << std::endl;
+    }
+
+    std::cout << TAG << "Calling HESSE." << std::endl;
+    did_converge = m_fitter->Hesse();
+
+    if(!did_converge)
+    {
+        std::cout << ERR << "Hesse did not converge." << std::endl;
+        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl
+                  << ERR << "Exiting." << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << TAG << "Hesse converged." << std::endl
+                  << TAG << "Status code: " << m_fitter->Status() << std::endl;
+    }
 
     if(m_dir)
         SaveChi2();
@@ -264,7 +328,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     std::cout << TAG << "Fit routine finished. Results saved." << std::endl;
 }
 
-void XsecFitter::GenerateToyData(bool stat_fluc)
+void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
 {
     double chi2_stat = 0.0;
     double chi2_syst = 0.0;
@@ -280,7 +344,7 @@ void XsecFitter::GenerateToyData(bool stat_fluc)
 
     for(int s = 0; s < m_samples.size(); ++s)
     {
-        const unsigned int N  = m_samples[s]->GetN(); //LM : N = get number of events
+        const unsigned int N  = m_samples[s]->GetN();
         const std::string det = m_samples[s]->GetDetector();
 #pragma omp parallel for num_threads(m_threads)
         for(unsigned int i = 0; i < N; ++i)
@@ -291,7 +355,7 @@ void XsecFitter::GenerateToyData(bool stat_fluc)
                 m_fitpara[j]->ReWeight(ev, det, s, i, fitpar_throw[j]);
         }
 
-        m_samples[s]->FillEventHist(kAsimov, stat_fluc);
+        m_samples[s]->FillEventHist(kAsimov);
         m_samples[s]->FillEventHist(kReset);
         chi2_stat += m_samples[s]->CalcChi2();
     }
@@ -369,9 +433,9 @@ double XsecFitter::CalcLikelihood(const double* par)
         std::vector<double> vec;
         for(int j = 0; j < npar; ++j)
         {
-            if(output_chi2)
-                std::cout << "Parameter " << j << " for " << m_fitpara[i]->GetName()
-                          << " has value " << par[k] << std::endl;
+            //if(output_chi2)
+            //    std::cout << "Parameter " << j << " for " << m_fitpara[i]->GetName()
+            //              << " has value " << par[k] << std::endl;
             vec.push_back(par[k++]);
         }
 
@@ -386,12 +450,12 @@ double XsecFitter::CalcLikelihood(const double* par)
         {
             std::cout << TAG << "Chi2 contribution from " << m_fitpara[i]->GetName() << " is "
                       << m_fitpara[i]->GetChi2(vec) << std::endl;
-
         }
     }
+
     if(chi2_sys<0)
         std::cout << WAR << "NEGATIVE chi2 sys = " << chi2_sys << std::endl;
-            
+
     double chi2_stat = FillSamples(new_pars, kMC);
     vec_chi2_stat.push_back(chi2_stat);
     vec_chi2_sys.push_back(chi2_sys);

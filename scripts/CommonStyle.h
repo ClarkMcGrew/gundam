@@ -11,7 +11,7 @@ int CommonStyle() {
   // 1 = presentation large fonts
   // 2 = presentation small fonts
   // 3 = publication/paper
-  Int_t localWhichStyle = 2;
+  Int_t localWhichStyle = 1;
 
   TStyle* t2kstyle = SetT2KStyle(localWhichStyle, localStyleName);
   gROOT->SetStyle(t2kstyle->GetName());
@@ -23,18 +23,19 @@ int CommonStyle() {
   gStyle->SetPadLeftMargin(0.165); 
 
   // -- title/lable offset --
-  //   gStyle->SetTitleOffset(1.5, "x");
-  //   gStyle->SetTitleOffset(1.7, "y");
-  //   gStyle->SetLabelOffset(0.02, "x");
-  //   gStyle->SetLabelOffset(0.02, "y");
+  gStyle->SetTitleOffset(1.1, "x");
+  gStyle->SetTitleOffset(1.1, "y");
+  gStyle->SetLabelOffset(0.01, "x");
+  gStyle->SetLabelOffset(0.02, "y");
 
   // -- title/label size --
-  // gStyle->SetTitleSize(0.04, "x"); 
-  // gStyle->SetTitleSize(0.04, "y"); 
-  // gStyle->SetTitleSize(0.04, "z"); 
-  // gStyle->SetLabelSize(0.034,"x"); 
-  // gStyle->SetLabelSize(0.034,"y"); 
-  // gStyle->SetLabelSize(0.034,"z"); 
+  gStyle->SetTitleFontSize(0.09); 
+  gStyle->SetTitleSize(0.08, "x"); 
+  gStyle->SetTitleSize(0.08, "y"); 
+  gStyle->SetTitleSize(0.08, "z"); 
+  gStyle->SetLabelSize(0.06,"x"); 
+  gStyle->SetLabelSize(0.06,"y"); 
+  gStyle->SetLabelSize(0.06,"z"); 
 
   // -- statistic and title info --
   gStyle->SetOptStat(0);
@@ -62,7 +63,7 @@ int CommonStyle() {
   //  gStyle->SetPalette(1);  // use the rainbow color set
 
   // -- horizontal error bars back --
-  //  gStyle->SetErrorX(0.5);
+   gStyle->SetErrorX(0.5);
 
   // -- transparent stuff --
   //  gStyle->SetFillStyle(0);

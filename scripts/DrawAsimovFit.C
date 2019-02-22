@@ -274,6 +274,7 @@ void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t
 				leg[ifgd]->Draw();
 			}
 		}
+
 		c_asimov[ifgd]->Print(Form("plots/fitteroutput/asimov/eventDistr_%s_FGD%d.pdf", inputname.c_str(), ifgd+1));
 	}
 
