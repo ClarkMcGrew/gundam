@@ -83,9 +83,21 @@ void XsecCalc::ReadFitFile(const std::string& file)
         postfit_param.emplace_back((*postfit_param_root)[i]);
 
     postfit_file->Close();
+    use_prefit_cov = false;
 
     std::cout << TAG << "Successfully read fit file." << std::endl;
     InitToyThrower();
+}
+
+void XsecCalc::UsePrefitCov()
+{
+    if(selected_events == nullptr)
+        std::cout << TAG << "FitObj not initialized for prefit covariance." << std::endl;
+    else
+    {
+        use_prefit_cov = true;
+        InitToyThrower();
+    }
 }
 
 void XsecCalc::InitToyThrower()
@@ -527,7 +539,7 @@ void XsecCalc::SaveSignalHist(TFile* file)
             std::string name = v_normalization.at(id).name + "_cos_bin" + std::to_string(k);
             TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
 
-            for(int l = 1; l <= temp.GetNbinsX()+1; ++l)
+            for(int l = 1; l <= temp.GetNbinsX(); ++l) //LM add +1 ??? (originally : not)
             {
                 temp.SetBinContent(l, signal_best_fit.at(id).GetBinContent(l+offset));
                 temp.SetBinError(l, signal_best_fit.at(id).GetBinError(l+offset));

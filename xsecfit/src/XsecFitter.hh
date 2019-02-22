@@ -26,6 +26,7 @@
 #include "AnaFitParameters.hh"
 #include "AnaSample.hh"
 #include "ColorOutput.hh"
+#include "OptParser.hh"
 
 enum FitType
 {
