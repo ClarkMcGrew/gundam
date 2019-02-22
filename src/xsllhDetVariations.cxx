@@ -32,7 +32,7 @@ struct FileOptions
     std::string fname_input;
     std::string tree_name;
     std::string detector;
-    unsigned int num_samples;
+    // unsigned int num_samples;
     unsigned int num_toys;
     unsigned int num_syst;
     // std::vector<int> cuts;
@@ -110,16 +110,25 @@ int main(int argc, char** argv)
             f.detector    = file["detector"];
             f.num_toys    = file["num_toys"];
             f.num_syst    = file["num_syst"];
-            f.num_samples = file["num_samples"];
+            // f.num_samples = file["num_samples"];
             // f.cuts        = file["cuts"].get<std::vector<int>>();
 
             std::map<std::string, std::vector<int>> temp_json = file["samples"];
             for(const auto& kv : temp_json)
                 f.samples.emplace(std::make_pair(std::stoi(kv.first), kv.second));
 
+            // fix from Andrew to sample ordering problem.
+            f.bin_manager.resize(f.samples.size());
             std::map<std::string, std::string> temp_bins = file["sample_binning"];
             for(const auto& kv : temp_bins)
-                f.bin_manager.emplace_back(BinManager(kv.second));
+                f.bin_manager.at(std::stoi(kv.first)) = std::move(BinManager(kv.second));
+
+            // std::map<std::string, std::string> temp_bins = file["sample_binning"];
+            // for(const auto& kv : temp_bins)
+            // {
+            //     f.bin_manager.emplace_back(BinManager(kv.second));
+            //     // std::cout << "***** Sample = " << kv.first << " and file = " << kv.second << std::endl;
+            // }
 
             v_files.emplace_back(f);
 
@@ -137,6 +146,8 @@ int main(int argc, char** argv)
     for(const auto& var : var_names)
         std::cout << var << " ";
     std::cout << std::endl;
+
+    std::cout << TAG << "Number of samples: " << num_use_samples << std::endl;
 
     int var_plot = -1;
     if(do_projection)
@@ -157,6 +168,8 @@ int main(int argc, char** argv)
             BinManager bm   = file.bin_manager.at(sam);
             const int nbins = bm.GetNbins();
             std::vector<TH1F> v_temp;
+
+            std::cout << TAG << "Sample = " << sam << ", bins = " << nbins << std::endl;
 
             for(unsigned int t = 0; t < file.num_toys; ++t)
             {
@@ -227,7 +240,7 @@ int main(int argc, char** argv)
         TTree* tree_event = (TTree*)file_input->Get(file.tree_name.c_str());
 
         // tree_event->SetBranchAddress("accum_level", accum_level);
-        tree_event->SetBranchAddress("sample_fgd2layer_xsec", sample);
+        tree_event->SetBranchAddress("sample_clst_fgd2layer_xsec", sample);
         tree_event->SetBranchAddress("weight_syst", weight_syst);
         tree_event->SetBranchAddress("weight_syst_total", weight_syst_total);
         for(unsigned int i = 0; i < nvars; ++i)

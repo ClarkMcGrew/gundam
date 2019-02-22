@@ -5,21 +5,30 @@
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawFitResultCov(string inputname = "fit1")
+void DrawFitResultCov(string inputname = "fit1_statFluc")
 {
 	string infile = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
 
-	int NbinsAna = 58;
+	TFile *findetcov = TFile::Open(infile.c_str());
+
+	//==== setup enu bins and covm for flux 
+	TMatrixDSym *cov_mat = (TMatrixDSym*)findetcov -> Get("res_cov_matrix");
+	TMatrixDSym *cor_mat = (TMatrixDSym*)findetcov -> Get("res_cor_matrix");
+
+	
+	int NbinsAna  = 58;
 	int NbinsFlux = 20;  
 	int NbinsXsec = 22;
-	int NbinsDet = 3*8*NbinsAna;                                                   
+	int NbinsDet[] = {58, 58, 58, 58, 25, 58, 58, 58,
+		              58, 58, 58, 58, 25, 58, 58, 58,
+		              58, 58, 58, 58, 25, 58, 58, 58 };
 
-	int Nbins = 2*NbinsAna + NbinsXsec + NbinsDet + NbinsFlux;
+	int Nbins = cov_mat -> GetNrows();
 
 	
 
 	//====================================================================================================                      
-	//=== Set boundary lines between samples   
+	//=== Set boundary lines between different types of parameters   
 
 	const int Nlines = 4;
 	double boundary[Nlines+1];
@@ -27,7 +36,7 @@ void DrawFitResultCov(string inputname = "fit1")
 	boundary[1] = 2*NbinsAna;
 	boundary[2] = 2*NbinsAna + NbinsFlux;
 	boundary[3] = 2*NbinsAna + NbinsFlux + NbinsXsec;
-	boundary[4] = 2*NbinsAna + NbinsFlux + NbinsXsec + NbinsDet;
+	boundary[4] = Nbins;
 	
 
 	//=== Draw an horizontal line for parameter type
@@ -55,11 +64,15 @@ void DrawFitResultCov(string inputname = "fit1")
 	}
 
 
+	//====================================================================================================                      
+	//=== Set boundary lines between samples in detector covariance sub-matrix   
+
 	const int Nsamples = 23;
 	double boundarySample[Nsamples+1];
-	for(int il = 0; il < Nsamples; il++)
+	boundarySample[0] = 2*NbinsAna + NbinsFlux + NbinsXsec + NbinsDet[0];
+	for(int il = 1; il < Nsamples; il++)
 	{
-		boundarySample[il] = 2*NbinsAna+NbinsFlux+NbinsXsec + NbinsAna*(il+1);
+		boundarySample[il] = boundarySample[il-1] + NbinsDet[il];
 	}
 
 	//=== Draw an horizontal line for det samples
@@ -87,12 +100,6 @@ void DrawFitResultCov(string inputname = "fit1")
 	CommonStyle();
 
 	//======================================================================================================
-
-	TFile *findetcov = TFile::Open(infile.c_str());
-
-	//==== setup enu bins and covm for flux 
-	TMatrixDSym *cov_mat = (TMatrixDSym*)findetcov -> Get("res_cov_matrix");
-	TMatrixDSym *cor_mat = (TMatrixDSym*)findetcov -> Get("res_cor_matrix");
 
 	gStyle->SetPadRightMargin(0.15);
 	gStyle->SetPadLeftMargin(0.1);
@@ -134,9 +141,13 @@ void DrawFitResultCov(string inputname = "fit1")
 	for(int il=0; il<Nsamples; il++) orlineSample[il]  -> Draw();
 	for(int il=0; il<Nsamples; il++) verlineSample[il] -> Draw();
 
+	// c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.pdf", inputname.c_str()));
+	// c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.png", inputname.c_str()));
 
-	// c2->Print("plots/covariancematrices/FinalCovMatrix.pdf");
-	c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.pdf", inputname.c_str()));
-	c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.png", inputname.c_str()));
+
+	// Draw matrix diagonal elements
+	// for(int i=0; i<Nbins; i++)
+	// 	std::cout << "Diag element "<<i<<" --> " << (*cov_mat)(i,i) << std::endl;
+
 
 }

@@ -227,7 +227,7 @@ int main(int argc, char** argv)
         int sample[1];
 
         // hl2_seltree -> SetBranchAddress("accum_level", &accum_level);
-        hl2_seltree -> SetBranchAddress("sample_fgd2layer_xsec",        &sample);
+        hl2_seltree -> SetBranchAddress("sample_clst_fgd2layer_xsec",        &sample);
         hl2_seltree -> SetBranchAddress(file.sel_var.nutype.c_str(),    &nutype);
         hl2_seltree -> SetBranchAddress(file.sel_var.reaction.c_str(),  &reaction);
         hl2_seltree -> SetBranchAddress(file.sel_var.topology.c_str(),  &topology);
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
                 for(const auto& branch : kv.second)
                 {
                     // if(accum_level[0][branch] > file.cuts[branch])
-                    if(sample[0]==branch)
+                    if(sample[0]==branch && topology>=0)
                     {
                         cut_branch = kv.first;
                         event_passed = true;

@@ -466,7 +466,6 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
         double D2_true   = m_events[i].GetTrueD2();
         double wght      = m_events[i].GetEvWght();
         int evt_topology = m_events[i].GetTopology();
-
         compos[evt_topology]++;
         int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
         int anybin_index_true = GetBinIndex(D1_true, D2_true);

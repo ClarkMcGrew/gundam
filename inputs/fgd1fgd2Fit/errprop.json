@@ -1,11 +1,11 @@
 {
-    "input_fit_file" : "/outputs/fit1_test.root",
-    "output_file" : "/outputs/xsec_fit1_test.root",
+    "input_fit_file" : "/outputs/fit1_statFluc.root",
+    "output_file" : "/outputs/xsec_fit1_statFluc.root",
     "extra_hists" : "/inputs/fgd1fgd2Fit/extra_hists.txt",
     "num_toys" : 10,
     "rng_seed" : 12257,
-    "sel_config" : "/inputs/fgd1fgd2Fit/config.json",
-    "tru_config" : "/inputs/fgd1fgd2Fit/config.json",
+    "sel_config" : "/inputs/fgd1fgd2Fit/config_fit1_statFluc.json",
+    "tru_config" : "/inputs/fgd1fgd2Fit/config_fit1_statFluc.json",
     "sig_norm" : {
         "CC0piCarbon" : {
             "flux_file" : "/inputs/flux/weighted_flux13av2_run2-4.root",
