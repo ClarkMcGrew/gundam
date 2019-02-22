@@ -109,7 +109,22 @@ void XsecCalc::InitToyThrower()
     // for(int i = 0; i < postfit_cov->GetNcols(); ++i)
     //    (*postfit_cov)(i,i) += 1E-6;
 
-    toy_thrower = new ToyThrower(*postfit_cov, rng_seed, 1E-48);
+    TMatrixDSym cov_mat;
+    if(use_prefit_cov)
+    {
+        std::cout << TAG << "Using prefit covariance matrix." << std::endl;
+        cov_mat.ResizeTo(selected_events->GetNpar(), selected_events->GetNpar());
+        cov_mat = selected_events->GetPrefitCov();
+    }
+    else
+    {
+        std::cout << TAG << "Using postfit covariance matrix." << std::endl;
+        cov_mat.ResizeTo(postfit_cov->GetNrows(), postfit_cov->GetNrows());
+        cov_mat = *postfit_cov;
+    }
+ 
+     toy_thrower = new ToyThrower(cov_mat, rng_seed, 1E-48);
+
     if(!toy_thrower->ForcePosDef(1E-9, 1E-48))
     {
         std::cout << ERR << "Covariance matrix could not be made positive definite.\n"

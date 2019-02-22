@@ -39,6 +39,7 @@ struct CovOpt
     std::string binning;
     bool do_throw;
     bool decompose;
+    bool do_fit;
     double info_frac;
 };
 
@@ -79,15 +80,11 @@ class OptParser
         std::string xsLLh_env;
 
         int fit_type;
-        double data_POT;
-        double mc_POT;
         int rng_seed;
         int num_threads;
+        double data_POT;
+        double mc_POT;
 
-        bool use_fit_param;
-        bool use_flux_param;
-        bool use_det_param;
-        bool use_xsec_param;
         bool stat_fluc;
         bool zero_syst;
         bool regularise;

@@ -11,6 +11,8 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     }
     parser.PrintOptions();
     m_tree_type = is_true_tree ? "true" : "selected";
+    m_fit_par   = nullptr;
+    m_flux_par  = nullptr;
 
     std::string input_dir = parser.input_dir;
     std::string fname_data = parser.fname_data;
@@ -18,6 +20,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     std::string fname_output = parser.fname_output;
     std::vector<std::string> topology = parser.sample_topology;
 
+    npar = 0;
     const double potD = parser.data_POT;
     const double potMC = parser.mc_POT;
     m_norm = potD / potMC;
@@ -65,7 +68,21 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     enubins.push_back(nd_numu_bins->GetBinLowEdge(1));
     for(int i = 0; i < nd_numu_bins->GetNbins(); ++i)
         enubins.push_back(nd_numu_bins->GetBinUpEdge(i + 1));
+
+    TMatrixDSym* cov_flux = (TMatrixDSym*)finfluxcov -> Get(parser.flux_cov.matrix.c_str());
     finfluxcov->Close();
+
+    std::cout << TAG << "Setup Xsec Covariance" << std::endl;
+    TFile* file_xsec_cov = TFile::Open(parser.xsec_cov.fname.c_str(), "READ");
+    std::cout << TAG << "Opening " << parser.xsec_cov.fname << " for xsec covariance." << std::endl;
+    TMatrixDSym* cov_xsec = (TMatrixDSym*)file_xsec_cov -> Get(parser.xsec_cov.matrix.c_str());
+    file_xsec_cov -> Close();
+
+    std::cout << TAG << "Setup Detector Covariance" << std::endl;
+    TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
+    TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());
+    TMatrixDSym cov_det = *cov_det_in;
+    file_detcov -> Close();
 
     // FitParameters sigfitpara("par_fit", false);
     FitParameters* sigfitpara = new FitParameters("par_fit", false);
@@ -76,40 +93,57 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     }
     sigfitpara->InitEventMap(samples, 0);
     fit_par.push_back(sigfitpara);
+    m_fit_par = sigfitpara;
+    npar += sigfitpara->GetNpar();
 
     // FluxParameters fluxpara("par_flux");
     FluxParameters* fluxpara = new FluxParameters("par_flux");
-    for(const auto& opt : parser.detectors)
+    if(parser.flux_cov.do_fit)
     {
-        if(opt.use_detector)
-            fluxpara->AddDetector(opt.name, enubins);
+        fluxpara->SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                fluxpara->AddDetector(opt.name, enubins);
+        }
+        fluxpara->InitEventMap(samples, 0);
+        fit_par.push_back(fluxpara);
+        m_flux_par = fluxpara;
+        npar += fluxpara->GetNpar();
     }
-    fluxpara->InitEventMap(samples, 0);
-    fit_par.push_back(fluxpara);
-    m_flux_par = fluxpara;
 
     // XsecParameters xsecpara("par_xsec");
     XsecParameters* xsecpara = new XsecParameters("par_xsec");
-    for(const auto& opt : parser.detectors)
+    if(parser.xsec_cov.do_fit)
     {
-        if(opt.use_detector)
-            xsecpara->AddDetector(opt.name, opt.xsec);
+        xsecpara->SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                xsecpara->AddDetector(opt.name, opt.xsec);
+        }
+        xsecpara->InitEventMap(samples, 0);
+        fit_par.push_back(xsecpara);
+        npar += xsecpara->GetNpar();
     }
-    xsecpara->InitEventMap(samples, 0);
-    fit_par.push_back(xsecpara);
 
     // DetParameters detpara("par_det");
     DetParameters* detpara = new DetParameters("par_det");
-    for(const auto& opt : parser.detectors)
+    if(parser.det_cov.do_fit)
     {
-        if(opt.use_detector)
-            detpara->AddDetector(opt.name, samples, true);
+        detpara->SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                detpara->AddDetector(opt.name, samples, true);
+        }
+        if(is_true_tree)
+            detpara->InitEventMap(samples, 2);
+        else
+            detpara->InitEventMap(samples, 0);
+        fit_par.push_back(detpara);
+        npar += detpara->GetNpar();
     }
-    if(is_true_tree)
-        detpara->InitEventMap(samples, 2);
-    else
-        detpara->InitEventMap(samples, 0);
-    fit_par.push_back(detpara);
 
     InitSignalHist(parser.signal_definition);
     std::cout << TAG << "Finished initialization." << std::endl;
@@ -248,25 +282,72 @@ TH1D FitObj::GetHistCombined(const std::string& suffix) const
 double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux_hist,
                                 const std::string& det)
 {
-    std::vector<double> flux_par;
-    auto start = input_par.begin();
-    auto end = input_par.begin();
-    for(const auto& param_type : fit_par)
-    {
-        start = end;
-        end = start + param_type->GetNpar();
-        if(param_type == m_flux_par)
-            flux_par.assign(start, end);
-    }
-
     double flux_int = 0.0;
-    for(int i = 1; i <= flux_hist.GetNbinsX(); ++i)
+    if(m_flux_par == nullptr)
+        flux_int = flux_hist.Integral();
+
+    else
     {
-        const double enu = flux_hist.GetBinCenter(i);
-        const double val = flux_hist.GetBinContent(i);
-        const int idx = m_flux_par->GetBinIndex(det, enu);
-        flux_int += val * flux_par[i - 1];
+        std::vector<double> flux_par;
+        auto start = input_par.begin();
+        auto end = input_par.begin();
+        for(const auto& param_type : fit_par)
+        {
+            start = end;
+            end = start + param_type->GetNpar();
+            if(param_type == m_flux_par)
+                flux_par.assign(start, end);
+        }
+
+        for(int i = 1; i <= flux_hist.GetNbinsX(); ++i)
+        {
+            const double enu = flux_hist.GetBinCenter(i);
+            const double val = flux_hist.GetBinContent(i);
+            const int idx = m_flux_par->GetBinIndex(det, enu);
+            flux_int += val * flux_par[i - 1];
+        }
     }
 
     return flux_int;
+}
+
+TMatrixDSym FitObj::GetPrefitCov()
+{
+    TMatrixDSym prefit_cov(npar);
+    TMatrixDSym temp_mat = CalcTemplateCov();
+
+    unsigned int idx = 0;
+    for(const auto& param_type : fit_par)
+    {
+        TMatrixDSym* cov_mat = nullptr;
+        if(param_type == m_fit_par)
+            cov_mat = &temp_mat;
+        else
+            cov_mat = param_type->GetOriginalCovMat();
+
+        for(int i = 0; i < cov_mat->GetNrows(); ++i)
+        {
+            for(int j = 0; j < cov_mat->GetNrows(); ++j)
+            {
+                prefit_cov(idx+i, idx+j) = (*cov_mat)(i,j);
+            }
+        }
+
+        idx += cov_mat->GetNrows();
+    }
+
+    return prefit_cov;
+}
+
+TMatrixDSym FitObj::CalcTemplateCov()
+{
+    TMatrixDSym temp_cov(m_fit_par->GetNpar());
+
+    ReweightNominal();
+    auto signal_hist = GetHistCombined("prefit");
+
+    for(int i = 0; i < m_fit_par->GetNpar(); ++i)
+        temp_cov(i,i) = 1.0 / signal_hist.GetBinContent(i+1);
+
+    return temp_cov;
 }

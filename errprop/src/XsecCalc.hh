@@ -125,7 +125,7 @@ private:
     unsigned int num_signals;
     unsigned int total_signal_bins;
 
-    void UsePrefitCov();
+    bool use_prefit_cov;
     const double perMeV = 1.0;
     const double perGeV = 1000.0;
 

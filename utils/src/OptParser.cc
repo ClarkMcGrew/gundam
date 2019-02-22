@@ -32,10 +32,6 @@ bool OptParser::ParseJSON(std::string json_file)
     fname_output = xsLLh_env + j["output_file"].get<std::string>();
 
     fit_type = j["fit_type"];
-    use_fit_param  = j["use_fit_param"];
-    use_flux_param = j["use_flux_param"];
-    use_det_param  = j["use_det_param"];
-    use_xsec_param = j["use_xsec_param"];
     stat_fluc = j["stat_fluc"];
     zero_syst = j["zero_syst"];
     data_POT = j["data_POT"];
@@ -51,18 +47,21 @@ bool OptParser::ParseJSON(std::string json_file)
     flux_cov.do_throw = j["flux_cov"]["throw"];
     flux_cov.decompose = j["flux_cov"]["decomp"];
     flux_cov.info_frac = j["flux_cov"]["variance"];
+    flux_cov.do_fit = j["flux_cov"]["fit_par"];
 
     det_cov.fname = input_dir + j["det_cov"]["file"].get<std::string>();
     det_cov.matrix = j["det_cov"]["matrix"];
     det_cov.do_throw = j["det_cov"]["throw"];
     det_cov.decompose = j["det_cov"]["decomp"];
     det_cov.info_frac = j["det_cov"]["variance"];
+    det_cov.do_fit = j["det_cov"]["fit_par"];
 
     xsec_cov.fname = input_dir + j["xsec_cov"]["file"].get<std::string>();
     xsec_cov.matrix = j["xsec_cov"]["matrix"];
     xsec_cov.do_throw = j["xsec_cov"]["throw"];
     xsec_cov.decompose = j["xsec_cov"]["decomp"];
     xsec_cov.info_frac = j["xsec_cov"]["variance"];
+    xsec_cov.do_fit = j["xsec_cov"]["fit_par"];
 
     regularise = j["regularisation"]["enable"];
     reg_strength = j["regularisation"]["strength"];
@@ -104,6 +103,32 @@ bool OptParser::ParseJSON(std::string json_file)
         s.binning = input_dir + sample["binning"].get<std::string>();
         s.use_sample = sample["use_sample"];
         samples.push_back(s);
+    }
+
+    json m;
+    try
+    {
+        m = j.at("min_settings");
+        min_settings.minimizer = m.value("minimizer", "Minuit2");
+        min_settings.algorithm = m.value("algorithm", "Migrad");
+        min_settings.print_level = m.value("print_level", 2);
+        min_settings.strategy  = m.value("strategy", 1);
+        min_settings.tolerance = m.value("tolerance", 1E-4);
+        min_settings.max_iter  = m.value("max_iter", 1E6);
+        min_settings.max_fcn   = m.value("max_fcn", 1E9);
+    }
+    catch(json::exception& e)
+    {
+        std::cout << TAG << "Using default minimizer settings."
+                  << std::endl;
+
+        min_settings.minimizer = "Minuit2";
+        min_settings.algorithm = "Migrad";
+        min_settings.print_level = 2;
+        min_settings.strategy  = 1;
+        min_settings.tolerance = 1E-4;
+        min_settings.max_iter  = 1E6;
+        min_settings.max_fcn   = 1E9;
     }
 
     std::cout << TAG << "Finished loading JSON configure file.\n";
