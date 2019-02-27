@@ -183,7 +183,7 @@ void plot_fit_output(const std::string& file_name = "fit1_statFluc")
     legend -> Draw();
 
     ss.str("");
-    ss << output_dir << "chi2_" << file_name << ".pdf";
+    ss << output_dir << "chi2_" << file_name << ".png";
     c -> Print(ss.str().c_str());
     // delete c;
     

@@ -14,14 +14,14 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
     SetBinning(m_binning);
 
     std::cout << TAG << m_name << ", ID " << m_sample_id << std::endl
-              << TAG << "Detector: " << m_detector << std::endl
-              << TAG << "Bin edges: " << std::endl;
+              << TAG << "Detector: " << m_detector << std::endl;
+    //           << TAG << "Bin edges: " << std::endl;
 
-    for(const auto& bin : m_bin_edges)
-    {
-        std::cout << bin.D2low << " " << bin.D2high << " " << bin.D1low << " " << bin.D1high
-                  << std::endl;
-    }
+    // for(const auto& bin : m_bin_edges)
+    // {
+    //     std::cout << bin.D2low << " " << bin.D2high << " " << bin.D1low << " " << bin.D1high
+    //               << std::endl;
+    // }
 
     m_hpred       = nullptr;
     m_hmc         = nullptr;

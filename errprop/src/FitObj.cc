@@ -183,6 +183,9 @@ void FitObj::InitSignalHist(const std::vector<SignalDef>& v_signal)
         signal_hist.emplace_back(TH1D(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins));
         total_signal_bins += nbins;
     }
+    //LM Define histogram that contains the O/C ratio
+    const int nbins = signal_bins.at(0).GetNbins();
+    TH1D ratio_hist("ratio_hist", "ratio_hist", nbins, 0, nbins);
 }
 
 void FitObj::ReweightEvents(const std::vector<double>& input_par)
@@ -231,6 +234,10 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
 
     for(auto& hist : signal_hist)
         hist.Scale(m_norm);
+
+    //LM
+    ratio_hist = signal_hist.at(1);
+    ratio_hist.Divide(&signal_hist.at(0));
 }
 
 void FitObj::ReweightNominal()
@@ -261,6 +268,7 @@ void FitObj::ResetHist()
 {
     for(auto& hist : signal_hist)
         hist.Reset();
+    ratio_hist.Reset();
 }
 
 TH1D FitObj::GetHistCombined(const std::string& suffix) const

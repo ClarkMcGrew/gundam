@@ -6,6 +6,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
     , rng_seed(0)
     , num_signals(0)
     , total_signal_bins(0)
+    , signal_bins(0)
     , postfit_cov(nullptr)
     , postfit_cor(nullptr)
     , toy_thrower(nullptr)
@@ -28,6 +29,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
         extra_hists = working_dir + extra_hists;
 
     num_toys = j["num_toys"];
+    do_ratio = j["do_ratio"];
     rng_seed = j["rng_seed"];
 
     std::string sel_json_config = working_dir + j["sel_config"].get<std::string>();
@@ -36,6 +38,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
     std::cout << TAG << "Input file from fit: " << input_file << std::endl
               << TAG << "Output xsec file: " << output_file << std::endl
               << TAG << "Num. toys: " << num_toys << std::endl
+              << TAG << "Calculate O/C ratio: " << do_ratio << std::endl
               << TAG << "RNG  seed: " << rng_seed << std::endl
               << TAG << "Selected events config: " << sel_json_config << std::endl
               << TAG << "True events config: " << tru_json_config << std::endl;
@@ -48,6 +51,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
     selected_events = new FitObj(sel_json_config, "selectedEvents", false);
     true_events = new FitObj(tru_json_config, "trueEvents", true);
     total_signal_bins = selected_events->GetNumSignalBins();
+    signal_bins = total_signal_bins/2;
 
     InitNormalization(j["sig_norm"], working_dir);
     std::cout << TAG << "Finished initialization." << std::endl;
@@ -123,7 +127,7 @@ void XsecCalc::InitToyThrower()
         cov_mat = *postfit_cov;
     }
  
-     toy_thrower = new ToyThrower(cov_mat, rng_seed, 1E-48);
+    toy_thrower = new ToyThrower(cov_mat, rng_seed, 1E-48);
 
     if(!toy_thrower->ForcePosDef(1E-9, 1E-48))
     {
@@ -213,17 +217,36 @@ void XsecCalc::ReweightNominal()
 
 void XsecCalc::ReweightBestFit()
 {
+    //Reweight all events using the post-fit parameters
+    //This is done in FitObj.cc
     ReweightParam(postfit_param);
 
-    auto sel_hists = selected_events->GetSignalHist();
-    auto tru_hists = true_events->GetSignalHist();
+    //Get a vector of histograms containing the selected (or true) number
+    //of signal events which have been weighted using the best
+    //fit values (done above). Each different signal definition
+    //is a separate histogram in the vector. This variable will
+    //be destroyed once this function finishes.
+    auto sel_hists  = selected_events->GetSignalHist();
+    auto tru_hists  = true_events->GetSignalHist();
+    auto ratio_hists = selected_events->GetRatioHist();
 
+    //Apply the efficiency and other normalizations to calculate
+    //the cross-section. This is done in place in the histograms.
     ApplyEff(sel_hists, tru_hists, false);
     ApplyNorm(sel_hists, postfit_param, false);
-
+    ApplyNormTargetsRatio(ratio_hists, false);
+    
+    //Concatenate the signal histograms together for later use
+    //in the error propagation. These are class member variables.
     sel_best_fit = ConcatHist(sel_hists, "sel_best_fit");
     tru_best_fit = ConcatHist(tru_hists, "tru_best_fit");
+    
+    //Store the vector of histograms with the calculated best-fit
+    //cross section in a class member variable for use in other
+    //functions.
     signal_best_fit = std::move(sel_hists);
+    ratio_best_fit  = std::move(ratio_hists);
+
 }
 
 void XsecCalc::ReweightParam(const std::vector<double>& param)
@@ -263,14 +286,17 @@ void XsecCalc::GenerateToys(const int ntoys)
         selected_events->ReweightEvents(toy);
         true_events->ReweightEvents(toy);
 
-        auto sel_hists = selected_events->GetSignalHist();
-        auto tru_hists = true_events->GetSignalHist();
+        auto sel_hists  = selected_events->GetSignalHist();
+        auto tru_hists  = true_events->GetSignalHist();
+        auto ratio_hists = selected_events->GetRatioHist();
 
         ApplyEff(sel_hists, tru_hists, true);
         ApplyNorm(sel_hists, toy, true);
+        ApplyNormTargetsRatio(ratio_hists, true); //LM
 
         toys_sel_events.emplace_back(ConcatHist(sel_hists, ("sel_signal_toy" + std::to_string(i))));
         toys_tru_events.emplace_back(ConcatHist(tru_hists, ("tru_signal_toy" + std::to_string(i))));
+        toys_ratio.emplace_back(ratio_hists);
 
         /*
         total_signal_bins = npar;
@@ -319,6 +345,27 @@ void XsecCalc::ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>&
         ApplyFlux(i, vec_hist[i], param, is_toy);
         ApplyBinWidth(i, vec_hist[i], perGeV);
     }
+}
+
+void XsecCalc::ApplyNormTargetsRatio(TH1D& hist, bool is_toy)
+{
+    double num_targets_O = 1.0; // signal 1
+    double num_targets_C = 1.0; // signal 0
+    if(is_toy)
+    {
+        num_targets_O = toy_thrower->ThrowSinglePar(v_normalization[1].num_targets_val,v_normalization[1].num_targets_err);
+        num_targets_C = toy_thrower->ThrowSinglePar(v_normalization[0].num_targets_val,v_normalization[0].num_targets_err);
+        v_normalization[1].target_throws.Fill(num_targets_O);
+        v_normalization[0].target_throws.Fill(num_targets_C);
+    }
+    else
+    {
+        num_targets_O = v_normalization[1].num_targets_val;
+        num_targets_C = v_normalization[0].num_targets_val;
+    }
+
+    hist.Scale(num_targets_C / num_targets_O);
+
 }
 
 void XsecCalc::ApplyTargets(const unsigned int signal_id, TH1D& hist, bool is_toy)
@@ -392,13 +439,15 @@ TH1D XsecCalc::ConcatHist(const std::vector<TH1D>& vec_hist, const std::string& 
 
 void XsecCalc::CalcCovariance(bool use_best_fit)
 {
-    std::cout << TAG << "Calculating covariance matrix..." << std::endl;
+    std::cout << TAG << "Calculating covariance matrix for C and O cross-sections..." << std::endl;
 
     TH1D h_cov;
+    TH1D h_cov_ratio;
     if(use_best_fit)
     {
         ReweightBestFit();
-        h_cov = sel_best_fit;
+        h_cov       = sel_best_fit;
+        h_cov_ratio = ratio_best_fit;
         std::cout << TAG << "Using best fit for covariance." << std::endl;
     }
     else
@@ -415,6 +464,15 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         //for(int i = 1; i <= total_signal_bins; ++i)
         //    std::cout << "Bin " << i << ": " << h_cov.GetBinContent(i) << std::endl;
 
+        TH1D h_mean_ratio("", "", signal_bins, 0, signal_bins);
+        for(const auto& hist : toys_ratio)
+        {
+            for(int i = 0; i < signal_bins; ++i)
+                h_mean_ratio.Fill(i + 0.5, hist.GetBinContent(i + 1));
+        }
+        h_mean_ratio.Scale(1.0 / (1.0 * num_toys));
+        h_cov_ratio = h_mean_ratio;
+
         std::cout << TAG << "Using mean of toys for covariance." << std::endl;
     }
 
@@ -423,6 +481,12 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
 
     xsec_cor.ResizeTo(total_signal_bins, total_signal_bins);
     xsec_cor.Zero();
+
+    ratio_cov.ResizeTo(signal_bins, signal_bins);
+    ratio_cov.Zero();
+
+    ratio_cor.ResizeTo(signal_bins, signal_bins);
+    ratio_cor.Zero();
 
     for(const auto& hist : toys_sel_events)
     {
@@ -433,6 +497,15 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
                 const double x = hist.GetBinContent(i + 1) - h_cov.GetBinContent(i + 1);
                 const double y = hist.GetBinContent(j + 1) - h_cov.GetBinContent(j + 1);
                 xsec_cov(i, j) += x * y / (1.0 * num_toys);
+            }
+        }
+        for(int i = 0; i < signal_bins; ++i)
+        {
+            for(int j = 0; j < signal_bins; ++j)
+            {
+                const double x = hist.GetBinContent(i + 1) - h_cov_ratio.GetBinContent(i + 1);
+                const double y = hist.GetBinContent(j + 1) - h_cov_ratio.GetBinContent(j + 1);
+                ratio_cov(i, j) += x * y / (1.0 * num_toys);
             }
         }
     }
@@ -451,6 +524,21 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         }
     }
 
+    for(int i = 0; i < signal_bins; ++i)
+    {
+        for(int j = 0; j < signal_bins; ++j)
+        {
+            const double x = ratio_cov(i, i);
+            const double y = ratio_cov(j, j);
+            const double z = ratio_cov(i, j);
+            ratio_cor(i, j) = z / (sqrt(x * y));
+
+            if(std::isnan(ratio_cor(i, j)))
+                ratio_cor(i, j) = 0.0;
+        }
+    }
+
+
     for(int i = 0; i < total_signal_bins; ++i)
         sel_best_fit.SetBinError(i + 1, sqrt(xsec_cov(i, i)));
 
@@ -464,8 +552,11 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         idx += nbins;
     }
 
-    std::cout << TAG << "Covariance and correlation matrix calculated." << std::endl;
-    std::cout << TAG << "Errors applied to histograms." << std::endl;
+    for(int i = 0; i < signal_bins; ++i)
+        ratio_best_fit.SetBinError(i + 1, sqrt(ratio_cov(i, i)));
+
+    std::cout << TAG << "Covariance and correlation matrix calculated for C and O cross-sections." << std::endl;
+    std::cout << TAG << "Errors applied to histograms for C and O cross-sections." << std::endl;
 }
 
 void XsecCalc::SaveOutput(bool save_toys)
@@ -488,17 +579,25 @@ void XsecCalc::SaveOutput(bool save_toys)
     sel_best_fit.Write("sel_best_fit");
     tru_best_fit.Write("tru_best_fit");
     eff_best_fit.Write("eff_best_fit");
+    ratio_best_fit.Write("ratio_best_fit");
 
     xsec_cov.Write("xsec_cov");
     xsec_cor.Write("xsec_cor");
 
+    ratio_cov.Write("ratio_cov");
+    ratio_cor.Write("ratio_cor");
+
     postfit_cov->Write("postfit_cov");
     postfit_cor->Write("postfit_cor");
+
+    if(use_prefit_cov)
+        selected_events->GetPrefitCov().Write("prefit_cov");
 
     TVectorD postfit_param_root(postfit_param.size(), postfit_param.data());
     postfit_param_root.Write("postfit_param");
 
     SaveSignalHist(file);
+    SaveRatioHist(file);
 
     for(const auto& n : v_normalization)
     {
@@ -554,7 +653,7 @@ void XsecCalc::SaveSignalHist(TFile* file)
             std::string name = v_normalization.at(id).name + "_cos_bin" + std::to_string(k);
             TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
 
-            for(int l = 1; l <= temp.GetNbinsX(); ++l) //LM add +1 ??? (originally : not)
+            for(int l = 1; l <= temp.GetNbinsX(); ++l)
             {
                 temp.SetBinContent(l, signal_best_fit.at(id).GetBinContent(l+offset));
                 temp.SetBinError(l, signal_best_fit.at(id).GetBinError(l+offset));
@@ -564,6 +663,53 @@ void XsecCalc::SaveSignalHist(TFile* file)
             temp.Write();
         }
     }
+}
+
+void XsecCalc::SaveRatioHist(TFile* file)
+{
+    file->cd();
+    
+    BinManager bm = selected_events->GetBinManager(0);
+    auto cos_edges = bm.GetEdgeVector(0);
+    auto pmu_edges = bm.GetEdgeVector(1);
+
+    std::vector<std::vector<double>> bin_edges;
+    bin_edges.emplace_back(std::vector<double>());
+    bin_edges.at(bin_edges.size()-1).emplace_back(pmu_edges.at(0).first);
+    bin_edges.at(bin_edges.size()-1).emplace_back(pmu_edges.at(0).second);
+
+    for(int m = 1; m < cos_edges.size(); ++m)
+    {
+        if(cos_edges[m] != cos_edges[m-1])
+            bin_edges.emplace_back(std::vector<double>());
+
+        bin_edges.at(bin_edges.size()-1).emplace_back(pmu_edges.at(m).first);
+        bin_edges.at(bin_edges.size()-1).emplace_back(pmu_edges.at(m).second);
+    }
+
+    for(int n = 0; n < bin_edges.size(); ++n)
+    {
+        std::sort(bin_edges.at(n).begin(), bin_edges.at(n).end());
+        auto iter = std::unique(bin_edges.at(n).begin(), bin_edges.at(n).end());
+        bin_edges.at(n).erase(iter, bin_edges.at(n).end());
+    }
+
+    unsigned int offset = 0;
+    for(int k = 0; k < bin_edges.size(); ++k)
+    {
+        std::string name = "CC0piOCRatio_cos_bin" + std::to_string(k);
+        TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
+
+        for(int l = 1; l <= temp.GetNbinsX(); ++l)
+        {
+            temp.SetBinContent(l, ratio_best_fit.GetBinContent(l+offset));
+            temp.SetBinError(l, ratio_best_fit.GetBinError(l+offset));
+        }
+        offset += temp.GetNbinsX();
+        temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+        temp.Write();
+    }
+
 }
 
 void XsecCalc::SaveExtra(TFile* output)

@@ -67,6 +67,7 @@ public:
 
     void ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy);
     void ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy);
+    void ApplyNormTargetsRatio(TH1D& hist, bool is_toy);
     void ApplyTargets(const unsigned int signal_id, TH1D& hist, bool is_toy);
     void ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::vector<double>& param,
                    bool is_toy);
@@ -82,6 +83,7 @@ public:
 
     void SaveOutput(bool save_toys = false);
     void SaveSignalHist(TFile* file);
+    void SaveRatioHist(TFile* file);
     void SaveExtra(TFile* file);
     void SetOutputFile(const std::string& override_file) { output_file = override_file; };
 
@@ -107,13 +109,18 @@ private:
     TMatrixDSym xsec_cov;
     TMatrixDSym xsec_cor;
 
+    TMatrixDSym ratio_cov; //LM
+    TMatrixDSym ratio_cor; //LM
+
     TH1D sel_best_fit;
     TH1D tru_best_fit;
     TH1D eff_best_fit;
+    TH1D ratio_best_fit; //LM
     std::vector<TH1D> signal_best_fit;
     std::vector<TH1D> toys_sel_events;
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;
+    std::vector<TH1D> toys_ratio; //LM
     std::vector<SigNorm> v_normalization;
 
     std::string input_file;
@@ -124,7 +131,9 @@ private:
     unsigned int rng_seed;
     unsigned int num_signals;
     unsigned int total_signal_bins;
+    unsigned int signal_bins;
 
+    bool do_ratio;
     bool use_prefit_cov;
     const double perMeV = 1.0;
     const double perGeV = 1000.0;
