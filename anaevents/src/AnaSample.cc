@@ -335,7 +335,7 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 
         if(stat_fluc && datatype == 2)
         {
-            for(unsigned int i = 0; i < m_hdata->GetNbinsX(); ++i)
+            for(unsigned int i = 1; i <= m_hdata->GetNbinsX(); ++i)
             {
                 double val = gRandom->Poisson(m_hdata->GetBinContent(i));
                 m_hdata->SetBinContent(i, val);

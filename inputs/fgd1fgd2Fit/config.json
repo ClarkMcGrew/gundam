@@ -1,7 +1,7 @@
 {
     "data_file" : "xsllh_nominal_noECal.root",
     "mc_file"   : "xsllh_nominal_noECal.root",
-    "output_file" : "/outputs/fit1_test.root",
+    "output_file" : "/outputs/fit1_asimov_onlyTemPar.root",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
     "stat_fluc" : false,
@@ -27,7 +27,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "det_cov" : {
         "file" : "xsllh_detcovmat.root",
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsllh_xseccovmat.root",
@@ -43,7 +43,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
         "enable" : false,

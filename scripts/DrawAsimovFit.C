@@ -16,7 +16,7 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
+void DrawAsimovFit(string inputname = "fit1_asimov", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
 	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
@@ -24,6 +24,7 @@ void DrawAsimovFit(string inputname = "fit1_statFluc", string fbinning = "/sps/t
 	//======================================================================================================  
 	//=== Set T2K style. In CommonStyle.h option 1 has been setted
 	CommonStyle();
+	gROOT->ForceStyle();
 
 	//======================================================================================================  
 	std::cout << "================================================" << std::endl;

@@ -1,20 +1,7 @@
-// #include "SetT2KStyle.h"
-#include "/sps/t2k/lmaret/softwares/highland2software/h2_head/highland2/highlandTools/v2r22/src/SetT2KStyle.H"
 #include "TROOT.h"
 
 
 int CommonStyle() {
-
-  // T2K style
-  TString localStyleName = "T2K";
-  // -- WhichStyle --
-  // 1 = presentation large fonts
-  // 2 = presentation small fonts
-  // 3 = publication/paper
-  Int_t localWhichStyle = 1;
-
-  TStyle* t2kstyle = SetT2KStyle(localWhichStyle, localStyleName);
-  gROOT->SetStyle(t2kstyle->GetName());
 
   // -- margin --
   gStyle->SetPadTopMargin(0.10);
@@ -30,9 +17,9 @@ int CommonStyle() {
 
   // -- title/label size --
   gStyle->SetTitleFontSize(0.09); 
-  gStyle->SetTitleSize(0.08, "x"); 
-  gStyle->SetTitleSize(0.08, "y"); 
-  gStyle->SetTitleSize(0.08, "z"); 
+  gStyle->SetTitleSize(0.07, "x"); 
+  gStyle->SetTitleSize(0.07, "y"); 
+  gStyle->SetTitleSize(0.07, "z"); 
   gStyle->SetLabelSize(0.06,"x"); 
   gStyle->SetLabelSize(0.06,"y"); 
   gStyle->SetLabelSize(0.06,"z"); 
@@ -43,7 +30,7 @@ int CommonStyle() {
   //  gStyle->SetOptStat(1111);
 
   // -- lines --
-  //  gStyle->SetLineWidth(4);
+   gStyle->SetLineWidth(1);
 
   // -- fills/color --
   //  gStyle->SetFrameFillColor(0); // white color for backgroud

@@ -197,12 +197,13 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string work
             temp_file->Close();
 
             unsigned int nbins = 100;
-            temp_hist
-                = new TH1D("", "", nbins, n.flux_int - 5 * n.flux_err, n.flux_int + 5 * n.flux_err);
+
+            temp_hist = new TH1D("", "", nbins, n.flux_int - 5 * n.flux_err, n.flux_int + 5 * n.flux_err);
             n.flux_throws = *temp_hist;
-            temp_hist = new TH1D("", "", nbins, n.num_targets_val - 5 * n.num_targets_err,
-                                 n.num_targets_val + 5 * n.num_targets_err);
+
+            temp_hist = new TH1D("", "", nbins, n.num_targets_val - 5 * n.num_targets_err,n.num_targets_val + 5 * n.num_targets_err);
             n.target_throws = *temp_hist;
+            
             v_normalization.push_back(n);
         }
     }
@@ -246,7 +247,6 @@ void XsecCalc::ReweightBestFit()
     //functions.
     signal_best_fit = std::move(sel_hists);
     ratio_best_fit  = std::move(ratio_hists);
-
 }
 
 void XsecCalc::ReweightParam(const std::vector<double>& param)
@@ -320,6 +320,13 @@ void XsecCalc::ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist
 
         for(int j = 1; j <= sel_hist[i].GetNbinsX(); ++j)
         {
+            // if(!is_toy)
+            //     std::cout   << "***** in XsecCalc::ApplyEff() for signal "<<i<<", bin j="<<j<<" : "
+            //                 << ", sel events  = " << sel_hist[i].GetBinContent(j)
+            //                 << ", true events = " << tru_hist[i].GetBinContent(j)
+            //                 << ", bin eff = "     << eff_hist[i].GetBinContent(j)
+            //                 << std::endl;
+
             double bin_eff = eff.GetBinContent(j);
             double bin_val = sel_hist[i].GetBinContent(j);
             sel_hist[i].SetBinContent(j, bin_val / bin_eff);

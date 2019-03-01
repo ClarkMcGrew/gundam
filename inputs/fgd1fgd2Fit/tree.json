@@ -70,7 +70,7 @@
                 "reaction" : "fgd2reaction",
                 "topology" : "fgd2topology",
                 "target"   : "fgd2target",
-                "fgdtarget": "fgdtargetCCZeroPi",
+                "fgdtarget": "fgd2fgdtargetCCZeroPi",
                 "nutype"   : "fgd2nutype",
                 "enu_true" : "nu_trueE",
                 "weight"   : "weight",

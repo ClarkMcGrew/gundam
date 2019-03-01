@@ -177,7 +177,7 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     h_prefit.Write();
 }
 
-void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool stat_fluc)
+bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool stat_fluc)
 {
     std::cout << TAG << "Starting to fit." << std::endl;
     m_samples = samples;
@@ -186,7 +186,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     {
         std::cerr << ERR << "In XsecFitter::Fit()\n"
                   << ERR << "Fitter has not been initialized." << std::endl;
-        return;
+        return false;
     }
 
 
@@ -220,7 +220,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     {
         std::cerr << ERR << "In XsecFitter::Fit()\n"
                   << ERR << "No valid fitting mode provided." << std::endl;
-        return;
+        return false;
     }
 
     SaveEvents(m_calls);
@@ -234,25 +234,21 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     {
         std::cout << ERR << "Fit did not converge while running " << min_settings.algorithm
                   << std::endl;
-        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl
-                  << ERR << "Exiting." << std::endl;
-        return;
+        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl;
     }
     else
     {
         std::cout << TAG << "Fit converged." << std::endl
                   << TAG << "Status code: " << m_fitter->Status() << std::endl;
-    }
 
-    std::cout << TAG << "Calling HESSE." << std::endl;
-    did_converge = m_fitter->Hesse();
+        std::cout << TAG << "Calling HESSE." << std::endl;
+        did_converge = m_fitter->Hesse();
+    }
 
     if(!did_converge)
     {
         std::cout << ERR << "Hesse did not converge." << std::endl;
-        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl
-                  << ERR << "Exiting." << std::endl;
-        return;
+        std::cout << ERR << "Failed with status code: " << m_fitter->Status() << std::endl;
     }
     else
     {
@@ -314,7 +310,7 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     if(k != ndim)
     {
         std::cout << ERR << "Number of parameters does not match." << std::endl;
-        return;
+        return false;
     }
 
     m_dir->cd();
@@ -325,7 +321,11 @@ void XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     SaveResults(res_pars, err_pars);
     SaveFinalEvents(m_calls, res_pars);
 
+    if(!did_converge)
+        std::cout << ERR << "Not valid fit result." << std::endl;
     std::cout << TAG << "Fit routine finished. Results saved." << std::endl;
+    
+    return did_converge;
 }
 
 void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
@@ -355,8 +355,8 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
                 m_fitpara[j]->ReWeight(ev, det, s, i, fitpar_throw[j]);
         }
 
-        m_samples[s]->FillEventHist(kAsimov);
-        m_samples[s]->FillEventHist(kReset);
+        m_samples[s]->FillEventHist(kAsimov, stat_fluc);
+        m_samples[s]->FillEventHist(kReset, stat_fluc);
         chi2_stat += m_samples[s]->CalcChi2();
     }
 

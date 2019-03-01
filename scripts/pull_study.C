@@ -4,12 +4,19 @@
 *******************************************/
 #include <unistd.h>
 #include <TFile.h>
-// #include "/atlas/users/lmaret/h2_v2r21/highland2/highlandTools/v2r17p1/src/SetT2KStyle.H"
+#include "CommonStyle.h"
 
 
 // Compute the pull for each parameter
 void pull_study()
 {
+	
+	//======================================================================================================  
+	//=== Set common style
+	CommonStyle();
+	gROOT->ForceStyle();
+
+
 	std::cout << "------------------------" << std::endl;
 	std::cout << "----- Begin script -----" << std::endl;
 
@@ -316,19 +323,3 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 }
 
 
-
-// Set plot style
-void plotStyle()
-{
-	// T2K style
-	// -- WhichStyle -- // 1 = presentation large fonts // 2 = presentation small fonts // 3 = publication/paper 
-	// TStyle* t2kstyle = SetT2KStyle(1, "T2K");
-	// gROOT->SetStyle(t2kstyle->GetName());
-
-	gStyle->SetOptStat(1111);
-	gStyle->SetOptFit(111);
-
-	gStyle->SetHistLineWidth( Width_t(2.5) );
-
-	std::cout << "Set T2K plot style." << std::endl;
-}

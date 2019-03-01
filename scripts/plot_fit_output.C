@@ -6,7 +6,11 @@
 
 void plot_fit_output(const std::string& file_name = "fit1_statFluc")
 {
-    gStyle -> SetOptStat(0);
+    //======================================================================================================  
+    //=== Set common style
+    CommonStyle();
+    gROOT->ForceStyle();
+
 
     const std::string output_dir = "plots/fitteroutput/asimov/";
     const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());

@@ -19,9 +19,9 @@ void DrawFitResultCov(string inputname = "fit1_statFluc")
 	int NbinsAna  = 58;
 	int NbinsFlux = 20;  
 	int NbinsXsec = 22;
-	int NbinsDet[] = {58, 58, 58, 58, 25, 58, 58, 58,
-		              58, 58, 58, 58, 25, 58, 58, 58,
-		              58, 58, 58, 58, 25, 58, 58, 58 };
+	int NbinsDet[] = {58, 58, 58, 15, 25, 58, 58, 58,
+		              58, 58, 58, 15, 25, 58, 58, 58,
+		              58, 58, 58, 15, 25, 58, 58, 58 };
 
 	int Nbins = cov_mat -> GetNrows();
 
