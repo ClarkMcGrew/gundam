@@ -119,7 +119,7 @@ int main(int argc, char** argv)
 
     for(const auto& opt : parser.samples)
     {
-        if(opt.use_sample == true)
+        if(opt.use_sample == true && opt.cut_branch >= 0)
         {
             std::cout << TAG << "Adding new sample to fit.\n"
                       << TAG << "Name: " << opt.name << std::endl
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
             s -> SetNorm(potD/potMC);
-            if(opt.cut_branch >= 0)
+            //if(opt.cut_branch >= 0)
                 samples.push_back(s);
         }
     }
@@ -166,28 +166,34 @@ int main(int argc, char** argv)
     fitpara.push_back(&sigfitpara);
 
     FluxParameters fluxpara("par_flux");
-    fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
-    fluxpara.SetThrow(parser.flux_cov.do_throw);
-    fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
-    for(const auto& opt : parser.detectors)
+    if(parser.flux_cov.do_fit)
     {
-        if(opt.use_detector)
-            fluxpara.AddDetector(opt.name, enubins);
+        fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
+        fluxpara.SetThrow(parser.flux_cov.do_throw);
+        fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                fluxpara.AddDetector(opt.name, enubins);
+        }
+        fluxpara.InitEventMap(samples, 0);
+        fitpara.push_back(&fluxpara);
     }
-    fluxpara.InitEventMap(samples, 0);
-    fitpara.push_back(&fluxpara);
 
     /*
     XsecParameters xsecpara("par_xsec");
-    xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
-    xsecpara.SetThrow(parser.xsec_cov.do_throw);
-    for(const auto& opt : parser.detectors)
+    if(parser.xsec_cov.do_fit)
     {
-        if(opt.use_detector)
-            xsecpara.AddDetector(opt.name, opt.xsec);
+        xsecpara.SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+        xsecpara.SetThrow(parser.xsec_cov.do_throw);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                xsecpara.AddDetector(opt.name, opt.xsec);
+        }
+        xsecpara.InitEventMap(samples, 0);
+        fitpara.push_back(&xsecpara);
     }
-    xsecpara.InitEventMap(samples, 0);
-    fitpara.push_back(&xsecpara);
 
     std::cout << TAG << "Setup Detector Covariance" << std::endl;
     TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
@@ -196,13 +202,18 @@ int main(int argc, char** argv)
     file_detcov -> Close();
 
     DetParameters detpara("par_det");
-    detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
-    detpara.SetThrow(parser.det_cov.do_throw);
-    detpara.SetInfoFrac(parser.det_cov.info_frac);
-    for(const auto& opt : parser.detectors)
+    if(parser.det_cov.do_fit)
     {
-        if(opt.use_detector)
-            detpara.AddDetector(opt.name, samples, true);
+        detpara.SetCovarianceMatrix(cov_det, parser.det_cov.decompose);
+        detpara.SetThrow(parser.det_cov.do_throw);
+        detpara.SetInfoFrac(parser.det_cov.info_frac);
+        for(const auto& opt : parser.detectors)
+        {
+            if(opt.use_detector)
+                detpara.AddDetector(opt.name, samples, true);
+        }
+        detpara.InitEventMap(samples, 0);
+        fitpara.push_back(&detpara);
     }
     detpara.InitEventMap(samples, 0);
     fitpara.push_back(&detpara);
@@ -211,6 +222,7 @@ int main(int argc, char** argv)
     //Instantiate fitter obj
     XsecFitter xsecfit(fout, seed, threads);
     //xsecfit.SetSaveFreq(10000);
+    xsecfit.SetMinSettings(parser.min_settings);
     xsecfit.SetPOTRatio(potD/potMC);
     xsecfit.SetTopology(topology);
     xsecfit.SetZeroSyst(parser.zero_syst);
@@ -224,9 +236,16 @@ int main(int argc, char** argv)
     xsecfit.FixParameter("par_fit_sig1_6", 1.0);
     xsecfit.FixParameter("par_fit_sig1_11", 1.0);
 
+    bool did_converge = false;
     if(!dry_run)
-        xsecfit.Fit(samples, parser.fit_type, parser.stat_fluc);
+    {
+        did_converge = xsecfit.Fit(samples, parser.fit_type, parser.stat_fluc);
+        if(!did_converge)
+            std::cout << TAG << "Fit did not coverge." << std::endl;
+    }
     fout -> Close();
 
+    std::cout << TAG << "\u3042\u308a\u304c\u3068\u3046\u3054\u3056\u3044\u307e\u3057\u305f\uff01"
+              << std::endl;
     return 0;
 }

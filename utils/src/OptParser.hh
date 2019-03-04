@@ -39,6 +39,7 @@ struct CovOpt
     std::string binning;
     bool do_throw;
     bool decompose;
+    bool do_fit;
     double info_frac;
 };
 
@@ -47,13 +48,18 @@ struct DetOpt
     std::string name;
     std::string xsec;
     std::string binning;
-    std::string flux_file;
-    std::string flux_hist;
-    double flux_integral;
-    double flux_error;
-    double ntargets_val;
-    double ntargets_err;
     bool use_detector;
+};
+
+struct MinSettings
+{
+    std::string minimizer;
+    std::string algorithm;
+    int print_level;
+    int strategy;
+    double tolerance;
+    double max_iter;
+    double max_fcn;
 };
 
 class OptParser
@@ -70,16 +76,14 @@ class OptParser
         std::string fname_data;
         std::string fname_mc;
         std::string fname_output;
-        std::string fname_xsec;
         std::string input_dir;
         std::string xsLLh_env;
 
         int fit_type;
-        int data_POT;
-        int mc_POT;
         int rng_seed;
         int num_threads;
-        int num_throws;
+        double data_POT;
+        double mc_POT;
 
         bool stat_fluc;
         bool zero_syst;
@@ -93,6 +97,7 @@ class OptParser
         CovOpt flux_cov;
         CovOpt det_cov;
         CovOpt xsec_cov;
+        MinSettings min_settings;
         std::vector<SampleOpt> samples;
         std::vector<DetOpt> detectors;
 

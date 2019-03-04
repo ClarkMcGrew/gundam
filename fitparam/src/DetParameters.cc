@@ -71,6 +71,9 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
     InitParameters();
     m_evmap.clear();
 
+    if(mode == 2)
+        std::cout << TAG << "Not using detector reweighting." << std::endl;
+
     for(std::size_t s = 0; s < sample.size(); ++s)
     {
         std::vector<int> sample_map;
@@ -90,6 +93,8 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 #endif
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())
+                bin = PASSEVENT;
+            else if(mode == 2)
                 bin = PASSEVENT;
             sample_map.push_back(bin);
         }
@@ -162,7 +167,7 @@ void DetParameters::InitParameters()
             pars_fixed[i] = true;
 
         std::cout << TAG << "Decomposed parameters.\n"
-                  << TAG << "Keeping the " << idx-1 << " largest eigen values.\n"
+                  << TAG << "Keeping the " << idx << " largest eigen values.\n"
                   << TAG << "Corresponds to " << m_info_frac * 100.0
                   << "\% total variance.\n";
     }

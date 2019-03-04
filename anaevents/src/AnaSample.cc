@@ -167,7 +167,6 @@ int AnaSample::GetBinIndex(const double D1, const double D2) const
     return -1;
 }
 
-// FillEventHist
 void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 {
     if(m_hpred != nullptr)
@@ -209,6 +208,9 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
     {
         SetData(m_hpred);
         m_hdata->Reset();
+
+        if(stat_fluc)
+            std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
 
         for(int j = 1; j <= m_hpred->GetNbinsX(); ++j)
         {
@@ -267,7 +269,10 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 
         if(stat_fluc && datatype == 2)
         {
-            for(unsigned int i = 0; i < m_hdata->GetNbinsX(); ++i)
+            if(stat_fluc)
+                std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
+
+            for(unsigned int i = 1; i <= m_hdata->GetNbinsX(); ++i)
             {
                 double val = gRandom->Poisson(m_hdata->GetBinContent(i));
                 m_hdata->SetBinContent(i, val);
@@ -275,7 +280,7 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         }
 
 #ifndef NDEBUG
-        std::cout << "[AnaSample] Data histogram filled: " << std::endl;
+        std::cout << TAG << "Data histogram filled: " << std::endl;
         m_hdata->Print();
 #endif
     }
