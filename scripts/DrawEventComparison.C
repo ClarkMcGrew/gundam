@@ -7,8 +7,8 @@
 //  Modified: 
 //
 //
-//  Usage: root 'DrawEventComparison.C+()'
-//         root 'DrawEventComparison.C+("fit1_statFluc")'
+//  Usage: root -b -q 'DrawEventComparison.C+()'
+//         root -b -q 'DrawEventComparison.C+("fit3_statFluc")'
 //
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +16,7 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawEventComparison(string inputname = "fit1_asimov")
+void DrawEventComparison(string inputname = "fit3_statFluc")
 {
 
 	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
@@ -34,6 +34,8 @@ void DrawEventComparison(string inputname = "fit1_asimov")
 	TFile* fin = new TFile(infilename.c_str());
 	
 	//======================================================================================================
+
+
 
 
 	//======================================================================================================
@@ -84,9 +86,17 @@ void DrawEventComparison(string inputname = "fit1_asimov")
 			hSample_data[ifgd].push_back(htemp_data);
 		}
 	}
-
 	//======================================================================================================
 
+
+	//======================================================================================================
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Get pre-fit and post-fit chi2 =====" << std::endl;
+	
+	TH1D* chi2_tot = (TH1D*)(fin->Get("chi2_tot_periter"));
+	Double_t chi2_tot_prefit  = chi2_tot -> GetBinContent(1);
+	Double_t chi2_tot_postfit = chi2_tot -> GetBinContent(chi2_tot->GetNbinsX()-1);
+	//======================================================================================================
 
 
 
@@ -150,9 +160,9 @@ void DrawEventComparison(string inputname = "fit1_asimov")
 				leg[ifgd] -> SetBorderSize(1);
 				leg[ifgd] -> SetFillStyle(0);
 				//leg[ifgd]->SetTextSize(0.075);
-				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],   "Data distribution","p");
-				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], "Pre-fit distribution","l");
-				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],"Post-fit distribution","l");
+				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],   "Data",    "lep");
+				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
+				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
 				c_events[ifgd]->cd(6);
 				leg[ifgd]->Draw();
 			}

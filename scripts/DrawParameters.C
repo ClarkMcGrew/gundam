@@ -1,10 +1,11 @@
 // Usage :
-// root 'plot_fit_output.C("fit1_statFluc")'
+// root 'DrawParameters.C("fit3_statFluc")'
+#include "CommonStyle.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-void plot_fit_output(const std::string& file_name = "fit1_statFluc")
+void DrawParameters(const std::string& file_name = "fit1_statFluc")
 {
     //======================================================================================================  
     //=== Set common style

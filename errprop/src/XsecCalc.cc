@@ -506,6 +506,10 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
                 xsec_cov(i, j) += x * y / (1.0 * num_toys);
             }
         }
+    }
+
+    for(const auto& hist : toys_ratio)
+    {
         for(int i = 0; i < signal_bins; ++i)
         {
             for(int j = 0; j < signal_bins; ++j)

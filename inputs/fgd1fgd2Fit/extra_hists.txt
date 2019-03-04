@@ -14,3 +14,7 @@ hist_par_det_result
 hist_par_det_prior
 hist_par_det_error_final
 hist_par_det_error_prior
+chi2_stat_periter
+chi2_sys_periter
+chi2_reg_periter
+chi2_tot_periter

@@ -7,8 +7,7 @@
 //  Modified: 
 //
 //
-//  Usage: root 'DrawXsec.C+()'
-//         root 'DrawXsec.C+("fit1_statFluc")'
+//  Usage: root 'DrawXsecErrorContributions.C+()'
 //
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,13 +15,16 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
+void DrawXsecErrorContributions(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
 	const int Ntarget = 2;
 	string targetlist[Ntarget] = {"Carbon", "Oxygen"};
 
-	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_%s.root", inputname.c_str());
+	string infilename_fit  = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyFitPar.root";
+	string infilename_flux = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyFluxPar.root";
+	string infilename_det  = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyDetPar.root";
+	string infilename_xsec = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyXsecPar.root";
 
 	//======================================================================================================  
 	//=== Set common style
@@ -66,18 +68,38 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Store final output in a TFile =====" << std::endl;
 
-	TFile* fin = new TFile(infilename.c_str());
+	TFile* fin_fit  = new TFile(infilename_fit.c_str());
+	TFile* fin_flux = new TFile(infilename_flux.c_str());
+	TFile* fin_det  = new TFile(infilename_det.c_str());
+	TFile* fin_xsec = new TFile(infilename_xsec.c_str());
 	//======================================================================================================
 
 
-	//======================================================================================================
-	std::cout << "================================================" << std::endl;
-	std::cout << "===== Get pre-fit and post-fit chi2 =====" << std::endl;
-	
-	TH1D* chi2_tot = (TH1D*)(fin->Get("chi2_tot_periter"));
-	Double_t chi2_tot_prefit  = chi2_tot -> GetBinContent(1);
-	Double_t chi2_tot_postfit = chi2_tot -> GetBinContent(chi2_tot->GetNbinsX()-1);
-	//======================================================================================================
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////
+
+// FROM HERE IT NEES TO BE MODIFIED 
+
+///////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	//======================================================================================================  
@@ -271,54 +293,3 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 }
 
 
-
-
-
-
-
-// // To compute the cross section :
-// // Normalise by the flux * nb of targets * efficiency * bin width
-// void NormaliseXsec(TH1D* &hist, TH1D* efficiency int target)
-// {
-// 	double flux = 1.12E13;
-// 	double Ntarg = 0;
-
-// 	if(target==0)      Ntarg = 7.439E29;
-// 	else if(target==0) Ntarg = 2.581E29;
-
-// 	hist -> Scale(1.0 / (flux * Ntarg));
-// 	hist -> Divide(efficiency);
-
-
-
-
-// 	//======================================================================================================  
-// 	std::cout << "================================================" << std::endl;
-// 	std::cout << "===== Set binning using BinningTools class =====" << std::endl;
-	
-// 	BinningTools bin; 
-// 	bin.SetBinning(fbinning.c_str());
-
-// 	//  int Nbins = bin.GetNbins();//Total number of bins
-// 	int Nbins_costh = bin.GetNbins_costh();//Number of costheta bins
-
-// 	int* Nmombins = new int[Nbins_costh];//Number of mom bin in each slice of costheta
-// 	Nmombins = bin.GetMomNBinsInEachCosthSlice();
-
-// 	double** mombins = new double*[Nbins_costh];//2-d array with momentum binning for each slice of cosine theta
-// 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
-// 	{
-// 		for(int nbm=0; nbm<Nmombins[nbcth]; nbm++)
-// 		{
-// 			mombins[nbcth] = new double[nbm];
-// 		}
-// 	}
-// 	mombins = bin.GetMomBins();
-	
-// 	//======================================================================================================
-
-// 	for(int i=1; i<Nbins; i++)
-// 	{
-// 		hist -> SetBinContent( double binwidth = ((mombins[nbcth][nbm+1] - mombins[nbcth][nbm])/0.1);)
-// 	}
-// }

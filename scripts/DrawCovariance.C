@@ -1,11 +1,11 @@
 // Usage:
-// root 'DrawFitResultCov.C+()'
+// root 'DrawCovariance.C+("fit3_statFluc")'
 
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawFitResultCov(string inputname = "fit1_statFluc")
+void DrawCovariance(string inputname = "fit3_statFluc")
 {
 	string infile = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
 
