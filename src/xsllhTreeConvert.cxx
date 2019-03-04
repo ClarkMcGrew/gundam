@@ -333,7 +333,7 @@ int main(int argc, char** argv)
         float enu, event_weight;
         float pmu_true, angle_true;
         float pmu_reco, angle_reco;
-        bool is_anti, is_nue;
+        bool is_anti, is_nue, is_fv;
         bool new_event;
 
         ing_tree -> SetBranchAddress("InteractionType", &interaction_type);
@@ -343,6 +343,7 @@ int main(int argc, char** argv)
         ing_tree -> SetBranchAddress("Enu", &enu);
         ing_tree -> SetBranchAddress("IsAnti", &is_anti);
         ing_tree -> SetBranchAddress("IsNuE", &is_nue);
+        ing_tree -> SetBranchAddress("IsFV", &is_fv);
         ing_tree -> SetBranchAddress("NewEvent", &new_event);
         ing_tree -> SetBranchAddress("weight", &event_weight);
         ing_tree -> SetBranchAddress("TrueMomentumMuon", &pmu_true);
@@ -359,7 +360,7 @@ int main(int argc, char** argv)
         ing_tree -> SetBranchAddress("TrackAngle_track0", &angle_track0);
         ing_tree -> SetBranchAddress("IronDistance_track0", &iron_track0);
         ing_tree -> SetBranchAddress("PlasticDistance_track0", &plastic_track0);
-        ing_tree -> SetBranchAddress("Sample_track2", &sample_track1);
+        ing_tree -> SetBranchAddress("Sample_track1", &sample_track1);
         ing_tree -> SetBranchAddress("TrackAngle_track1", &angle_track1);
         ing_tree -> SetBranchAddress("IronDistance_track1", &iron_track1);
         ing_tree -> SetBranchAddress("PlasticDistance_track1", &plastic_track1);
@@ -368,11 +369,13 @@ int main(int argc, char** argv)
         ing_tree -> SetBranchAddress("IronDistance_track2", &iron_track2);
         ing_tree -> SetBranchAddress("PlasticDistance_track2", &plastic_track2);
 
-        long int nevents = ing_tree -> GetEntries();
+        const unsigned int nevents = ing_tree -> GetEntries();
         std::cout << TAG << "Reading events tree." << std::endl
                   << TAG << "Num. events: " << nevents << std::endl;
 
-        for(int i = 0; i < nevents; ++i)
+        double sel_events = 0;
+        double gen_events = 0;
+        for(unsigned int i = 0; i < nevents; ++i)
         {
             ing_tree -> GetEntry(i);
 
@@ -396,7 +399,7 @@ int main(int argc, char** argv)
                 default:
                     pmu_reco = -999;
                     angle_reco = -999;
-                    track_sample = 0;
+                    track_sample = 999;
                     break;
             }
 
@@ -410,7 +413,7 @@ int main(int argc, char** argv)
             nutype = GetIngridNutype(is_anti, is_nue);
             topology = GetIngridTopology(fsi_int);
             reaction = GetIngridReaction(interaction_type);
-            target = 8;
+            target = 6;
 
             enu_true = enu;
             enu_reco = enu;
@@ -426,8 +429,11 @@ int main(int argc, char** argv)
             cut_branch = file.branch;
             weight = event_weight;
 
-            if(selected_sample == file.sample && pmu_true > 0.0 && track_sample < 4)
+            if(selected_sample == 0 && track_sample < 4)
+            {
                 out_seltree -> Fill();
+                sel_events += weight;
+            }
 
             nutype_true = nutype;
             reaction_true = reaction;
@@ -436,12 +442,18 @@ int main(int argc, char** argv)
             cut_branch = file.branch * -1;
             weight_true = weight;
 
-            if(pmu_true > 0.0 && track_sample < 4)
+            if(is_fv && !is_anti && !is_nue && fsi_int < 3 && new_event == 1)
+            {
                 out_trutree -> Fill();
+                gen_events += weight;
+            }
 
             if(i % 2000 == 0 || i == (nevents-1))
                 pbar.Print(i, nevents-1);
         }
+
+        std::cout << TAG << "INGRID Selected Ev : " << sel_events << std::endl;
+        std::cout << TAG << "INGRID Generated Ev: " << gen_events << std::endl;
     }
 
     out_file -> cd();

@@ -76,7 +76,7 @@
 
     "ingrid_files" : [
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/ingrid_cc0pi_selection_wm.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/ingrid_cc0pi_selection_pm.root",
             "file_id" : 0,
             "event_tree" : "wtree",
             "sample" : 0,

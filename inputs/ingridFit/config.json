@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsec_cov_nd280.root",
@@ -43,7 +43,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
         "enable" : false,
@@ -59,7 +59,7 @@
                 {
                     "name" : "CC0pi",
                     "binning" : "binning/analysis_binning.txt",
-                    "signal" : {"topology" : [0,1,2]},
+                    "signal" : {"sample" : [0,1,2,3,4,5,6], "topology" : [0,1,2]},
                     "use" : true
                 },
                 {
