@@ -1,12 +1,20 @@
 // Usage:
-// root 'DrawCovariance.C+("fit3_statFluc")'
+// root 'DrawCovariancePostfit.C+("fit3_statFluc")'
 
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawCovariance(string inputname = "fit3_statFluc")
+void DrawCovariancePostfit(string inputname = "fit3_statFluc")
 {
+	
+	//======================================================================================================  
+	//=== Set common style
+	CommonStyle();
+	gROOT->ForceStyle();
+	//======================================================================================================  
+
+
 	string infile = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
 
 	TFile *findetcov = TFile::Open(infile.c_str());
@@ -96,10 +104,7 @@ void DrawCovariance(string inputname = "fit3_statFluc")
 
 
 	//====================================================================================================  
-	//=== Set T2K style. In CommonStyle.h option 1 has been setted
-	CommonStyle();
-
-	//======================================================================================================
+	//=== Draw matrices
 
 	gStyle->SetPadRightMargin(0.15);
 	gStyle->SetPadLeftMargin(0.1);
@@ -117,9 +122,12 @@ void DrawCovariance(string inputname = "fit3_statFluc")
 	Double_t blue[NRGBs]  = { 1.00, 1.00, 0.00 };
 	TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
 
+	gStyle->SetLabelSize(0.04, "x"); 
+	gStyle->SetLabelSize(0.04, "y"); 
+	gROOT->ForceStyle();
 
 	//=== Draw covariance matrix
-	TCanvas *c2 = new TCanvas("c2","c2",1000,900);
+	TCanvas *c2 = new TCanvas("c2","c2",1050,900);
 	c2 -> Draw();
 	cov_mat -> Draw("colz");
 
@@ -131,9 +139,14 @@ void DrawCovariance(string inputname = "fit3_statFluc")
 
 
 	//=== Draw correlation matrix
-	TCanvas *c3 = new TCanvas("c3","c3",1000,900);
+	TCanvas *c3 = new TCanvas("c3","c3",1050,900);
 	c3 -> Draw();
-	cor_mat -> Draw("colz");
+
+	TH2D *cor_mat_th2 = new TH2D(*cor_mat);
+	cor_mat_th2 -> SetMinimum(-1.0);
+	cor_mat_th2 -> SetMaximum(1.0);
+	
+	cor_mat_th2 -> Draw("colz");
 
 	for(int il=0; il<2*Nlines; il++) orline[il]  -> Draw();
 	for(int il=0; il<2*Nlines; il++) verline[il] -> Draw();
@@ -141,8 +154,8 @@ void DrawCovariance(string inputname = "fit3_statFluc")
 	for(int il=0; il<Nsamples; il++) orlineSample[il]  -> Draw();
 	for(int il=0; il<Nsamples; il++) verlineSample[il] -> Draw();
 
-	// c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.pdf", inputname.c_str()));
-	// c3->Print(Form("plots/covariancematrices/FinalCorrMatrix_%s.png", inputname.c_str()));
+	c3->Print(Form("plots/fitteroutput/asimov/PostFitCorrMatrix_%s.pdf", inputname.c_str()));
+	c3->Print(Form("plots/fitteroutput/asimov/PostFitCorrMatrix_%s.png", inputname.c_str()));
 
 
 	// Draw matrix diagonal elements

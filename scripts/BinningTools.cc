@@ -163,5 +163,3 @@ double* BinningTools::GetCosBinWidth() {
  
 }
 
-
-

@@ -280,7 +280,7 @@ void XsecCalc::GenerateToys(const int ntoys)
         for(int i = 0; i < npar; ++i)
         {
             if(toy[i] < 0.0)
-                toy[i] = 0.1;
+                toy[i] = 0.01;
         }
 
         selected_events->ReweightEvents(toy);

@@ -1,6 +1,6 @@
 {
     "input_dir" : "/inputs/fgd1fgd2Fit/",
-    "dimensions" : [870, 87, 29],
+    "dimensions" : [1740, 174, 58],
     "dials" : [
         {
             "name" : "MACCQE",

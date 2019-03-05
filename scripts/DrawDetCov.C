@@ -142,7 +142,12 @@ void DrawDetCov(	int NsamplesTot = 24,
 	TCanvas *c3 = new TCanvas("c3","c3",1000,900);
 	// TCanvas *c3 = new TCanvas("c3","c3",700,600);
 	c3 -> Draw();
-	cor_mat -> Draw("colz");
+	
+	TH2D *cor_mat_th2 = new TH2D(*cor_mat);
+	cor_mat_th2 -> SetMinimum(-1.0);
+	cor_mat_th2 -> SetMaximum(1.0);
+	
+	cor_mat_th2 -> Draw("colz");
 
 	// cor_mat -> SetMinimum(-1);
 

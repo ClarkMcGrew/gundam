@@ -32,7 +32,6 @@ void DrawEventComparison(string inputname = "fit3_statFluc")
 	std::cout << "===== Store fitter output in a TFile =====" << std::endl;
 
 	TFile* fin = new TFile(infilename.c_str());
-	
 	//======================================================================================================
 
 

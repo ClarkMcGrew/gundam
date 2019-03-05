@@ -7,8 +7,8 @@
 //  Modified: 
 //
 //
-//  Usage: root 'DrawXsec.C+()'
-//         root 'DrawXsec.C+("fit1_statFluc")'
+//  Usage: root -b -q 'DrawXsec.C+()'
+//         root -b -q 'DrawXsec.C+("fit3_statFluc")'
 //
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +16,7 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
+void DrawXsec(string inputname = "fit3_statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
 	const int Ntarget = 2;
@@ -58,7 +58,7 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	                     "0.9  < cos#theta < 0.94",
 	                     "0.94 < cos#theta < 0.98",
 	                     "0.98 < cos#theta < 1.0"
-	                 };
+	                    };
 	//======================================================================================================
 
 
@@ -84,22 +84,22 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Get histos with cross-section result =====" << std::endl;
 	
-	vector< vector<TH1D*> > h_xsec(Ntarget);
-	vector< vector<TH1D*> > h_xsec_err(Ntarget);
+	vector< vector<TH1D*> > h_xsec_postfit(Ntarget);
+	vector< vector<TH1D*> > h_xsec_postfit_err(Ntarget);
 
 	for(int itar = 0; itar < Ntarget; itar++)
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec[itar].push_back(     (TH1D*)(fin->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_err[itar].push_back( (TH1D*)(fin->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_postfit[itar].push_back(     (TH1D*)(fin->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_postfit_err[itar].push_back( (TH1D*)(fin->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
 		}
 
-	vector< TH1D* > h_ratio;
-	vector< TH1D* > h_ratio_err;
+	vector< TH1D* > h_ratio_postfit;
+	vector< TH1D* > h_ratio_postfit_err;
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio.push_back(     (TH1D*)(fin->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
-		h_ratio_err.push_back( (TH1D*)(fin->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_errs", nbcth)) );
+		h_ratio_postfit.push_back(     (TH1D*)(fin->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
+		h_ratio_postfit_err.push_back( (TH1D*)(fin->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_errs", nbcth)) );
 	}
 	//======================================================================================================
 
@@ -110,32 +110,133 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	for(int itar = 0; itar < Ntarget; itar++)
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec_err[itar][nbcth] -> Reset();
-			for(int i=1; i<=h_xsec_err[itar][nbcth]->GetNbinsX(); i++)
+			h_xsec_postfit_err[itar][nbcth] -> Reset();
+			for(int i=1; i<=h_xsec_postfit_err[itar][nbcth]->GetNbinsX(); i++)
 			{
-				double err  = h_xsec[itar][nbcth] -> GetBinError(i);
-				double mean = h_xsec[itar][nbcth] -> GetBinContent(i);
+				double err  = h_xsec_postfit[itar][nbcth] -> GetBinError(i);
+				double mean = h_xsec_postfit[itar][nbcth] -> GetBinContent(i);
 				if(err/mean<100)
-					h_xsec_err[itar][nbcth] -> SetBinContent(i, err/mean);
+					h_xsec_postfit_err[itar][nbcth] -> SetBinContent(i, err/mean);
 				else
-					h_xsec_err[itar][nbcth] -> SetBinContent(i, 0.0);
+					h_xsec_postfit_err[itar][nbcth] -> SetBinContent(i, 0.0);
 			}
 		}
 
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio_err[nbcth] -> Reset();
-		for(int i=1; i<=h_ratio_err[nbcth]->GetNbinsX(); i++)
+		h_ratio_postfit_err[nbcth] -> Reset();
+		for(int i=1; i<=h_ratio_postfit_err[nbcth]->GetNbinsX(); i++)
 		{
-			double err  = h_ratio[nbcth] -> GetBinError(i);
-			double mean = h_ratio[nbcth] -> GetBinContent(i);
+			double err  = h_ratio_postfit[nbcth] -> GetBinError(i);
+			double mean = h_ratio_postfit[nbcth] -> GetBinContent(i);
 			if(err/mean<100)
-				h_ratio_err[nbcth] -> SetBinContent(i, err/mean);
+				h_ratio_postfit_err[nbcth] -> SetBinContent(i, err/mean);
 			else
-				h_ratio_err[nbcth] -> SetBinContent(i, 0.0);
+				h_ratio_postfit_err[nbcth] -> SetBinContent(i, 0.0);
 		}
 	}
 	//======================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+	// //======================================================================================================
+	// std::cout << "================================================" << std::endl;
+	// std::cout << "===== Store pre-fit MC and data in a TFile =====" << std::endl;
+
+	// TFile* fin_mc = new TFile("xsllh_nominal_noECal.root");
+	// TFile* fin_dt = new TFile("xsllh_nominal_fakedata_noECal.root");
+
+	// TTree* seltree_mc = (TTree*)fin_mc -> Get("selectedEvents");
+	// TTree* seltree_dt = (TTree*)fin_dt -> Get("selectedEvents");
+
+	// Int_t cut_branch_mc, cut_branch_dt;
+	// seltree_mc -> Branch("cut_branch", &cut_branch_mc, "cut_branch/I");
+	// seltree_dt -> Branch("cut_branch", &cut_branch_dt, "cut_branch/I");
+
+	// Int_t fgdtarget_mc, fgdtarget_dt;
+	// seltree_mc -> Branch("fgdtarget", &fgdtarget_mc, "fgdtarget/I");
+	// seltree_dt -> Branch("fgdtarget", &fgdtarget_dt, "fgdtarget/I");
+
+	// Float_t weight_mc, weight_dt;
+	// seltree_mc -> Branch("weight", &weight_mc, "weight/F");
+	// seltree_dt -> Branch("weight", &weight_dt, "weight/F");
+
+	// Float_t D1True_mc, D1Reco_mc, D2True_mc, D2Reco_mc;
+ //    seltree_mc -> Branch("D1True",    &D1True_mc,    "D1True/F");
+ //    seltree_mc -> Branch("D1Reco",    &D1Reco_mc,    "D1Reco/F");
+ //    seltree_mc -> Branch("D2True",    &D2True_mc,    "D2True/F");
+ //    seltree_mc -> Branch("D2Reco",    &D2Reco_mc,    "D2Reco/F");
+ //    Float_t D1Reco_dt, D2Reco_dt;
+ //    seltree_dt -> Branch("D1Reco",    &D1Reco_dt,    "D1Reco/F");
+ //    seltree_dt -> Branch("D2Reco",    &D2Reco_dt,    "D2Reco/F");
+	// //======================================================================================================
+
+
+	// //======================================================================================================
+	// std::cout << "================================================" << std::endl;
+	// std::cout << "===== Define empty histograms with p, theta binning =====" << std::endl;
+
+	// for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	// {
+	// 	h_tmp.push_back(new TH1D("","", Nmombins[nbcth], mombins[nbcth]));
+	// 	// h_tmp[nbcth] -> SetTitle( Form("%s", h_title[nbcth].Data()) );
+	// 	// h_tmp[nbcth] -> GetYaxis()->SetTitle("CC-0#pi events/100 MeV");
+	// 	// h_tmp[nbcth] -> GetXaxis()->SetTitle("p^{#mu}_{true} [GeV/c]");
+	// 	// h_tmp[nbcth] -> GetXaxis()->SetTitle("p^{#mu}_{reco} [GeV/c]");
+	// }
+
+	// vector< vector<TH1D*> > h_xsec_prefit(Ntarget);
+	// vector< vector<TH1D*> > h_xsec_prefit_err(Ntarget);
+	// vector< vector<TH1D*> > h_xsec_data(Ntarget);
+	// vector< vector<TH1D*> > h_xsec_data_err(Ntarget);
+
+	// for(int itar = 0; itar < Ntarget; itar++)
+	// {
+	// 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	// 	{
+	// 		h_xsec_prefit[itar].push_back(    (TH1D*)h_tmp[nbcth] -> Clone(Form("h_xsec_prefit_cth_%d",nbcth)));
+	// 		h_xsec_prefit_err[itar].push_back((TH1D*)h_tmp[nbcth] -> Clone(Form("h_xsec_prefit_err_cth_%d",nbcth)));
+	// 		h_xsec_data[itar].push_back(      (TH1D*)h_tmp[nbcth] -> Clone(Form("h_xsec_data_cth_%d",nbcth)));
+	// 		h_xsec_data_err[itar].push_back(  (TH1D*)h_tmp[nbcth] -> Clone(Form("h_xsec_data_err_cth_%d",nbcth)));
+	// 	}
+	// }
+ //    //======================================================================================================
+
+
+	// //======================================================================================================
+	// std::cout << "================================================" << std::endl;
+	// std::cout << "===== Fill pre-fit MC histograms =====" << std::endl;
+
+	// for(int i = 0; i < seltree_mc -> GetEntries(); ++i)
+ //    {
+ //        seltree_mc -> GetEntry(i);
+
+ //    }
+ //    //======================================================================================================
+
+
+	// //======================================================================================================
+	// std::cout << "================================================" << std::endl;
+	// std::cout << "===== Fill data histograms =====" << std::endl;
+
+	// for(int i = 0; i < seltree_dt -> GetEntries(); ++i)
+ //    {
+ //        seltree_dt -> GetEntry(i);
+
+ //    }
+ //    //======================================================================================================
+
+
+
+
 
 
 
@@ -155,17 +256,17 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec[itar][nbcth] -> SetTitle(h_title[nbcth]);
-			h_xsec[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-			h_xsec[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon GeV/c}]");
+			h_xsec_postfit[itar][nbcth] -> SetTitle(h_title[nbcth]);
+			h_xsec_postfit[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+			h_xsec_postfit[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon GeV/c}]");
 
-			h_xsec[itar][nbcth] -> SetLineColor(kBlue);
+			h_xsec_postfit[itar][nbcth] -> SetLineColor(kBlue);
 
 			c_xsec[itar] -> cd(nbcth+1);
 
 			// if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec[itar][nbcth]->Draw("E"); // with error bars
+			h_xsec_postfit[itar][nbcth]->Draw("E"); // with error bars
 
 		}
 		c_xsec[itar]->Print(Form("plots/xsecResults/xsec_%s_%s.pdf", inputname.c_str(), targetlist[itar].c_str()));
@@ -176,17 +277,17 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec_err[itar][nbcth] -> SetTitle(h_title[nbcth]);
-			h_xsec_err[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-			h_xsec_err[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon GeV/c}]");
+			h_xsec_postfit_err[itar][nbcth] -> SetTitle(h_title[nbcth]);
+			h_xsec_postfit_err[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+			h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon GeV/c}]");
 
-			h_xsec_err[itar][nbcth] -> SetLineColor(kBlue);
+			h_xsec_postfit_err[itar][nbcth] -> SetLineColor(kBlue);
 
 			c_xsec_err[itar] -> cd(nbcth+1);
 
 			// if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec_err[itar][nbcth]->Draw("hist"); // with error bars
+			h_xsec_postfit_err[itar][nbcth]->Draw("hist"); // with error bars
 
 		}
 		c_xsec_err[itar]->Print(Form("plots/xsecResults/xsec_error_%s_%s.pdf", inputname.c_str(), targetlist[itar].c_str()));
@@ -197,17 +298,17 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	c_ratio -> Divide(3,3);
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio[nbcth] -> SetTitle(h_title[nbcth]);
-		h_ratio[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-		h_ratio[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
+		h_ratio_postfit[nbcth] -> SetTitle(h_title[nbcth]);
+		h_ratio_postfit[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+		h_ratio_postfit[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
 
-		h_ratio[nbcth] -> SetLineColor(kBlue);
+		h_ratio_postfit[nbcth] -> SetLineColor(kBlue);
 
 		c_ratio -> cd(nbcth+1);
 
 		// if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio[nbcth]->Draw("E"); // with error bars
+		h_ratio_postfit[nbcth]->Draw("E"); // with error bars
 	}
 	c_ratio->Print( Form("plots/xsecResults/xsec_OCratio_%s.pdf", inputname.c_str()) );
 
@@ -217,19 +318,21 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	c_ratio_err -> Divide(3,3);
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio_err[nbcth] -> SetTitle(h_title[nbcth]);
-		h_ratio_err[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-		h_ratio_err[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
+		h_ratio_postfit_err[nbcth] -> SetTitle(h_title[nbcth]);
+		h_ratio_postfit_err[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
 
-		h_ratio_err[nbcth] -> SetLineColor(kBlue);
+		h_ratio_postfit_err[nbcth] -> SetLineColor(kBlue);
 
 		c_ratio_err -> cd(nbcth+1);
 
 		// if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio_err[nbcth]->Draw("hist"); // with error bars
+		h_ratio_postfit_err[nbcth]->Draw("hist"); // with error bars
 	}
 	c_ratio_err->Print( Form("plots/xsecResults/xsec_error_OCratio_%s.pdf", inputname.c_str()) );
+
+	//======================================================================================================
 
 
 
@@ -254,20 +357,19 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 	h_eff->Draw("hist"); // with error bars
 	
 	c_eff->Print( Form("plots/xsecResults/efficiency_%s.pdf", inputname.c_str()) );
-
-	
 	//======================================================================================================
 
 
 
 
+	//======================================================================================================
+	delete fin;
 
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== End of script =====" << std::endl;
 	std::cout << "================================================" << std::endl;                                                                                               
 	//======================================================================================================
 
-	delete fin;
 }
 
 
@@ -278,7 +380,7 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 
 // // To compute the cross section :
 // // Normalise by the flux * nb of targets * efficiency * bin width
-// void NormaliseXsec(TH1D* &hist, TH1D* efficiency int target)
+// void NormaliseXsec(TH1D* &hist, TH1D* efficiency, int target, BinningTools bintool)
 // {
 // 	double flux = 1.12E13;
 // 	double Ntarg = 0;
@@ -289,36 +391,13 @@ void DrawXsec(string inputname = "fit1_statFluc", string fbinning = "/sps/t2k/lm
 // 	hist -> Scale(1.0 / (flux * Ntarg));
 // 	hist -> Divide(efficiency);
 
+// 	unit_scale = 0.1;
 
+//     for(int i = 0; i < hist -> GetNbinsX(); ++i)
+//     {
+//         const double bin_width = bintool.GetMomBinWidth(i) * bintool.GetCosBinWidth(i) / unit_scale;
+//         const double bin_value = hist.GetBinContent(i + 1);
+//         hist.SetBinContent(i + 1, bin_value / bin_width);
+//     }
 
-
-// 	//======================================================================================================  
-// 	std::cout << "================================================" << std::endl;
-// 	std::cout << "===== Set binning using BinningTools class =====" << std::endl;
-	
-// 	BinningTools bin; 
-// 	bin.SetBinning(fbinning.c_str());
-
-// 	//  int Nbins = bin.GetNbins();//Total number of bins
-// 	int Nbins_costh = bin.GetNbins_costh();//Number of costheta bins
-
-// 	int* Nmombins = new int[Nbins_costh];//Number of mom bin in each slice of costheta
-// 	Nmombins = bin.GetMomNBinsInEachCosthSlice();
-
-// 	double** mombins = new double*[Nbins_costh];//2-d array with momentum binning for each slice of cosine theta
-// 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
-// 	{
-// 		for(int nbm=0; nbm<Nmombins[nbcth]; nbm++)
-// 		{
-// 			mombins[nbcth] = new double[nbm];
-// 		}
-// 	}
-// 	mombins = bin.GetMomBins();
-	
-// 	//======================================================================================================
-
-// 	for(int i=1; i<Nbins; i++)
-// 	{
-// 		hist -> SetBinContent( double binwidth = ((mombins[nbcth][nbm+1] - mombins[nbcth][nbm])/0.1);)
-// 	}
 // }
