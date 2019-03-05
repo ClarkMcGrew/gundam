@@ -18,6 +18,7 @@ struct SampleOpt
 {
     int cut_branch;
     bool use_sample;
+    bool use_pot;
     std::string name;
     std::string detector;
     std::string binning;

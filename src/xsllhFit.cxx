@@ -125,12 +125,13 @@ int main(int argc, char** argv)
                       << TAG << "Name: " << opt.name << std::endl
                       << TAG << "CutB: " << opt.cut_branch << std::endl
                       << TAG << "Detector: " << opt.detector << std::endl
+                      << TAG << "Apply POT: " << std::boolalpha << opt.use_pot << std::endl
                       << TAG << "Use Sample: " << std::boolalpha << opt.use_sample << std::endl;
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
-            s -> SetNorm(potD/potMC);
-            //if(opt.cut_branch >= 0)
-                samples.push_back(s);
+            if(opt.use_pot)
+                s -> SetNorm(potD/potMC);
+            samples.push_back(s);
         }
     }
 
@@ -195,6 +196,7 @@ int main(int argc, char** argv)
         fitpara.push_back(&xsecpara);
     }
 
+    */
     std::cout << TAG << "Setup Detector Covariance" << std::endl;
     TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
     TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());
@@ -215,9 +217,6 @@ int main(int argc, char** argv)
         detpara.InitEventMap(samples, 0);
         fitpara.push_back(&detpara);
     }
-    detpara.InitEventMap(samples, 0);
-    fitpara.push_back(&detpara);
-    */
 
     //Instantiate fitter obj
     XsecFitter xsecfit(fout, seed, threads);

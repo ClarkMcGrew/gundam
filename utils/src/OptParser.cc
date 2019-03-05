@@ -102,6 +102,7 @@ bool OptParser::ParseJSON(std::string json_file)
         s.detector = sample["detector"];
         s.binning = input_dir + sample["binning"].get<std::string>();
         s.use_sample = sample["use_sample"];
+        s.use_pot = sample.value("use_pot", true);
         samples.push_back(s);
     }
 

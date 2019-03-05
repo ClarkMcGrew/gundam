@@ -15,7 +15,7 @@
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
         "print_level" : 2,
-        "tolerance" : 1E-4,
+        "tolerance" : 1E-2,
         "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
@@ -25,15 +25,15 @@
         "matrix" : "flux_numu_cov",
         "binning" : "hist_bins",
         "throw"  : false,
-        "decomp" : true,
+        "decomp" : false,
         "variance" : 1.00,
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "detector_cov.root",
-        "matrix" : "cov_mat",
+        "file" : "combined_detcov.root",
+        "matrix" : "det_cov",
         "throw"  : false,
-        "decomp" : true,
+        "decomp" : false,
         "variance" : 0.99,
         "fit_par" : false
     },
@@ -148,6 +148,7 @@
             "name": "INGRID",
             "detector" : "INGRID",
             "binning" : "ingrid_reco_fine.txt",
+            "use_pot" : false,
             "use_sample" : true
         }
     ]
