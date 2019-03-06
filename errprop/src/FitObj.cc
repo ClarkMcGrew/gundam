@@ -43,10 +43,12 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
                       << TAG << "CutB: " << opt.cut_branch << std::endl
                       << TAG << "Detector: " << opt.detector << std::endl
                       << TAG << "True tree: " << std::boolalpha << is_true_tree << std::endl
+                      << TAG << "Apply POT: " << std::boolalpha << opt.use_pot << std::endl
                       << TAG << "Use Sample: " << std::boolalpha << opt.use_sample << std::endl;
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
-            s->SetNorm(potD / potMC);
+            if(opt.use_pot)
+                s->SetNorm(potD / potMC);
             if(opt.cut_branch >= 0 && !is_true_tree)
                 samples.push_back(s);
             else if(opt.cut_branch < 0 && is_true_tree)

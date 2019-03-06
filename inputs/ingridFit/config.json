@@ -57,13 +57,13 @@
             "binning" : "binning/analysis_binning.txt",
             "template_par" : [
                 {
-                    "name" : "CC0pi",
+                    "name" : "nd280_CC0pi",
                     "binning" : "binning/analysis_binning.txt",
-                    "signal" : {"sample" : [0,1,2,3,4,5,6], "topology" : [0,1,2]},
+                    "signal" : {"sample" : [-1,0,1,2,3,4,5,6], "topology" : [0,1,2]},
                     "use" : true
                 },
                 {
-                    "name" : "CC1pi",
+                    "name" : "nd280_CC1pi",
                     "binning" : "binning/analysis_binning.txt",
                     "signal" : {"topology" : [3]},
                     "use" : false
@@ -77,9 +77,9 @@
             "binning" : "ingrid_true_binning.txt",
             "template_par" : [
                 {
-                    "name" : "CC0pi",
+                    "name" : "ingrid_CC0pi",
                     "binning" : "ingrid_true_binning.txt",
-                    "signal" : {"sample" : [10], "topology" : [0,1,2]},
+                    "signal" : {"sample" : [-10,10], "topology" : [0,1,2]},
                     "use" : true
                 }
             ],
@@ -89,7 +89,7 @@
     "samples" : [
         {
             "cut_branch" : -1,
-            "name" : "truth",
+            "name" : "nd280_truth",
             "detector" : "ND280",
             "binning" : "binning/analysis_binning.txt",
             "use_sample" : true
@@ -146,6 +146,14 @@
         {
             "cut_branch" : 10,
             "name": "INGRID",
+            "detector" : "INGRID",
+            "binning" : "ingrid_reco_fine.txt",
+            "use_pot" : false,
+            "use_sample" : true
+        },
+        {
+            "cut_branch" : -10,
+            "name": "ingrid_truth",
             "detector" : "INGRID",
             "binning" : "ingrid_reco_fine.txt",
             "use_pot" : false,
