@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "xsec_cov" : {
         "file" : "xsec_cov_nd280.root",
@@ -43,7 +43,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : false
+        "fit_par" : true
     },
     "regularisation" : {
         "enable" : false,
@@ -73,8 +73,8 @@
         },
         {
             "name" : "INGRID",
-            "xsec_config" : "ptheta_dials.json",
-            "binning" : "ingrid_binning.txt",
+            "xsec_config" : "ingrid_dials.json",
+            "binning" : "ingrid_true_binning.txt",
             "template_par" : [
                 {
                     "name" : "CC0pi",

@@ -181,7 +181,6 @@ int main(int argc, char** argv)
         fitpara.push_back(&fluxpara);
     }
 
-    /*
     XsecParameters xsecpara("par_xsec");
     if(parser.xsec_cov.do_fit)
     {
@@ -196,7 +195,6 @@ int main(int argc, char** argv)
         fitpara.push_back(&xsecpara);
     }
 
-    */
     std::cout << TAG << "Setup Detector Covariance" << std::endl;
     TFile* file_detcov = TFile::Open(parser.det_cov.fname.c_str(), "READ");
     TMatrixDSym* cov_det_in = (TMatrixDSym*)file_detcov -> Get(parser.det_cov.matrix.c_str());

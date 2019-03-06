@@ -66,6 +66,11 @@ void XsecParameters::InitParameters()
     unsigned int offset = 0;
     for(const auto& det : v_detectors)
     {
+        if(det == "INGRID")
+        {
+            m_offset.insert(std::make_pair(det, 0));
+            break;
+        }
         m_offset.insert(std::make_pair(det, offset));
         for(const auto& d : m_dials.at(det))
         {
@@ -126,14 +131,17 @@ void XsecParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
         weight *= dial_weight;
 
         /*
-        if(dial_weight != 1.0 && det == "INGRID")
+        if(dial_weight == 1.0 && det == "INGRID")
         {
             std::cout << "--------------" << std::endl;
             std::cout << "Ev T: " << event -> GetTopology() << std::endl
                       << "Ev R: " << event -> GetReaction() << std::endl
-                      << "Ev Q: " << event -> GetQ2() << std::endl;
+                      << "Ev Q: " << event -> GetQ2True() << std::endl
+                      << "Ev 1: " << event -> GetTrueD1() << std::endl
+                      << "Ev 2: " << event -> GetTrueD2() << std::endl;
             std::cout << "Ev I: " << idx << std::endl;
             std::cout << "Ev W: " << dial_weight << std::endl;
+            std::cout << "Pa I: " << d + m_offset.at(det) << std::endl;
             std::cout << "Dl V: " << params[d + m_offset.at(det)] << std::endl;
             std::cout << "Dl N: " << det << "_" << v_dials[d].GetName() << std::endl;
             std::cout << "Sp N: " << v_dials[d].GetSplineName(idx) << std::endl;
