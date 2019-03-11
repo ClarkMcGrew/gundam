@@ -43,9 +43,12 @@ public:
                             const std::string& det);
 
     TH1D GetHistCombined(const std::string& suffix = "") const;
-    std::vector<TH1D> GetSignalHist() const { return signal_hist; };
-    TH1D GetSignalHist(const int signal_id) const { return signal_hist.at(signal_id); }
-    TH1D GetRatioHist() const { return ratio_hist; }
+    std::vector<TH1D> GetSignalHist()     const { return signal_hist; };
+    std::vector<TH1D> GetTrueSignalHist() const { return signal_true_hist; };
+    TH1D GetSignalHist(const int signal_id)     const { return signal_hist.at(signal_id); }
+    TH1D GetTrueSignalHist(const int signal_id) const { return signal_true_hist.at(signal_id); }
+    TH1D GetRatioHist()     const { return ratio_hist; }
+    TH1D GetTrueRatioHist() const { return ratio_true_hist; }
 
     std::vector<SignalDef> GetSignalDef() const { return signal_def; };
     BinManager& GetBinManager(const int signal_id) { return signal_bins.at(signal_id); };
@@ -67,7 +70,9 @@ private:
     std::vector<AnaSample*> samples;
 
     std::vector<TH1D> signal_hist;
+    std::vector<TH1D> signal_true_hist; //LM
     TH1D ratio_hist; //LM
+    TH1D ratio_true_hist; //LM
     std::vector<BinManager> signal_bins;
     std::vector<SignalDef> signal_def;
 

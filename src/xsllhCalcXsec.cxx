@@ -86,17 +86,31 @@ int main(int argc, char** argv)
     std::cout << TAG << "Constructing the extractor..." << std::endl;
     XsecCalc xsec(json_file);
     if(!input_file.empty())
+    {
+        std::cout << TAG << "Read fit file..." << std::endl;
         xsec.ReadFitFile(input_file);
+    }
     if(use_prefit_cov)
+    {
+        std::cout << TAG << "Use pre-fit covariance..." << std::endl;
         xsec.UsePrefitCov();
+    }
+
+    std::cout << TAG << "Setting up the number of events and reweighting with best fit parameters..." << std::endl;
     xsec.ReweightBestFit();
+    
+    std::cout << TAG << "Generating " << num_toys << " toys..." << std::endl;
     if(num_toys != 0)
         xsec.GenerateToys(num_toys);
     else
         xsec.GenerateToys();
+
+    std::cout << TAG << "Calculating covariance matrix..." << std::endl;
     xsec.CalcCovariance(use_best_fit);
     if(!output_file.empty())
         xsec.SetOutputFile(output_file);
+
+    std::cout << TAG << "Saving output..." << std::endl;
     xsec.SaveOutput(do_save_toys);
     std::cout << TAG << "Finished." << std::endl;
     std::cout << TAG << "\u3042\u308a\u304c\u3068\u3046\u3054\u3056\u3044\u307e\u3057\u305f\uff01"

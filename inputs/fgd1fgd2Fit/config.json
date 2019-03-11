@@ -1,7 +1,7 @@
 {
-    "data_file" : "xsllh_nominal_noECal.root",
-    "mc_file"   : "xsllh_nominal_noECal.root",
-    "output_file" : "/outputs/fit1_asimov_onlyTemPar.root",
+    "data_file" : "xsllh_nominal.root",
+    "mc_file"   : "xsllh_nominal.root",
+    "output_file" : "/outputs/fit1_asimov.root",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
     "stat_fluc" : false,
@@ -9,7 +9,7 @@
     "data_POT"  : 1.0,
     "mc_POT"    : 1.0,
     "rng_seed"  : 12258,
-    "num_threads" : 16,
+    "num_threads" : 1,
     "sample_topology" : ["cc0pi", "cc1pi", "ccother", "bkg", "oofv"],
     "min_settings" : {
         "minimizer" : "Minuit2",
@@ -27,7 +27,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "det_cov" : {
         "file" : "xsllh_detcovmat.root",
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "xsec_cov" : {
         "file" : "xsllh_xseccovmat.root",
@@ -43,7 +43,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : false
+        "fit_par" : true
     },
     "regularisation" : {
         "enable" : false,

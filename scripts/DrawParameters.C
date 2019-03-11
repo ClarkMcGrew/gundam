@@ -5,30 +5,26 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-void DrawParameters(const std::string& file_name = "fit1_statFluc")
+void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc")
 {
     //======================================================================================================  
     //=== Set common style
     CommonStyle();
     gROOT->ForceStyle();
 
+    bool isAsimov = false;
+    if(dir_name=="asimov") isAsimov = true;
 
-    const std::string output_dir = "plots/fitteroutput/asimov/";
+    const std::string output_dir = Form("plots/fitteroutput/%s/", dir_name.c_str());
     const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());
 
     std::string name;
     std::stringstream ss;
 
-
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
     const int Npar = 4;
     std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
-    //const int Npar = 2;
-    //std::string par_name[Npar] = {"par_fit", "par_xsec"};
-    // const int Npar = 1;
-    // std::string par_name[Npar] = {"par_fit"};
-
 
 
     std::cout << std::endl;
@@ -48,6 +44,10 @@ void DrawParameters(const std::string& file_name = "fit1_statFluc")
         ss.str("");
         ss << "hist_" << name << "_prior";
         TH1D* h_prior = (TH1D*)file -> Get(ss.str().c_str());
+
+        ss.str("");
+        ss << "hist_" << name << "_iter0";
+        if(!isAsimov) TH1D* h_iter0 = (TH1D*)file -> Get(ss.str().c_str());
 
         ss.str("");
         ss << "hist_" << name << "_result";
@@ -74,24 +74,34 @@ void DrawParameters(const std::string& file_name = "fit1_statFluc")
         gStyle -> SetOptTitle(0);
 
         h_prior -> SetMarkerColor(kBlue);
-        h_prior -> SetMarkerStyle(kFullCircle);
+        h_prior -> SetMarkerStyle(kFullSquare);
+        if(!isAsimov) h_iter0 -> SetMarkerColor(kGreen+3);
+        if(!isAsimov) h_iter0 -> SetMarkerStyle(kFullTriangleUp);
         h_final -> SetMarkerColor(kRed);
         h_final -> SetMarkerStyle(kFullCircle);
+
+        h_prior -> SetMarkerSize(2);
+        if(!isAsimov) h_iter0 -> SetMarkerSize(2);
+        h_final -> SetMarkerSize(2);
 
         h_prior -> SetFillColor(kBlue-9);
         h_prior -> SetFillStyle(1001);
         h_final -> SetFillColor(kRed-9);
         h_final -> SetFillStyle(3144);
 
-        h_prior -> Draw("P E2");
-        h_final -> Draw("P E2 same");
-
         if(name == "par_xsec") // for xsec parameters
             gPad->SetLogy();
+        if(name == "par_flux") // for flux parameters
+            h_prior -> GetYaxis() -> SetRangeUser(0.7,1.3);
+
+        h_prior -> Draw("P E2");
+        if(!isAsimov) h_iter0 -> Draw("P same");
+        h_final -> Draw("P E2 same");
 
         TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
         legend -> SetFillColor(0);
         legend -> AddEntry(h_prior, "Prior","p");
+        if(!isAsimov) legend -> AddEntry(h_iter0, "Initial","p");
         legend -> AddEntry(h_final, "Final","p");
         legend -> Draw();
 

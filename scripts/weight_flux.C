@@ -49,7 +49,7 @@ void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLh
     h_flux_total_numu -> Add(h_flux_run3b);
     h_flux_total_numu -> Add(h_flux_run3c);
     h_flux_total_numu -> Add(h_flux_run4);
-    // h_flux_total_numu -> Add(h_flux_run8);
+    h_flux_total_numu -> Add(h_flux_run8);
 
     std::cout << "Total: " << total << std::endl;
 

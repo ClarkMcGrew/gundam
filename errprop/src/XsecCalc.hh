@@ -75,11 +75,11 @@ public:
 
     TH1D ConcatHist(const std::vector<TH1D>& vec_hists, const std::string& hist_name = "");
 
-    std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
-    TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
+    // std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
+    // TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
 
-    std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
-    TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
+    // std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
+    // TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
 
     void SaveOutput(bool save_toys = false);
     void SaveSignalHist(TFile* file);
@@ -116,7 +116,9 @@ private:
     TH1D tru_best_fit;
     TH1D eff_best_fit;
     TH1D ratio_best_fit; //LM
+    TH1D ratio_truth; //truth histograms
     std::vector<TH1D> signal_best_fit;
+    std::vector<TH1D> signal_truth; //LM truth histograms
     std::vector<TH1D> toys_sel_events;
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;

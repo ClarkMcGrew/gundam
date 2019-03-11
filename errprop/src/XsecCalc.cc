@@ -49,7 +49,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
 
     std::cout << TAG << "Initializing fit objects..." << std::endl;
     selected_events = new FitObj(sel_json_config, "selectedEvents", false);
-    true_events = new FitObj(tru_json_config, "trueEvents", true);
+    true_events     = new FitObj(tru_json_config, "trueEvents", true);
     total_signal_bins = selected_events->GetNumSignalBins();
     signal_bins = total_signal_bins/2;
 
@@ -218,9 +218,11 @@ void XsecCalc::ReweightNominal()
 
 void XsecCalc::ReweightBestFit()
 {
+    // std::cout << TAG << "In XsecCalc::ReweightBestFit(), initialise event histograms." << std::endl;
     //Reweight all events using the post-fit parameters
     //This is done in FitObj.cc
     ReweightParam(postfit_param);
+    // std::cout << TAG << "In XsecCalc::ReweightBestFit(), initialisation finished." << std::endl;
 
     //Get a vector of histograms containing the selected (or true) number
     //of signal events which have been weighted using the best
@@ -231,11 +233,18 @@ void XsecCalc::ReweightBestFit()
     auto tru_hists  = true_events->GetSignalHist();
     auto ratio_hists = selected_events->GetRatioHist();
 
+    auto truth_hists = true_events->GetTrueSignalHist();
+    auto truth_ratio_hists = true_events->GetTrueRatioHist();
+
+
     //Apply the efficiency and other normalizations to calculate
     //the cross-section. This is done in place in the histograms.
     ApplyEff(sel_hists, tru_hists, false);
     ApplyNorm(sel_hists, postfit_param, false);
     ApplyNormTargetsRatio(ratio_hists, false);
+    
+    ApplyNorm(truth_hists, postfit_param, false);
+    ApplyNormTargetsRatio(truth_ratio_hists, false);
     
     //Concatenate the signal histograms together for later use
     //in the error propagation. These are class member variables.
@@ -247,12 +256,20 @@ void XsecCalc::ReweightBestFit()
     //functions.
     signal_best_fit = std::move(sel_hists);
     ratio_best_fit  = std::move(ratio_hists);
+
+    signal_truth = std::move(truth_hists);
+    ratio_truth  = std::move(truth_ratio_hists);
+
+    std::cout << TAG << "In XsecCalc::ReweightBestFit(), finished." << std::endl;
+
 }
 
 void XsecCalc::ReweightParam(const std::vector<double>& param)
 {
+    std::cout << TAG << "XsecCalc::ReweightParam(), reweight selected events..." << std::endl;
     selected_events->ReweightEvents(param);
-    true_events->ReweightEvents(param);
+    std::cout << TAG << "XsecCalc::ReweightParam(), reweight true events..." << std::endl;
+    true_events->ReweightEvents(param);   ///// THERE IS A BUT WHILE DOING THIS //////
 }
 
 void XsecCalc::GenerateToys() { GenerateToys(num_toys); }
@@ -632,6 +649,8 @@ void XsecCalc::SaveSignalHist(TFile* file)
     for(int id = 0; id < num_signals; ++id)
     {
         signal_best_fit.at(id).Write();
+        // signal_truth.at(id).Write();
+        ratio_truth.Write();
 
         BinManager bm = selected_events->GetBinManager(id);
         auto cos_edges = bm.GetEdgeVector(0);
@@ -658,6 +677,7 @@ void XsecCalc::SaveSignalHist(TFile* file)
             bin_edges.at(n).erase(iter, bin_edges.at(n).end());
         }
 
+        // Save cross-section from fit result
         unsigned int offset = 0;
         for(int k = 0; k < bin_edges.size(); ++k)
         {
@@ -668,6 +688,22 @@ void XsecCalc::SaveSignalHist(TFile* file)
             {
                 temp.SetBinContent(l, signal_best_fit.at(id).GetBinContent(l+offset));
                 temp.SetBinError(l, signal_best_fit.at(id).GetBinError(l+offset));
+            }
+            offset += temp.GetNbinsX();
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            temp.Write();
+        }
+
+        // Save cross-section from truth
+        offset = 0;
+        for(int k = 0; k < bin_edges.size(); ++k)
+        {
+            std::string name = v_normalization.at(id).name + "_cos_bin" + std::to_string(k) + "_truth";
+            TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
+
+            for(int l = 1; l <= temp.GetNbinsX(); ++l)
+            {
+                temp.SetBinContent(l, signal_truth.at(id).GetBinContent(l+offset));
             }
             offset += temp.GetNbinsX();
             temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
@@ -705,6 +741,7 @@ void XsecCalc::SaveRatioHist(TFile* file)
         bin_edges.at(n).erase(iter, bin_edges.at(n).end());
     }
 
+    // Save ratio from fit result
     unsigned int offset = 0;
     for(int k = 0; k < bin_edges.size(); ++k)
     {
@@ -715,6 +752,23 @@ void XsecCalc::SaveRatioHist(TFile* file)
         {
             temp.SetBinContent(l, ratio_best_fit.GetBinContent(l+offset));
             temp.SetBinError(l, ratio_best_fit.GetBinError(l+offset));
+        }
+        offset += temp.GetNbinsX();
+        temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+        temp.Write();
+    }
+
+    // Save ratio from truth
+    offset = 0;
+    for(int k = 0; k < bin_edges.size(); ++k)
+    {
+        std::string name = "CC0piOCRatio_cos_bin" + std::to_string(k) + "_truth";
+        TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
+
+        for(int l = 1; l <= temp.GetNbinsX(); ++l)
+        {
+            temp.SetBinContent(l, ratio_truth.GetBinContent(l+offset));
+            // temp.SetBinError(l, ratio_best_fit.GetBinError(l+offset));
         }
         offset += temp.GetNbinsX();
         temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);

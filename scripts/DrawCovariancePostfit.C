@@ -5,7 +5,7 @@
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawCovariancePostfit(string inputname = "fit3_statFluc")
+void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc")
 {
 	
 	//======================================================================================================  
@@ -154,8 +154,8 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc")
 	for(int il=0; il<Nsamples; il++) orlineSample[il]  -> Draw();
 	for(int il=0; il<Nsamples; il++) verlineSample[il] -> Draw();
 
-	c3->Print(Form("plots/fitteroutput/asimov/PostFitCorrMatrix_%s.pdf", inputname.c_str()));
-	c3->Print(Form("plots/fitteroutput/asimov/PostFitCorrMatrix_%s.png", inputname.c_str()));
+	c3->Print(Form("plots/fitteroutput/%s/PostFitCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
+	c3->Print(Form("plots/fitteroutput/%s/PostFitCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
 
 
 	// Draw matrix diagonal elements

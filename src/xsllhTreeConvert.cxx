@@ -104,10 +104,24 @@ int main(int argc, char** argv)
     std::string out_fname = j["output"]["fname"];
     std::string out_seltree_name = j["output"]["sel_tree"];
     std::string out_trutree_name = j["output"]["tru_tree"];
+    const unsigned int do_fakedata = j["output"]["do_fakedata"];
 
-    std::cout << TAG << "Out File: " << out_fname << std::endl
+    std::cout << TAG << "Out File          : " << out_fname << std::endl
               << TAG << "Out Selection Tree: " << out_seltree_name << std::endl
-              << TAG << "Out Truth Tree    : " << out_trutree_name << std::endl;
+              << TAG << "Out Truth Tree    : " << out_trutree_name << std::endl
+              << TAG << "Fake data type    : " << do_fakedata;
+            if(do_fakedata==0)
+                std::cout << " -> No fake data, content is not altered." << std::endl;
+            else if(do_fakedata==1)
+                std::cout << " -> Do fake data : add 30 percent of carbon events." << std::endl;
+            else if(do_fakedata==2)
+                std::cout << " -> Do fake data : remove 30 percent of carbon events." << std::endl;
+            else if(do_fakedata==3)
+                std::cout << " -> Do fake data : add 30 percent of oxygen events." << std::endl;
+            else if(do_fakedata==4)
+                std::cout << " -> Do fake data : remove 30 percent of oxygen events." << std::endl;
+            else
+                std::cout << std::endl << ERR << "Error in the input fake data variable, do_fakedata should be equal to 0, 1, 2, 3 or 4." << std::endl;
 
     TFile* out_file = TFile::Open(out_fname.c_str(), "RECREATE");
     TTree* out_seltree = new TTree(out_seltree_name.c_str(), out_seltree_name.c_str());
@@ -213,7 +227,7 @@ int main(int argc, char** argv)
         std::cout << TAG << "Highland2 target mapping:" << std::endl;
         for(const auto& kv : file.targetmap)
         {
-            std::cout << TAG << "Sample " << kv.first << ": ";
+            std::cout << TAG << "Target " << kv.first << ": ";
             for(const auto& b : kv.second)
                 std::cout << b << " ";
             std::cout << std::endl;
@@ -293,11 +307,31 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
-            // if(h2target == 6) weight = 10.0*weight; // uncomment to carbon events
-            // if(h2target == 6) weight = 1.3*weight; // uncomment to add 30% of carbon events
-            // if(h2target == 6) weight = 0.7*weight; // uncomment to add -30% of carbon events
-            // if(h2target == 8) weight = 1.3*weight; // uncomment to add 30% of oxygen events
-            // if(h2target == 8) weight = 0.7*weight; // uncomment to add -30% of oxygen events
+            
+            if(do_fakedata==0)
+            {
+                break;
+            }
+            else if(do_fakedata==1)
+            {
+                if(h2target == 6) weight = 1.3*weight;
+            }
+            else if(do_fakedata==2)
+            {
+                if(h2target == 6) weight = 0.7*weight;
+            }
+            else if(do_fakedata==3)
+            {
+                if(h2target == 8) weight = 1.3*weight;
+            }
+            else if(do_fakedata==4)
+            {
+                if(h2target == 8) weight = 0.7*weight;
+            }
+            else
+            {
+                std::cout << ERR << "Error in the input fake data variable, do_fakedata should be equal to 0, 1, 2, 3 or 4." << std::endl;
+            }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
             if(event_passed)

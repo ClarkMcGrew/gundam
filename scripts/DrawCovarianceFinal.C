@@ -5,7 +5,7 @@
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawCovarianceFinal(string inputname = "fit3_statFluc")
+void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc")
 {
 	
 	//======================================================================================================  
@@ -118,8 +118,8 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc")
 	verlineTar ->Draw();
 	orlineTar  ->Draw();
 
-	c3->Print(Form("plots/xsecResults/FinalXsecCorrMatrix_%s.pdf", inputname.c_str()));
-	c3->Print(Form("plots/xsecResults/FinalXsecCorrMatrix_%s.png", inputname.c_str()));
+	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
+	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
 
 
 	// Draw matrix diagonal elements
