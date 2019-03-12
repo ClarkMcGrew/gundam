@@ -241,7 +241,7 @@ int main(int argc, char** argv)
         int sample[1];
 
         // hl2_seltree -> SetBranchAddress("accum_level", &accum_level);
-        hl2_seltree -> SetBranchAddress("sample_clst_fgd2layer_xsec",        &sample);
+        hl2_seltree -> SetBranchAddress("sample_clst_fgd2layer_xsec",   &sample);
         hl2_seltree -> SetBranchAddress(file.sel_var.nutype.c_str(),    &nutype);
         hl2_seltree -> SetBranchAddress(file.sel_var.reaction.c_str(),  &reaction);
         hl2_seltree -> SetBranchAddress(file.sel_var.topology.c_str(),  &topology);
@@ -308,11 +308,7 @@ int main(int argc, char** argv)
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
             
-            if(do_fakedata==0)
-            {
-                break;
-            }
-            else if(do_fakedata==1)
+            if(do_fakedata==1)
             {
                 if(h2target == 6) weight = 1.3*weight;
             }
@@ -327,10 +323,6 @@ int main(int argc, char** argv)
             else if(do_fakedata==4)
             {
                 if(h2target == 8) weight = 0.7*weight;
-            }
-            else
-            {
-                std::cout << ERR << "Error in the input fake data variable, do_fakedata should be equal to 0, 1, 2, 3 or 4." << std::endl;
             }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 

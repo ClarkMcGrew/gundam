@@ -229,11 +229,11 @@ void XsecCalc::ReweightBestFit()
     //fit values (done above). Each different signal definition
     //is a separate histogram in the vector. This variable will
     //be destroyed once this function finishes.
-    auto sel_hists  = selected_events->GetSignalHist();
-    auto tru_hists  = true_events->GetSignalHist();
+    auto sel_hists   = selected_events->GetSignalHist();
+    auto tru_hists   = true_events->GetSignalHist();
     auto ratio_hists = selected_events->GetRatioHist();
 
-    auto truth_hists = true_events->GetTrueSignalHist();
+    auto truth_hists       = true_events->GetTrueSignalHist();
     auto truth_ratio_hists = true_events->GetTrueRatioHist();
 
 
@@ -249,7 +249,8 @@ void XsecCalc::ReweightBestFit()
     //Concatenate the signal histograms together for later use
     //in the error propagation. These are class member variables.
     sel_best_fit = ConcatHist(sel_hists, "sel_best_fit");
-    tru_best_fit = ConcatHist(tru_hists, "tru_best_fit");
+    // tru_best_fit = ConcatHist(tru_hists, "tru_best_fit");
+    tru_best_fit = ConcatHist(truth_hists, "tru_best_fit"); //LM MODIF 12 mars
     
     //Store the vector of histograms with the calculated best-fit
     //cross section in a class member variable for use in other
@@ -649,7 +650,7 @@ void XsecCalc::SaveSignalHist(TFile* file)
     for(int id = 0; id < num_signals; ++id)
     {
         signal_best_fit.at(id).Write();
-        // signal_truth.at(id).Write();
+        signal_truth.at(id).Write();
         ratio_truth.Write();
 
         BinManager bm = selected_events->GetBinManager(id);
@@ -690,7 +691,8 @@ void XsecCalc::SaveSignalHist(TFile* file)
                 temp.SetBinError(l, signal_best_fit.at(id).GetBinError(l+offset));
             }
             offset += temp.GetNbinsX();
-            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            // temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()); //LM
             temp.Write();
         }
 
@@ -706,7 +708,8 @@ void XsecCalc::SaveSignalHist(TFile* file)
                 temp.SetBinContent(l, signal_truth.at(id).GetBinContent(l+offset));
             }
             offset += temp.GetNbinsX();
-            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            // temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()); //LM
             temp.Write();
         }
     }

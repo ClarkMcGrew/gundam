@@ -25,10 +25,12 @@
 #include "TStyle.h"
 #include "TPaveStats.h"
 #include "TLatex.h"
+#include "TMatrixD.h"
 #include "TMatrixDSym.h"
 #include "TGaxis.h"
 #include "TMath.h"
 #include "TColor.h"
+#include "TDecompSVD.h"
 
 #endif
 

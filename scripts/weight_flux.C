@@ -1,3 +1,5 @@
+// root 'weight_flux.C()'
+
 void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av2/")
 {
     const double run2_pot  = 0.079263;

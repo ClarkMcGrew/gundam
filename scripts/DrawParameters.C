@@ -12,8 +12,8 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
     CommonStyle();
     gROOT->ForceStyle();
 
-    bool isAsimov = false;
-    if(dir_name=="asimov") isAsimov = true;
+    bool drawParThrow = false;
+    if(file_name == "fit3_statFluc") drawParThrow = true;
 
     const std::string output_dir = Form("plots/fitteroutput/%s/", dir_name.c_str());
     const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());
@@ -47,7 +47,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
         ss.str("");
         ss << "hist_" << name << "_iter0";
-        if(!isAsimov) TH1D* h_iter0 = (TH1D*)file -> Get(ss.str().c_str());
+        if(drawParThrow) TH1D* h_iter0 = (TH1D*)file -> Get(ss.str().c_str());
 
         ss.str("");
         ss << "hist_" << name << "_result";
@@ -75,13 +75,13 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
         h_prior -> SetMarkerColor(kBlue);
         h_prior -> SetMarkerStyle(kFullSquare);
-        if(!isAsimov) h_iter0 -> SetMarkerColor(kGreen+3);
-        if(!isAsimov) h_iter0 -> SetMarkerStyle(kFullTriangleUp);
+        if(drawParThrow) h_iter0 -> SetMarkerColor(kGreen+3);
+        if(drawParThrow) h_iter0 -> SetMarkerStyle(kFullTriangleUp);
         h_final -> SetMarkerColor(kRed);
         h_final -> SetMarkerStyle(kFullCircle);
 
         h_prior -> SetMarkerSize(2);
-        if(!isAsimov) h_iter0 -> SetMarkerSize(2);
+        if(drawParThrow) h_iter0 -> SetMarkerSize(2);
         h_final -> SetMarkerSize(2);
 
         h_prior -> SetFillColor(kBlue-9);
@@ -95,13 +95,13 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
             h_prior -> GetYaxis() -> SetRangeUser(0.7,1.3);
 
         h_prior -> Draw("P E2");
-        if(!isAsimov) h_iter0 -> Draw("P same");
+        if(drawParThrow) h_iter0 -> Draw("P same");
         h_final -> Draw("P E2 same");
 
         TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
         legend -> SetFillColor(0);
         legend -> AddEntry(h_prior, "Prior","p");
-        if(!isAsimov) legend -> AddEntry(h_iter0, "Initial","p");
+        if(drawParThrow) legend -> AddEntry(h_iter0, "Initial","p");
         legend -> AddEntry(h_final, "Final","p");
         legend -> Draw();
 
