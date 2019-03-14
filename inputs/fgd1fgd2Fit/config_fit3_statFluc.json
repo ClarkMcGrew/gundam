@@ -54,6 +54,7 @@
         {
             "name" : "ND280",
             "xsec_config" : "ptheta_dials.json",
+            "xsec_truth_config" : "ptheta_dials_truth.json",
             "binning" : "binning/tn337_binning.txt",
             "template_par" : [
                 {

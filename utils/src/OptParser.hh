@@ -47,6 +47,7 @@ struct DetOpt
 {
     std::string name;
     std::string xsec;
+    std::string xsec_truth;
     std::string binning;
     bool use_detector;
 };

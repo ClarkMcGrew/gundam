@@ -196,7 +196,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 			if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec_truth[itar][nbcth]   -> Draw("hist"); // with error bars
+			h_xsec_truth[itar][nbcth]   -> Draw("hist");
 			h_xsec_postfit[itar][nbcth] -> Draw("same E"); // with error bars
 
 			if(nbcth==0)
@@ -232,7 +232,8 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 			if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec_postfit_err[itar][nbcth] -> Draw("hist"); // with error bars
+			h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.25);
+			h_xsec_postfit_err[itar][nbcth] -> Draw("hist");
 
 		}
 		c_xsec_err[itar]->Print(Form("plots/xsecResults/%s/xsec_error_%s_%s.pdf", dir_name.c_str(), inputname.c_str(), targetlist[itar].c_str()));
@@ -255,7 +256,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio_truth[nbcth]   -> Draw("hist"); // with error bars
+		h_ratio_truth[nbcth]   -> Draw("hist");
 		h_ratio_postfit[nbcth] -> Draw("same E"); // with error bars
 
 		// if(nbcth==0)
@@ -272,7 +273,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 		// 	leg[Ntarget]->Draw();
 		// }
 	}
-	c_ratio->Print( Form("plots/xsecResults/%s/xsec_OCratio_%s.pdf", dir_name.c_str(), inputname.c_str()) );
+	c_ratio->Print( Form("plots/xsecResults/%s/xsec_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
 
 
 
@@ -290,9 +291,10 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio_postfit_err[nbcth]->Draw("hist"); // with error bars
+		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.3);
+		h_ratio_postfit_err[nbcth] -> Draw("hist");
 	}
-	c_ratio_err->Print( Form("plots/xsecResults/%s/xsec_error_OCratio_%s.pdf", dir_name.c_str(), inputname.c_str()) );
+	c_ratio_err->Print( Form("plots/xsecResults/%s/xsec_error_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
 
 	//======================================================================================================
 
@@ -316,7 +318,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 	// if(nbcth!=0) gPad->SetLogx();
 
-	h_eff->Draw("hist"); // with error bars
+	h_eff->Draw("hist");
 	
 	c_eff->Print( Form("plots/xsecResults/%s/efficiency_%s.pdf", dir_name.c_str(), inputname.c_str()) );
 	//======================================================================================================

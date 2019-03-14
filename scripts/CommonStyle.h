@@ -49,6 +49,15 @@ int CommonStyle() {
   //  - rainbow -
   //  gStyle->SetPalette(1);  // use the rainbow color set
 
+  // Set color style for covariance matrices (blue=-1, white=0, red=1)
+  const Int_t NRGBs = 3;
+  const Int_t NCont = 20;
+  Double_t stops[NRGBs] = { 0.00, 0.50, 1.00 };
+  Double_t red[NRGBs]   = { 0.00, 1.00, 1.00 };
+  Double_t green[NRGBs] = { 0.00, 1.00, 0.00 };
+  Double_t blue[NRGBs]  = { 1.00, 1.00, 0.00 };
+  TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
+  
   // -- horizontal error bars back --
    gStyle->SetErrorX(0.5);
 

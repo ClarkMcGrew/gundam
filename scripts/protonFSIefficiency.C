@@ -29,6 +29,8 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 	string infilename_noFSI = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd1_noFSI_500toys.root";
 	string infilename_wiFSI = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd1_500toys.root";
 
+	string fitpath = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/";
+
 	//======================================================================================================  
 	//=== Set T2K style. In CommonStyle.h option 1 has been setted
 	CommonStyle();
@@ -41,7 +43,7 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 	BinningTools bin; 
 	bin.SetBinning(fbinning.c_str());
 
-	//  int Nbins = bin.GetNbins();//Total number of bins
+	int Nbins = bin.GetNbins();//Total number of bins
 	int Nbins_costh = bin.GetNbins_costh();//Number of costheta bins
 
 	int* Nmombins = new int[Nbins_costh];//Number of mom bin in each slice of costheta
@@ -153,34 +155,85 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 		h_eff_noFSI[nbcth] -> Divide(h_tru_noFSI[nbcth]);
 		h_eff_wiFSI[nbcth] -> Divide(h_tru_wiFSI[nbcth]);
 	}
-
 	//======================================================================================================
 
 
 	//===================================================================================================================
 	std::cout << "================================================" << std::endl;
-	std::cout << "=== Compute relative error on the efficiency and write it into a file" << std::endl;
-
-
-	ofstream outfile("plots/protonFSI/efficiencyOutput.txt");
-	if (!outfile){ cout << "Problem to open an output text file."; }
+	std::cout << "=== Compute relative error on the efficiency" << std::endl;
 	
-	double effWiFSI, effNoFSI, errorRelEff;
-	int nbinindex = 0;
+	std::vector< TH1D* > h_eff_error;
+	std::vector< TH1D* > h_eff_errorTEST;
 
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	{
+		h_eff_error.push_back((TH1D*)h_eff_wiFSI[nbcth] -> Clone(Form("h_eff_error_%d",nbcth)));
+	}
+
+	double tmp_effwiFSI, tmp_effnoFSI;
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		for(int nbm=0; nbm<Nmombins[nbcth]; nbm++)
 		{
-			effWiFSI = h_eff_wiFSI[nbcth] -> GetBinContent(nbm+1);
-			effNoFSI = h_eff_noFSI[nbcth] -> GetBinContent(nbm+1);
-			if(effWiFSI !=0) errorRelEff = fabs(effWiFSI - effNoFSI)/effWiFSI;
-			else errorRelEff = 1.0;
+			tmp_effnoFSI = h_eff_noFSI[nbcth] -> GetBinContent(nbm+1);
+			tmp_effwiFSI = h_eff_wiFSI[nbcth] -> GetBinContent(nbm+1);
 
-			outfile << nbinindex << " " << effWiFSI << " " << effNoFSI << " " << errorRelEff << std::endl;
-			nbinindex++;
+			h_eff_error[nbcth] -> SetBinContent(nbm+1, fabs(tmp_effwiFSI - tmp_effnoFSI)/tmp_effwiFSI );
+			// h_eff_error[nbcth] -> SetBinContent(nbm+1, (tmp_effwiFSI - tmp_effnoFSI)/tmp_effwiFSI );
 		}
 	//======================================================================================================
 
+
+	//===================================================================================================================
+	std::cout << "================================================" << std::endl;
+	std::cout << "=== Compute covariance matrix" << std::endl;
+	
+	TH1D* effWiFSI = new TH1D("effWiFSI", "effWiFSI", 2*Nbins, 0, 2*Nbins);
+	TH1D* effNoFSI = new TH1D("effNoFSI", "effNoFSI", 2*Nbins, 0, 2*Nbins);
+
+	int nbinindex = 1;
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+		for(int nbm=0; nbm<Nmombins[nbcth]; nbm++)
+		{
+			effWiFSI -> SetBinContent(nbinindex, h_eff_wiFSI[nbcth] -> GetBinContent(nbm+1) );
+			effNoFSI -> SetBinContent(nbinindex, h_eff_noFSI[nbcth] -> GetBinContent(nbm+1) );
+			
+			// Since we don't have FGD2, we set the oxygen bins to the values computed for carbon.
+			effWiFSI -> SetBinContent(nbinindex + Nbins, h_eff_wiFSI[nbcth] -> GetBinContent(nbm+1) );
+			effNoFSI -> SetBinContent(nbinindex + Nbins, h_eff_noFSI[nbcth] -> GetBinContent(nbm+1) );
+			
+			nbinindex++;
+		}
+
+	TMatrixDSym *cov_mat = new TMatrixDSym(2*Nbins);
+	TMatrixDSym *cor_mat = new TMatrixDSym(2*Nbins);
+
+	// // Compute matrix with co-variances
+
+	// for(int i=0; i<2*Nbins; i++)
+	// 	for(int j=0; j<2*Nbins; j++)
+	// 		(*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
+
+	// for(int i=0; i<2*Nbins; i++)
+	// 	for(int j=0; j<2*Nbins; j++)
+	// 		(*cor_mat)(i,j) = (*cov_mat)(i,j)/(TMath::Sqrt((*cov_mat)(i,i))*TMath::Sqrt((*cov_mat)(j,j)));
+
+
+	// Compute matrix without co-variances
+
+	for(int i=0; i<2*Nbins; i++)
+		for(int j=0; j<2*Nbins; j++)
+		{
+			if(i==j) (*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
+			else     (*cov_mat)(i,j) = 0;
+		}
+
+	TFile* file_output = TFile::Open(Form("%s/inputs/fgd1fgd2Fit/xsllh_covarProtonFSI.root", fitpath.c_str()), "RECREATE");
+    file_output->cd();
+
+    cov_mat -> Write("cov_mat");
+    cor_mat -> Write("cor_mat");
+
+	//======================================================================================================
 
 
 
@@ -189,8 +242,10 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Make final plots =====" << std::endl;                                                                                                                      
 
-	TCanvas* c;
-	double max;
+	TCanvas *c_matrix = new TCanvas("c_matrix","c_matrix",1000,900);
+	cor_mat -> Draw("colz");
+	c_matrix -> Print("plots/protonFSI/protonFSI_correlation.pdf");
+
 
 	TCanvas* c_eff = new TCanvas("nuwro_efficiency", "nuwro_efficiency",1700,1000);
 	c_eff -> Divide(3,3);
@@ -202,15 +257,15 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 		h_eff_noFSI[nbcth] -> GetYaxis() -> SetTitle("Signal efficiency");
 		h_eff_noFSI[nbcth] -> GetYaxis() -> SetRangeUser(0, 1.0);
 
-		h_eff_noFSI[nbcth] -> SetLineColor(kRed+2);
-		h_eff_wiFSI[nbcth] -> SetLineColor(kBlue+2);
+		h_eff_noFSI[nbcth] -> SetLineColor(kRed+1);
+		h_eff_wiFSI[nbcth] -> SetLineColor(kBlue+1);
 
 		c_eff -> cd(nbcth+1);
 
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_eff_noFSI[nbcth] -> Draw("hist"); // with error bars
-		h_eff_wiFSI[nbcth] -> Draw("same hist"); // with error bars
+		h_eff_noFSI[nbcth] -> Draw("hist");
+		h_eff_wiFSI[nbcth] -> Draw("same hist");
 
 		if(nbcth==0)
 		{
@@ -225,7 +280,30 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 			leg->Draw();
 		}
 	}
-	c_eff->Print("plots/protonFSI/nuwro_efficiency.pdf");
+	c_eff -> Print("plots/protonFSI/protonFSI_efficiency.pdf");
+
+
+
+
+	TCanvas* c_error = new TCanvas("protonFSIsyst", "protonFSIsyst",1700,1000);
+	c_error -> Divide(3,3);
+
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	{
+		h_eff_error[nbcth] -> SetTitle(h_title[nbcth]);
+		h_eff_error[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [MeV/c]");
+		h_eff_error[nbcth] -> GetYaxis() -> SetTitle("Proton FSI systematics");
+		// h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(0, 1.0);
+		h_eff_error[nbcth] -> SetLineColor(kBlue+1);
+
+		c_error -> cd(nbcth+1);
+		if(nbcth!=0) gPad->SetLogx();
+
+		h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.15);
+		// h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(-0.15, 0.15);
+		h_eff_error[nbcth] -> Draw("hist"); 
+	}
+	c_error -> Print("plots/protonFSI/protonFSI_syst.pdf");
 
 
 

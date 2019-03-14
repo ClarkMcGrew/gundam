@@ -120,7 +120,10 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-                xsecpara->AddDetector(opt.name, opt.xsec);
+            {
+                if(is_true_tree) xsecpara->AddDetector(opt.name, opt.xsec_truth);
+                else xsecpara->AddDetector(opt.name, opt.xsec);
+            }
         }
         xsecpara->InitEventMap(samples, 0);
         fit_par.push_back(xsecpara);

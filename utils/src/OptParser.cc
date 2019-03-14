@@ -71,7 +71,8 @@ bool OptParser::ParseJSON(std::string json_file)
     {
         DetOpt d;
         d.name = detector["name"];
-        d.xsec = input_dir + detector["xsec_config"].get<std::string>();
+        d.xsec       = input_dir + detector["xsec_config"].get<std::string>();
+        d.xsec_truth = input_dir + detector["xsec_truth_config"].get<std::string>();
         d.binning = input_dir + detector["binning"].get<std::string>();
         d.use_detector = detector["use_detector"];
         detectors.push_back(d);

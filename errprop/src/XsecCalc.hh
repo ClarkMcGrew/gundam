@@ -106,6 +106,8 @@ private:
     TMatrixDSym* postfit_cor;
     std::vector<double> postfit_param;
 
+    TMatrixDSym* protonfsi_cov;
+
     TMatrixDSym xsec_cov;
     TMatrixDSym xsec_cor;
 

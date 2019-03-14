@@ -187,7 +187,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 				leg[ifgd] -> SetBorderSize(1);
 				leg[ifgd] -> SetFillStyle(0);
 				//leg[ifgd]->SetTextSize(0.075);
-				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],   "Data",    "lep");
+				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],        "(Fake) data",    "lep");
 				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
 				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
 				c_events[ifgd]->cd(6);

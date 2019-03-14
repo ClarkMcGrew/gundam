@@ -9,6 +9,7 @@ XsecCalc::XsecCalc(const std::string& json_config)
     , signal_bins(0)
     , postfit_cov(nullptr)
     , postfit_cor(nullptr)
+    , protonfsi_cov(nullptr)
     , toy_thrower(nullptr)
 {
     std::cout << TAG << "Reading error propagation options." << std::endl;
@@ -27,6 +28,12 @@ XsecCalc::XsecCalc(const std::string& json_config)
     extra_hists = j.value("extra_hists", "");
     if(!extra_hists.empty())
         extra_hists = working_dir + extra_hists;
+
+    if(protonfsi_cov != nullptr)
+        delete protonfsi_cov;
+    std::string inputname_protonfsicov = working_dir + j["proton_fsi_cov"].get<std::string>();
+    TFile* inputfile_protonfsicov = TFile::Open(inputname_protonfsicov.c_str(), "READ");
+    protonfsi_cov = (TMatrixDSym*)inputfile_protonfsicov->Get("cov_mat");
 
     num_toys = j["num_toys"];
     do_ratio = j["do_ratio"];
@@ -65,6 +72,7 @@ XsecCalc::~XsecCalc()
 
     delete postfit_cov;
     delete postfit_cor;
+    delete protonfsi_cov;
 }
 
 void XsecCalc::ReadFitFile(const std::string& file)
@@ -79,8 +87,8 @@ void XsecCalc::ReadFitFile(const std::string& file)
     input_file = file;
 
     TFile* postfit_file = TFile::Open(file.c_str(), "READ");
-    postfit_cov = (TMatrixDSym*)postfit_file->Get("res_cov_matrix");
-    postfit_cor = (TMatrixDSym*)postfit_file->Get("res_cor_matrix");
+    postfit_cov   = (TMatrixDSym*)postfit_file->Get("res_cov_matrix");
+    postfit_cor   = (TMatrixDSym*)postfit_file->Get("res_cor_matrix");
 
     TVectorD* postfit_param_root = (TVectorD*)postfit_file->Get("res_vector");
     for(int i = 0; i < postfit_param_root->GetNoElements(); ++i)
@@ -513,6 +521,7 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
     ratio_cor.ResizeTo(signal_bins, signal_bins);
     ratio_cor.Zero();
 
+    // Compute the xsec covariance
     for(const auto& hist : toys_sel_events)
     {
         for(int i = 0; i < total_signal_bins; ++i)
@@ -526,6 +535,7 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         }
     }
 
+    // Compute the ratio covariance
     for(const auto& hist : toys_ratio)
     {
         for(int i = 0; i < signal_bins; ++i)
@@ -539,6 +549,24 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         }
     }
 
+    // Add the proton FSI contribution to the xsec covariance
+    for(int i = 0; i < total_signal_bins; ++i)
+    {   
+        const double a = xsec_cov(i, i);
+        const double b = (*protonfsi_cov)(i, i) * sel_best_fit.GetBinContent(i+1) * sel_best_fit.GetBinContent(i+1);
+        xsec_cov(i, i) = a + b;
+    }
+
+    // Add the proton FSI contribution to the xsec covariance
+    // The error from FSI on the ratio is sqrt(2) times the FSI error we get for the xsec (proton FSI)
+    for(int i = 0; i < signal_bins; ++i)
+    {   
+        const double a = ratio_cov(i, i);
+        const double b = 2 * (*protonfsi_cov)(i, i) * ratio_best_fit.GetBinContent(i+1) * ratio_best_fit.GetBinContent(i+1);
+        ratio_cov(i, i) = a + b;
+    }
+
+    // Compute the xsec correlation
     for(int i = 0; i < total_signal_bins; ++i)
     {
         for(int j = 0; j < total_signal_bins; ++j)
@@ -553,6 +581,7 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
         }
     }
 
+    // Compute the ratio correlation
     for(int i = 0; i < signal_bins; ++i)
     {
         for(int j = 0; j < signal_bins; ++j)
@@ -566,7 +595,6 @@ void XsecCalc::CalcCovariance(bool use_best_fit)
                 ratio_cor(i, j) = 0.0;
         }
     }
-
 
     for(int i = 0; i < total_signal_bins; ++i)
         sel_best_fit.SetBinError(i + 1, sqrt(xsec_cov(i, i)));
