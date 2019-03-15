@@ -181,6 +181,7 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string inpu
             n.num_targets_val = s["num_targets_val"];
             n.num_targets_err = s["num_targets_err"];
             n.is_rel_err = s["relative_err"];
+            n.pot_norm = s.value("pot_norm", 1.0);
             if(n.is_rel_err)
             {
                 n.flux_err = n.flux_int * n.flux_err;
@@ -191,6 +192,7 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string inpu
             n.nbins = bm.GetNbins();
 
             std::cout << TAG << "Num. bins: " << n.nbins << std::endl
+                      << TAG << "POT norm : " << n.pot_norm << std::endl
                       << TAG << "Flux file: " << n.flux_file << std::endl
                       << TAG << "Flux hist: " << n.flux_name << std::endl
                       << TAG << "Flux integral: " << n.flux_int << std::endl
@@ -333,6 +335,7 @@ void XsecCalc::ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>&
         ApplyTargets(i, vec_hist[i], is_toy);
         ApplyFlux(i, vec_hist[i], param, is_toy);
         ApplyBinWidth(i, vec_hist[i], perGeV);
+        ApplyPOT(i, vec_hist[i]);
     }
 }
 
@@ -388,6 +391,11 @@ void XsecCalc::ApplyBinWidth(const unsigned int signal_id, TH1D& hist, const dou
         const double bin_value = hist.GetBinContent(i + 1);
         hist.SetBinContent(i + 1, bin_value / bin_width);
     }
+}
+
+void XsecCalc::ApplyPOT(const unsigned int signal_id, TH1D& hist)
+{
+    hist.Scale(v_normalization[signal_id].pot_norm);
 }
 
 TH1D XsecCalc::ConcatHist(const std::vector<TH1D>& vec_hist, const std::string& hist_name)

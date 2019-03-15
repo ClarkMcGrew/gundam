@@ -46,6 +46,8 @@ struct SigNorm
     double num_targets_val;
     double num_targets_err;
     bool is_rel_err;
+
+    double pot_norm;
 };
 
 class XsecCalc
@@ -71,6 +73,7 @@ public:
     void ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::vector<double>& param,
                    bool is_toy);
     void ApplyBinWidth(const unsigned int signal_id, TH1D& hist, const double unit_scale);
+    void ApplyPOT(const unsigned int signal_id, TH1D& hist);
 
     TH1D ConcatHist(const std::vector<TH1D>& vec_hists, const std::string& hist_name = "");
 

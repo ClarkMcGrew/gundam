@@ -463,7 +463,7 @@ double XsecFitter::CalcLikelihood(const double* par)
 
     if(output_chi2)
     {
-        std::cout << TAG << "Iterations: " << m_calls << std::endl;
+        std::cout << TAG << "Func Calls: " << m_calls << std::endl;
         std::cout << TAG << "Chi2 total: " << chi2_stat + chi2_sys + chi2_reg << std::endl;
         std::cout << TAG << "Chi2 stat : " << chi2_stat << std::endl
                   << TAG << "Chi2 syst : " << chi2_sys  << std::endl

@@ -25,7 +25,7 @@
         "matrix" : "flux_numu_cov",
         "binning" : "hist_bins",
         "throw"  : false,
-        "decomp" : false,
+        "decomp" : true,
         "variance" : 1.00,
         "fit_par" : true
     },
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsec_cov_nd280.root",

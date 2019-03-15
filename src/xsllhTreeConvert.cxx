@@ -415,8 +415,8 @@ int main(int argc, char** argv)
             reaction = GetIngridReaction(interaction_type);
             target = 6;
 
-            enu_true = enu;
-            enu_reco = enu;
+            enu_true = enu * 1000.0;
+            enu_reco = enu * 1000.0;
 
             double emu_true = std::sqrt(pmu_true * pmu_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - pmu_true * TMath::Cos(angle_true * deg_to_rad))
