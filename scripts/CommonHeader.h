@@ -9,6 +9,7 @@
 #include <sstream>
 #include <assert.h>
 #include <unistd.h>
+#include <vector>
 
 #include "TFile.h"
 #include "TH1.h"

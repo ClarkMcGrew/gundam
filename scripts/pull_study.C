@@ -2,9 +2,10 @@
 * Author : Lucie Maret
 * mail : lucie.maret@cern.ch
 *******************************************/
-#include <unistd.h>
-#include <TFile.h>
+// #include <unistd.h>
+// #include <TFile.h>
 #include "CommonStyle.h"
+#include "CommonHeader.h"
 
 
 // Compute the pull for each parameter
@@ -14,19 +15,23 @@ void pull_study()
 	//======================================================================================================  
 	//=== Set common style
 	CommonStyle();
+	gStyle->SetOptStat(1);
 	gROOT->ForceStyle();
 
 
 	std::cout << "------------------------" << std::endl;
 	std::cout << "----- Begin script -----" << std::endl;
 
-	plotStyle();
+	// int toys[]= {1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100}; // all
+	int toys[]= {1 , 2 , 3 , 4 , 5 , 6 , 7 , 9 , 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 90, 91, 92, 94, 95, 96, 97, 98, 99, 100}; // removed the ones that didn't converge
+	// 17, 81, 88 not finished yet
 
-	int ntoys = 100;
-	int nbins = 58;
+	int ntoys = (sizeof(toys)/sizeof(*toys));
+	std::cout << "----- Number of toys used = "<<ntoys<<" -----" << std::endl;
 
-	// string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_onlyFitPar_toy";
-	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit1_AllPar_toy";
+	int nbins = 2*58;
+
+	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit3_statFluc_toy";
 
 
 	std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
@@ -44,15 +49,15 @@ void pull_study()
 	std::vector< Double_t > pull_and_sigma_in_bin_j;
 	TH1D *h_pull_mean   = new TH1D("h_pull_mean", "Template parameter pull", nbins, 0, nbins);
 	TH1D *h_pull_sigma  = new TH1D("h_pull_sigma", "Pull width", nbins, 0, nbins);
-	TH1D *h_pull_O        = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -2.5, 2.5);
-	TH1D *h_pull_C        = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -2.5, 2.5);
+	TH1D *h_pull_O        = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -1.0, 1.0);
+	TH1D *h_pull_C        = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -1.0, 1.0);
 
 
 	std::cout << "----- Loop over the parameters to compute the mean among toys -----" << std::endl;
 
 	for(int j = 1; j <= nbins; j++)
 	{
-		pull_and_sigma_in_bin_j = pull_of_one_bin(j, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
+		pull_and_sigma_in_bin_j = pull_of_one_bin(j, toys, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
 
 		h_pull_mean   -> SetBinContent(j, pull_and_sigma_in_bin_j[0]);
 		h_pull_mean   -> SetBinError(j, pull_and_sigma_in_bin_j[1]);
@@ -81,7 +86,7 @@ void pull_study()
 
 	std::cout << "----- Plot results -----" << std::endl;
 
-	TCanvas *c_pull_mean = new TCanvas("c_pull_mean","Parameter pull",900,500);
+	TCanvas *c_pull_mean = new TCanvas("c_pull_mean","Parameter pull",1000,600);
 	h_pull_mean -> SetTitle("Pull; Parameter number; ");
 	c_pull_mean -> SetGrid();
 	h_pull_mean -> SetStats(kFALSE);
@@ -97,9 +102,9 @@ void pull_study()
 	h_pull_sigma -> SetFillColor(kRed-9);
 	h_pull_sigma -> SetFillStyle(3144);
 
-	TLine *line0 = new TLine(0,0,58,0);
-	TLine *line1 = new TLine(0,1,58,1);
-	TLine *line2 = new TLine(29,-4,29,5);
+	TLine *line0 = new TLine(0,0,2*58,0);
+	TLine *line1 = new TLine(0,1,2*58,1);
+	TLine *line2 = new TLine(58,-4,58,5);
 
 	h_pull_mean   -> Draw("P E2");
 	h_pull_sigma  -> Draw("same P E2");
@@ -113,25 +118,27 @@ void pull_study()
 	legend->AddEntry(h_pull_sigma,"Pull sigma","p");
 	legend->Draw(); 
 
-	c_pull_mean -> Print("histos/pullstudy/pull_mean_and_sigma.pdf");
+	c_pull_mean -> Print("plots/pullstudy/pull_mean_and_sigma.pdf");
 
 
-	TCanvas *c_pull_O = new TCanvas("c_pull_O","Pull distribution for oxygen parameters",800,500);
-	h_pull_O -> SetTitle("; Pull distribution for oxygen parameters; ");
+	TCanvas *c_pull_O = new TCanvas("c_pull_O","Pull distribution for oxygen parameters",900,700);
+	h_pull_O -> SetTitle("; Pull for oxygen parameters; ");
 	c_pull_O -> SetGrid();
+	h_pull_O -> GetYaxis() -> SetRangeUser(0.0, 25.0);
 
 	h_pull_O -> Draw();
 
+	c_pull_O -> Print("plots/pullstudy/pull_distribution_O.pdf");
 
-	c_pull_O -> Print("histos/pullstudy/pull_distribution_O.pdf");
 
-	TCanvas *c_pull_C = new TCanvas("c_pull_C","Pull distribution for carbon parameters",800,500);
-	h_pull_C -> SetTitle(" ; Pull distribution for carbon parameters; ");
+	TCanvas *c_pull_C = new TCanvas("c_pull_C","Pull distribution for carbon parameters",900,700);
+	h_pull_C -> SetTitle(" ; Pull for carbon parameters; ");
 	c_pull_C -> SetGrid();
+	h_pull_C -> GetYaxis() -> SetRangeUser(0.0, 25.0);
 
 	h_pull_C -> Draw();
 
-	c_pull_C -> Print("histos/pullstudy/pull_distribution_C.pdf");
+	c_pull_C -> Print("plots/pullstudy/pull_distribution_C.pdf");
 
 
 	std::cout << "----- End script -----" << std::endl;
@@ -147,7 +154,7 @@ void pull_study()
 
 
 // Compute the pull mean for each bin
-std::vector< Double_t > pull_of_one_bin(int bin, int Ntoys, string genFilename, bool draw_distr = false)
+std::vector< Double_t > pull_of_one_bin(int bin, int Toys[], int Ntoys, string genFilename, bool draw_distr = false)
 {
 	string filename;
 	TFile *fin;
@@ -161,7 +168,7 @@ std::vector< Double_t > pull_of_one_bin(int bin, int Ntoys, string genFilename, 
 	for(int i = 1; i <= Ntoys; i++)
 	{
 		// Define the input file
-		filename = Form("%s%d.root", genFilename.c_str(), i);
+		filename = Form("%s%d.root", genFilename.c_str(), Toys[i]);
 		TFile *fin = new TFile(filename.c_str());
 		// std::cout << "File " << filename.c_str() << " is open." << std::endl;
 
@@ -188,19 +195,19 @@ std::vector< Double_t > pull_of_one_bin(int bin, int Ntoys, string genFilename, 
 		h_pull_values_in_bin -> SetTitle( Form("Pull distribution of parameter %d; Pull; ", bin-1) );
 		h_pull_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_pull_distribution -> Print( Form("histos/pullstudy/pull_distribution_of_param_%d.pdf", bin-1) );
+		c_pull_distribution -> Print( Form("plots/pullstudy/pull_distribution_of_param_%d.pdf", bin-1) );
 
 		TCanvas *c_param_distribution = new TCanvas("c_param_distribution", Form("Parameter c_%d distribution", bin-1),900,600);
 		h_param_values_in_bin -> SetTitle( Form("Parameter c_%d distribution; Parameter value; ", bin-1) );
 		h_param_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_param_distribution -> Print( Form("histos/pullstudy/param_distribution_%d.pdf", bin-1) );
+		c_param_distribution -> Print( Form("plots/pullstudy/param_distribution_%d.pdf", bin-1) );
 
 		TCanvas *c_paramerr_distribution = new TCanvas("c_paramerr_distribution", Form("Error on parameter c_%d distribution", bin-1),900,600);
 		h_paramerr_values_in_bin -> SetTitle( Form("Error on parameter c_%d distribution; Parameter error; ", bin-1) );
 		h_paramerr_values_in_bin -> Draw("hist");
 		// fitfct -> Draw("same");
-		c_paramerr_distribution -> Print( Form("histos/pullstudy/paramerr_distribution_%d.pdf", bin-1) );
+		c_paramerr_distribution -> Print( Form("plots/pullstudy/paramerr_distribution_%d.pdf", bin-1) );
 
 		// sleep(1);
 	}
@@ -260,7 +267,7 @@ void pull_of_one_toy(int toy, int Nbins, string genFilename)
 	h_pull_values -> SetTitle( Form("Pull distribution for toy %d; Pull; ", toy) );
 	h_pull_values -> Draw("hist");
 	// fitfct -> Draw("same");
-	c_pull_distribution -> Print( Form("histos/pullstudy/pull_distribution_for_toy_%d.pdf", toy) );
+	c_pull_distribution -> Print( Form("plots/pullstudy/pull_distribution_for_toy_%d.pdf", toy) );
 
 	sleep(1);
 
@@ -273,7 +280,7 @@ void pull_of_one_toy(int toy, int Nbins, string genFilename)
 
 
 
-void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename)
+void parameters_of_each_toy(int Toys[], int Ntoys, int const Nbins, string genFilename)
 {
 	string filename;
 	TFile *fin;
@@ -284,7 +291,7 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 	for(int toyi = 1; toyi <= Ntoys; toyi++)
 	{
 		// Define the input file
-		filename = Form("%s%d.root", genFilename.c_str(), toyi);
+		filename = Form("%s%d.root", genFilename.c_str(), Toys[toyi]);
 		TFile *fin = new TFile(filename.c_str());
 		if (fin->IsOpen() ) printf("Input file opened successfully\n");
 
@@ -314,11 +321,11 @@ void parameters_of_each_toy(int const Ntoys, int const Nbins, string genFilename
 	
 	// Draw parameters
 	TCanvas *c_parameters = new TCanvas("c_parameters", "Parameters for each toy",2000,1200);
-	for(int toyi = 1; toyi <= Ntoys; toyi++)
+	for(int i = 1; i <= Ntoys; i++)
 	{
-		(TH1D*)param_file->Get(Form("param_for_toy_%d", toyi)) -> Draw("hist same");	
+		(TH1D*)param_file->Get(Form("param_for_toy_%d", Toys[toyi])) -> Draw("hist same");	
 	}
-	c_parameters -> Print("histos/pullstudy/parameters_for_each_toy.pdf");
+	c_parameters -> Print("plots/pullstudy/parameters_for_each_toy.pdf");
 
 }
 

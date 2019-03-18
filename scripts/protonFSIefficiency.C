@@ -209,23 +209,23 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 
 	// // Compute matrix with co-variances
 
-	// for(int i=0; i<2*Nbins; i++)
-	// 	for(int j=0; j<2*Nbins; j++)
-	// 		(*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
+	for(int i=0; i<2*Nbins; i++)
+		for(int j=0; j<2*Nbins; j++)
+			(*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
 
-	// for(int i=0; i<2*Nbins; i++)
-	// 	for(int j=0; j<2*Nbins; j++)
-	// 		(*cor_mat)(i,j) = (*cov_mat)(i,j)/(TMath::Sqrt((*cov_mat)(i,i))*TMath::Sqrt((*cov_mat)(j,j)));
+	for(int i=0; i<2*Nbins; i++)
+		for(int j=0; j<2*Nbins; j++)
+			(*cor_mat)(i,j) = (*cov_mat)(i,j)/(TMath::Sqrt((*cov_mat)(i,i))*TMath::Sqrt((*cov_mat)(j,j)));
 
 
 	// Compute matrix without co-variances
 
-	for(int i=0; i<2*Nbins; i++)
-		for(int j=0; j<2*Nbins; j++)
-		{
-			if(i==j) (*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
-			else     (*cov_mat)(i,j) = 0;
-		}
+	// for(int i=0; i<2*Nbins; i++)
+	// 	for(int j=0; j<2*Nbins; j++)
+	// 	{
+	// 		if(i==j) (*cov_mat)(i,j) = (effWiFSI->GetBinContent(i+1) - effNoFSI->GetBinContent(i+1)) * (effWiFSI->GetBinContent(j+1) - effNoFSI->GetBinContent(j+1)) / (effWiFSI->GetBinContent(i+1)*effWiFSI->GetBinContent(j+1));
+	// 		else     (*cov_mat)(i,j) = 0;
+	// 	}
 
 	TFile* file_output = TFile::Open(Form("%s/inputs/fgd1fgd2Fit/xsllh_covarProtonFSI.root", fitpath.c_str()), "RECREATE");
     file_output->cd();

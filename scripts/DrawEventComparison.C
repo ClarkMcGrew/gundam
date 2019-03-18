@@ -30,6 +30,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	//======================================================================================================
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Store fitter output in a TFile =====" << std::endl;
+	std::cout << "===== "<< infilename <<" =====" << std::endl;
 
 	TFile* fin = new TFile(infilename.c_str());
 	//======================================================================================================
@@ -45,7 +46,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	string fgdNames[Nfgd] = {"FGD1", "FGD2x", "FGD2y"};
 
 	const int Nsample = 8;
-	vector< vector<string> > nameSamples(Nfgd);
+	vector< vector< string > > nameSamples(Nfgd);
 
 	for(int is = 0; is < Nsample; is++)// add FGD1 distributions
 		nameSamples[0].push_back(Form("evhist_sam%d", is));
@@ -246,7 +247,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			leg_allSubDet -> SetBorderSize(1);
 			leg_allSubDet -> SetFillStyle(0);
 			//leg_allSubDet->SetTextSize(0.075);
-			leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "Data",    "lep");
+			leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
 			leg_allSubDet -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
 			leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
 			c_events_allSubDet->cd(6);

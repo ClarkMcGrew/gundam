@@ -22,22 +22,24 @@ echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/c
 # Fake data with GENIE and NuWro inputs
 echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/config_fit1_fakedata_genie.json" >> job_xsllh_fit1_fakedata_genie.sh
 echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/config_fit1_fakedata_nuwro.json" >> job_xsllh_fit1_fakedata_nuwro.sh
+echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/config_fit1_fakedata_neutProd6D.json" >> job_xsllh_fit1_fakedata_neutProd6D.sh
 
 source /usr/local/shared/bin/openmpi_env.sh
 
 # Submit jobs
 
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_asimov.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_asimov.sh
 
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit3_statFluc.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit3_statFluc.sh
 
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_m30Carbon.sh
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_p30Carbon.sh
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_m30Oxygen.sh
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_p30Oxygen.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_m30Carbon.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_p30Carbon.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_m30Oxygen.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_p30Oxygen.sh
 
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_genie.sh
-qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_nuwro.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_genie.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_nuwro.sh
+qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_fit1_fakedata_neutProd6D.sh
 
 
 cd - 

@@ -251,7 +251,7 @@ int main(int argc, char** argv)
     {
         did_converge = xsecfit.Fit(samples, parser.fit_type, parser.stat_fluc);
         if(!did_converge)
-            std::cout << TAG << "Fit did not coverge." << std::endl;
+            std::cout << TAG << "Fit did not converge." << std::endl;
     }
     fout -> Close();
 

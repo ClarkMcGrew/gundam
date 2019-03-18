@@ -154,8 +154,8 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 	double chi2 = calcChi2_M(h_sel_best_fit, h_tru_best_fit, *cov_mat);
 
-	h_sel_best_fit -> Draw();
-	h_tru_best_fit -> Draw("same");
+	// h_sel_best_fit -> Draw();
+	// h_tru_best_fit -> Draw("same");
 
 	//======================================================================================================
 
@@ -291,7 +291,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.3);
+		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.5);
 		h_ratio_postfit_err[nbcth] -> Draw("hist");
 	}
 	c_ratio_err->Print( Form("plots/xsecResults/%s/xsec_error_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
@@ -377,12 +377,14 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 			{
 				if(i==j && (test[i][j]>1.00001 || test[i][j]<0.99999))
 				{
-					if(!inversionError) cout << "****** WARNING: Issue with matrix inversion in chi2 calculation. See below!" << endl; 
+					if(!inversionError) cout 	<< "****** WARNING: Issue with matrix inversion in chi2 calculation."
+												<< " Element ("<<i<<","<<j<<") = " << test[i][j] << endl; 
 					inversionError=true;
 				}
 				else if(i!=j && (test[i][j]>0.0000001))
 				{
-				if(!inversionError) cout << "****** WARNING: Issue with matrix inversion in chi2 calculation. See below!" << endl; 
+				if(!inversionError) cout 	<< "****** WARNING: Issue with matrix inversion in chi2 calculation."
+											<< " Element ("<<i<<","<<j<<") = " << test[i][j] << endl; 
 				inversionError=true;
 				}
 			}
@@ -392,11 +394,11 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 			cout << "DEBUG info after iteration " << count << endl;
 			cout << "  Input matrix: determinent is: " << covar.Determinant() <<  endl;
 			// cout << "Will try adding 0.00000001pc to the diagonal ..." << endl;
-			cout << "Will try adding 0.00001pc to the diagonal ..." << endl;
+			cout << "Will try adding 0.001pc to the diagonal ..." << endl;
 			for(int i=0; i<covar.GetNrows(); i++)
 			{
 				// covar[i][i]=covar[i][i]*1.00000001;
-				covar[i][i]=covar[i][i]*1.00001;
+				covar[i][i]=covar[i][i]*1.001;
 			}
 			count++;
 			//if(count>10)getchar();

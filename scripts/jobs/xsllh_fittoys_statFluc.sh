@@ -273,7 +273,7 @@ do
 	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json" >> job_xsllh_toy${N}.sh
 
 	# Submit job
-	qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long job_xsllh_toy${N}.sh
+	qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long job_xsllh_toy${N}.sh
 
 done
 

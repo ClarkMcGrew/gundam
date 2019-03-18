@@ -1,0 +1,226 @@
+{
+    "input_dir" : "/inputs/fgd1fgd2Fit/",
+    "dimensions" : [1740, 174, 58],
+    "dials" : [
+        {
+            "name" : "MACCQE",
+            "nominal" : 1.20,
+            "step" : 0.05,
+            "limit_lo" : 0.01,
+            "limit_hi" : 2.46,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/maccqe_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "PF_C",
+            "nominal" : 217,
+            "step" : 0.05,
+            "limit_lo" : 199.99,
+            "limit_hi" : 275.03,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/pf_c_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "MEC_C",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/mec_c_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "EB_C",
+            "nominal" : 25.0,
+            "step" : 0.05,
+            "limit_lo" : 11.98,
+            "limit_hi" : 42.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/eb_c_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "PF_O",
+            "nominal" : 225,
+            "step" : 0.05,
+            "limit_lo" : 200.01,
+            "limit_hi" : 274.98,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/pf_o_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "MEC_O",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/mec_o_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "EB_O",
+            "nominal" : 27.0,
+            "step" : 0.05,
+            "limit_lo" : 12.02,
+            "limit_hi" : 41.98,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/eb_o_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "MEC_SHAPE_O",
+            "nominal" : 1.0,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/mec_shape_o_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "MEC_SHAPE_C",
+            "nominal" : 1.0,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/mec_shape_c_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CA5",
+            "nominal" : 1.01,
+            "step" : 0.05,
+            "limit_lo" : 0.52,
+            "limit_hi" : 1.5,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/ca5_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "MANFFRES",
+            "nominal" : 0.95,
+            "step" : 0.05,
+            "limit_lo" : 0.53,
+            "limit_hi" : 1.37,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/manffres_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "BGRES",
+            "nominal" : 1.30,
+            "step" : 0.05,
+            "limit_lo" : 0.04,
+            "limit_hi" : 2.56,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/bgres_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CCNUE",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.93,
+            "limit_hi" : 1.07,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/ccnue_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "DIS",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 2.19,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/dis_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CCCOH_O",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/cccoh_o_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "NCOTHER",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 4.01,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/ncother_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_INEL_LO",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.09,
+            "limit_hi" : 2.26,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_inel_lo_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_PI_ABS",
+            "nominal" : 1.10,
+            "step" : 0.05,
+            "limit_lo" : 0.12,
+            "limit_hi" : 2.43,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_pi_abs_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_CEX_LO",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.09,
+            "limit_hi" : 2.68,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_cex_lo_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_PI_PROD",
+            "nominal" : 1.80,
+            "step" : 0.05,
+            "limit_lo" : 0.12,
+            "limit_hi" : 3.62,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_pi_prod_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_INEL_HI",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.09,
+            "limit_hi" : 2.47,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_inel_hi_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_CEX_HI",
+            "nominal" : 1.80,
+            "step" : 0.05,
+            "limit_lo" : 0.12,
+            "limit_hi" : 3.34,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splinesTruth/fsi_cex_hi_splines.root",
+            "use" : true
+        }
+    ]
+}
