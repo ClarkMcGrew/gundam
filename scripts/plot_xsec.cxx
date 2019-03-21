@@ -4,9 +4,15 @@ void plot_xsec(const std::string& file_name_input)
     gStyle->SetOptTitle(0);
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
+    /*
     std::vector<std::string> v_hist_names
         = {"CC0pi_cos_bin0", "CC0pi_cos_bin1", "CC0pi_cos_bin2", "CC0pi_cos_bin3", "CC0pi_cos_bin4",
            "CC0pi_cos_bin5", "CC0pi_cos_bin6", "CC0pi_cos_bin7", "CC0pi_cos_bin8"};
+           */
+    std::vector<std::string> v_hist_names
+        = {"nd280_CC0pi_cos_bin0", "nd280_CC0pi_cos_bin1", "nd280_CC0pi_cos_bin2", "nd280_CC0pi_cos_bin3", "nd280_CC0pi_cos_bin4",
+           "nd280_CC0pi_cos_bin5", "nd280_CC0pi_cos_bin6", "nd280_CC0pi_cos_bin7", "nd280_CC0pi_cos_bin8",
+           "ingrid_CC0pi_cos_bin0", "ingrid_CC0pi_cos_bin1", "ingrid_CC0pi_cos_bin2", "ingrid_CC0pi_cos_bin3"};
 
     for(const auto& name : v_hist_names)
     {
