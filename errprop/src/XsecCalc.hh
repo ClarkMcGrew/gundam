@@ -59,9 +59,7 @@ public:
     void ReadFitFile(const std::string& file);
     void UsePrefitCov();
 
-    void ReweightParam(const std::vector<double>& param);
     void ReweightBestFit();
-    void ReweightNominal();
     void GenerateToys();
     void GenerateToys(const int ntoys);
 
@@ -106,6 +104,8 @@ private:
     TMatrixDSym* postfit_cov;
     TMatrixDSym* postfit_cor;
     std::vector<double> postfit_param;
+    std::vector<double> prefit_param_original;
+    std::vector<double> prefit_param_decomp;
 
     TMatrixDSym xsec_cov;
     TMatrixDSym xsec_cor;
