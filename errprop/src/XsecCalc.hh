@@ -51,15 +51,13 @@ struct SigNorm
 class XsecCalc
 {
 public:
-    XsecCalc(const std::string& json_config);
+    XsecCalc(const std::string& json_config, const std::string& cli_filename = "");
     ~XsecCalc();
 
     void ReadFitFile(const std::string& file);
     void UsePrefitCov();
 
-    void ReweightParam(const std::vector<double>& param);
     void ReweightBestFit();
-    void ReweightNominal();
     void GenerateToys();
     void GenerateToys(const int ntoys);
 
@@ -67,7 +65,6 @@ public:
 
     void ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy);
     void ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy);
-    void ApplyNormTargetsRatio(TH1D& hist, bool is_toy);
     void ApplyTargets(const unsigned int signal_id, TH1D& hist, bool is_toy);
     void ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::vector<double>& param,
                    bool is_toy);
@@ -75,15 +72,14 @@ public:
 
     TH1D ConcatHist(const std::vector<TH1D>& vec_hists, const std::string& hist_name = "");
 
-    // std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
-    // TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
+    std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
+    TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
 
-    // std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
-    // TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
+    std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
+    TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
 
     void SaveOutput(bool save_toys = false);
     void SaveSignalHist(TFile* file);
-    void SaveRatioHist(TFile* file);
     void SaveExtra(TFile* file);
     void SetOutputFile(const std::string& override_file) { output_file = override_file; };
 
@@ -105,47 +101,44 @@ private:
     TMatrixDSym* postfit_cov;
     TMatrixDSym* postfit_cor;
     std::vector<double> postfit_param;
-    std::vector<double> prefit_param; //LM added 28mars
-
-    TMatrixDSym* protonfsi_cov;
+    std::vector<double> prefit_param_original;
+    std::vector<double> prefit_param_decomp;
+    std::vector<double> prefit_param_toy;
 
     TMatrixDSym xsec_cov;
     TMatrixDSym xsec_cor;
 
-    TMatrixDSym ratio_cov; //LM
-    TMatrixDSym ratio_cor; //LM
-
     TH1D sel_best_fit;
     TH1D tru_best_fit;
     TH1D eff_best_fit;
-    TH1D ratio_best_fit; //LM
-    TH1D ratio_truth; //truth histograms
     std::vector<TH1D> signal_best_fit;
-    std::vector<TH1D> signal_truth; //LM truth histograms
     std::vector<TH1D> toys_sel_events;
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;
-    std::vector<TH1D> toys_ratio; //LM
-    std::vector<TH1D> toys_param; //LM
     std::vector<SigNorm> v_normalization;
 
     std::string input_file;
     std::string output_file;
     std::string extra_hists;
 
+    bool is_fit_type_throw;
     unsigned int num_toys;
     unsigned int rng_seed;
     unsigned int num_signals;
     unsigned int total_signal_bins;
-    unsigned int signal_bins;
 
-    bool do_ratio;
+    bool do_incompl_chol;
+    bool do_force_posdef;
+    double dropout_tol;
+    double force_padd;
+
     bool use_prefit_cov;
     const double perMeV = 1.0;
     const double perGeV = 1000.0;
 
     const std::string TAG = color::YELLOW_STR + "[XsecExtract]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + "[ERROR]: " + color::RESET_STR;
+    const std::string COMMENT_CHAR = "#";
 };
 
 #endif

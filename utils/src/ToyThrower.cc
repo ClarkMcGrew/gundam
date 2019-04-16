@@ -9,7 +9,7 @@ ToyThrower::ToyThrower(int nrows, unsigned int seed)
     RNG = new TRandom3(seed);
 }
 
-ToyThrower::ToyThrower(const TMatrixD &cov, unsigned int seed, double decomp_tol)
+ToyThrower::ToyThrower(const TMatrixD &cov, unsigned int seed, bool do_setup, double decomp_tol)
     : ToyThrower(cov.GetNrows(), seed)
 {
     for(int i = 0; i < npar; ++i)
@@ -19,11 +19,11 @@ ToyThrower::ToyThrower(const TMatrixD &cov, unsigned int seed, double decomp_tol
             (*covmat)[i][j] = cov[i][j];
         }
     }
-
-    SetupDecomp(decomp_tol);
+    if(do_setup)
+        SetupDecomp(decomp_tol);
 }
 
-ToyThrower::ToyThrower(const TMatrixDSym &cov, unsigned int seed, double decomp_tol)
+ToyThrower::ToyThrower(const TMatrixDSym &cov, unsigned int seed, bool do_setup, double decomp_tol)
     : ToyThrower(cov.GetNrows(), seed)
 {
     for(int i = 0; i < npar; ++i)
@@ -33,8 +33,8 @@ ToyThrower::ToyThrower(const TMatrixDSym &cov, unsigned int seed, double decomp_
             (*covmat)[i][j] = cov[i][j];
         }
     }
-
-    SetupDecomp(decomp_tol);
+    if(do_setup)
+        SetupDecomp(decomp_tol);
 }
 
 ToyThrower::~ToyThrower()

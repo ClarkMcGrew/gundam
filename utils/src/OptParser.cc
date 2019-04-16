@@ -114,7 +114,7 @@ bool OptParser::ParseJSON(std::string json_file)
         min_settings.algorithm = m.value("algorithm", "Migrad");
         min_settings.print_level = m.value("print_level", 2);
         min_settings.strategy  = m.value("strategy", 1);
-        min_settings.tolerance = m.value("tolerance", 1E-4);
+        min_settings.tolerance = m.value("tolerance", 1E-2);
         min_settings.max_iter  = m.value("max_iter", 1E6);
         min_settings.max_fcn   = m.value("max_fcn", 1E9);
     }

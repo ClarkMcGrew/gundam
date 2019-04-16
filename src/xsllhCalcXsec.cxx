@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     }
 
     std::cout << TAG << "Constructing the extractor..." << std::endl;
-    XsecCalc xsec(json_file);
+    XsecCalc xsec(json_file, input_file);
     if(!input_file.empty())
     {
         std::cout << TAG << "Read fit file..." << std::endl;

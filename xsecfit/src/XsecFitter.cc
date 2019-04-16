@@ -19,7 +19,7 @@ XsecFitter::XsecFitter(TDirectory* dirout, const int seed, const int num_threads
     min_settings.algorithm = "Migrad";
     min_settings.print_level = 2;
     min_settings.strategy  = 1;
-    min_settings.tolerance = 1E-4;
+    min_settings.tolerance = 1E-2;
     min_settings.max_iter  = 1E6;
     min_settings.max_fcn   = 1E9;
 }
@@ -157,24 +157,31 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
               << std::endl;
 
     TH1D h_prefit("hist_prefit_par_all", "hist_prefit_par_all", m_npar, 0, m_npar);
+    TVectorD v_prefit_original(m_npar);
+    TVectorD v_prefit_decomp(m_npar);
+
     int num_par = 1;
     for(int i = 0; i < m_fitpara.size(); ++i)
     {
+        TMatrixDSym* cov_mat = m_fitpara[i]->GetCovMat();
         for(int j = 0; j < m_fitpara[i]->GetNpar(); ++j)
         {
             h_prefit.SetBinContent(num_par, m_fitpara[i]->GetParPrior(j));
             if(m_fitpara[i]->HasCovMat())
-            {
-                TMatrixDSym* covMat = m_fitpara[i]->GetCovMat();
-                h_prefit.SetBinError(num_par, std::sqrt((*covMat)[j][j]));
-            }
+                h_prefit.SetBinError(num_par, std::sqrt((*cov_mat)[j][j]));
             else
                 h_prefit.SetBinError(num_par, 0);
+
+            v_prefit_original[num_par-1] = m_fitpara[i]->GetParOriginal(j);
+            v_prefit_decomp[num_par-1] = m_fitpara[i]->GetParPrior(j);
             num_par++;
         }
     }
+
     m_dir->cd();
     h_prefit.Write();
+    v_prefit_original.Write("vec_prefit_original");
+    v_prefit_decomp.Write("vec_prefit_decomp");
 }
 
 bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool stat_fluc)
@@ -189,13 +196,11 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return false;
     }
 
-
     std::cout << "LM ***** fit_type == " << fit_type << " *****" << std::endl;
     std::cout << "fit_type = kAsimovFit   == " << kAsimovFit   << " and kAsimov   == " << kAsimov   << " *****" << std::endl;
     std::cout << "fit_type = kExternalFit == " << kExternalFit << " and kExternal == " << kExternal << " *****" << std::endl;
     std::cout << "fit_type = kDataFit     == " << kDataFit     << " and kData     == " << kData     << " *****" << std::endl;
     std::cout << "fit_type = kToyFit      == " << kToyFit      << "                                 *****" << std::endl;
-
 
     if(fit_type == kAsimovFit)
     {
@@ -283,8 +288,14 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
 
     TMatrixDSym cor_matrix(ndim);
     for(int r = 0; r < ndim; ++r)
+    {
         for(int c = 0; c < ndim; ++c)
+        {
             cor_matrix[r][c] = cov_matrix[r][c] / std::sqrt(cov_matrix[r][r] * cov_matrix[c][c]);
+            if(std::isnan(cor_matrix[r][c]))
+                cor_matrix[r][c] = 0;
+        }
+    }
 
     TVectorD postfit_param(ndim, &par_val_vec[0]);
     std::vector<std::vector<double>> res_pars;
@@ -324,19 +335,20 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     if(!did_converge)
         std::cout << ERR << "Not valid fit result." << std::endl;
     std::cout << TAG << "Fit routine finished. Results saved." << std::endl;
-    
+
     return did_converge;
 }
 
 void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
 {
+    int temp_seed = rng->GetSeed();
     double chi2_stat = 0.0;
     double chi2_syst = 0.0;
     std::vector<std::vector<double>> fitpar_throw;
     for(const auto& fitpar : m_fitpara)
     {
         std::vector<double> toy_throw(fitpar->GetNpar(), 0.0);
-        fitpar -> ThrowPar(toy_throw);
+        fitpar -> ThrowPar(toy_throw, temp_seed++);
 
         chi2_syst += fitpar -> GetChi2(toy_throw);
         fitpar_throw.emplace_back(toy_throw);
@@ -356,7 +368,7 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
         }
 
         m_samples[s]->FillEventHist(kAsimov, stat_fluc);
-        m_samples[s]->FillEventHist(kReset, stat_fluc);
+        m_samples[s]->FillEventHist(kReset);
         chi2_stat += m_samples[s]->CalcChi2();
     }
 
@@ -453,9 +465,6 @@ double XsecFitter::CalcLikelihood(const double* par)
         }
     }
 
-    if(chi2_sys<0)
-        std::cout << WAR << "NEGATIVE chi2 sys = " << chi2_sys << std::endl;
-
     double chi2_stat = FillSamples(new_pars, kMC);
     vec_chi2_stat.push_back(chi2_stat);
     vec_chi2_sys.push_back(chi2_sys);
@@ -469,7 +478,7 @@ double XsecFitter::CalcLikelihood(const double* par)
 
     if(output_chi2)
     {
-        std::cout << TAG << "Iterations: " << m_calls << std::endl;
+        std::cout << TAG << "Func Calls: " << m_calls << std::endl;
         std::cout << TAG << "Chi2 total: " << chi2_stat + chi2_sys + chi2_reg << std::endl;
         std::cout << TAG << "Chi2 stat : " << chi2_stat << std::endl
                   << TAG << "Chi2 syst : " << chi2_sys  << std::endl
@@ -515,7 +524,7 @@ void XsecFitter::SaveFinalEvents(int fititer, std::vector<std::vector<double>>& 
             D1Reco    = ev->GetRecoD1();
             D2Reco    = ev->GetRecoD2();
             weightNom = (ev->GetEvWght()) * (ev->GetEvWghtMC());
-            weightMC  = ev->GetEvWghtMC(); // input weights
+            weightMC  = ev->GetEvWghtMC();
             weight    = ev->GetEvWght() * m_potratio;
             outtree->Fill();
         }

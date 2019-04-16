@@ -25,6 +25,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     const double potMC = parser.mc_POT;
     m_norm = potD / potMC;
     m_threads = parser.num_threads;
+    m_fit_type = parser.fit_type;
     signal_def = parser.signal_definition;
 
     std::cout << TAG << "Configure file parsing finished." << std::endl;
@@ -120,10 +121,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-            {
-                if(is_true_tree) xsecpara->AddDetector(opt.name, opt.xsec_truth);
-                else xsecpara->AddDetector(opt.name, opt.xsec);
-            }
+                xsecpara->AddDetector(opt.name, opt.xsec);
         }
         xsecpara->InitEventMap(samples, 0);
         fit_par.push_back(xsecpara);
@@ -143,8 +141,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         if(is_true_tree)
             detpara->InitEventMap(samples, 2);
         else
-            detpara->InitEventMap(samples, 0); //AC original
-            // detpara->InitEventMap(samples, 2); //LM DEBUG commented out in order to fix the detector parameters
+            detpara->InitEventMap(samples, 0);
         fit_par.push_back(detpara);
         npar += detpara->GetNpar();
     }
@@ -186,28 +183,11 @@ void FitObj::InitSignalHist(const std::vector<SignalDef>& v_signal)
         const int nbins = signal_bins.at(i).GetNbins();
         signal_hist.emplace_back(TH1D(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins));
         total_signal_bins += nbins;
-    
     }
-
-    //LM initialise histogram that contains non-reweighted events
-    for(int i = 0; i < signal_id; ++i)
-    {
-        std::stringstream ss;
-        ss << "hist_nonreweightedtruth_" << m_tree_type << "_signal_" << i;
-
-        const int nbins = signal_bins.at(i).GetNbins();
-        signal_true_hist.emplace_back(TH1D(ss.str().c_str(), ss.str().c_str(), nbins, 0, nbins));
-    }
-    //LM initialise histogram that contains the O/C ratio
-    const int nbins = signal_bins.at(0).GetNbins();
-    TH1D ratio_hist(     "ratio_hist",      "ratio_hist",      nbins, 0, nbins);
-    TH1D ratio_true_hist("ratio_true_hist", "ratio_true_hist", nbins, 0, nbins);
 }
 
 void FitObj::ReweightEvents(const std::vector<double>& input_par)
 {
-    // std::cout << TAG << "In FitObj::ReweightEvents(), start..." << std::endl;
-    
     ResetHist();
 
     std::vector<std::vector<double>> new_par;
@@ -229,13 +209,11 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
         {
             AnaEvent* ev = samples[s]->GetEvent(i);
             ev->ResetEvWght();
-
             for(int f = 0; f < fit_par.size(); ++f)
-                fit_par[f]->ReWeight(ev, det, s, i, new_par.at(f)); /////LM CHECK HERE FOR BUGS
+                fit_par[f]->ReWeight(ev, det, s, i, new_par.at(f));
         }
     }
 
-    // Fill histogram with reweighted events
     for(int s = 0; s < samples.size(); ++s)
     {
         const unsigned int num_events = samples[s]->GetN();
@@ -252,37 +230,8 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
         }
     }
 
-    // Fill histogram with events NOT reweighted (used for truth xsec)
-    for(int s = 0; s < samples.size(); ++s)
-    {
-        const unsigned int num_events = samples[s]->GetN();
-        for(unsigned int i = 0; i < num_events; ++i)
-        {
-            AnaEvent* ev = samples[s]->GetEvent(i);
-            if(ev->isSignalEvent())
-            {
-                int signal_id = ev->GetSignalType();
-                int bin_idx = signal_bins[signal_id].GetBinIndex(
-                    std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
-                signal_true_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWghtMC());
-            }
-        }
-    }
-
     for(auto& hist : signal_hist)
         hist.Scale(m_norm);
-
-    for(auto& hist : signal_true_hist)
-        hist.Scale(m_norm);
-
-    //LM
-    ratio_hist = signal_hist.at(1);
-    ratio_hist.Divide(&signal_hist.at(0));
-
-    ratio_true_hist = signal_true_hist.at(1);
-    ratio_true_hist.Divide(&signal_true_hist.at(0));
-
-    // std::cout << TAG << "In FitObj::ReweightEvents(), finished." << std::endl;
 }
 
 void FitObj::ReweightNominal()
@@ -313,7 +262,6 @@ void FitObj::ResetHist()
 {
     for(auto& hist : signal_hist)
         hist.Reset();
-    ratio_hist.Reset();
 }
 
 TH1D FitObj::GetHistCombined(const std::string& suffix) const
@@ -356,8 +304,9 @@ double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux
         {
             const double enu = flux_hist.GetBinCenter(i);
             const double val = flux_hist.GetBinContent(i);
-            const int idx = m_flux_par->GetBinIndex(det, enu);
-            flux_int += val * flux_par[i - 1];
+            const int idx = m_flux_par->GetBinIndex(det, enu)
+                            + m_flux_par->GetDetectorOffset(det);
+            flux_int += val * flux_par[idx];
         }
     }
 

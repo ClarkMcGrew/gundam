@@ -44,7 +44,7 @@ public:
                                       RegMethod flag) const
     { return 0.0; }
 
-    void ThrowPar(std::vector<double>& param) const;
+    void ThrowPar(std::vector<double>& param, const int seed = 0) const;
     double GetChi2(const std::vector<double>& params) const;
     void SetCovarianceMatrix(const TMatrixDSym& covmat, bool decompose = false);
     std::string GetName() const { return m_name; }
@@ -67,6 +67,7 @@ public:
     void GetParNames(std::vector<std::string>& vec) const { vec = pars_name; }
     void GetParPriors(std::vector<double>& vec) const { vec = pars_prior; }
     void GetParOriginal(std::vector<double>& vec) const { vec = pars_original; }
+    double GetParOriginal(int i) const { return pars_original.at(i); }
     double GetParPrior(int i) const { return pars_prior.at(i); }
     void GetParSteps(std::vector<double>& vec) const { vec = pars_step; }
     void GetParFixed(std::vector<bool>& vec) const { vec = pars_fixed; }
