@@ -32,6 +32,7 @@
 #include "TMath.h"
 #include "TColor.h"
 #include "TDecompSVD.h"
+#include "TPaveText.h"
 
 #endif
 

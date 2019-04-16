@@ -62,8 +62,33 @@ int XsecDial::GetSplineIndex(const std::vector<int>& var, const std::vector<doub
 
 double XsecDial::GetSplineValue(int index, double dial_value) const
 {
+    double splineValue;
+    if(dial_value<m_limit_lo)
+    {
+        splineValue = v_splines.at(index).Eval(m_limit_lo);
+        // std::cout << TAG << "Dial value is outside of range !!! " 
+        //                 << "dial_value("<<index<<") = " << dial_value << " set to the low limit value instead, " << m_limit_lo
+        //                 << " --> splineValue = " << splineValue << std::endl;
+    }
+    else if(dial_value>m_limit_hi)
+    {
+        splineValue = v_splines.at(index).Eval(m_limit_hi);
+        // std::cout << TAG << "Dial value is outside of range! "
+        //                 << "dial_value("<<index<<") = " << dial_value << " set to the high limit value instead, " << m_limit_hi
+        //                 << " --> splineValue = " << splineValue << std::endl;
+    }
+    else
+        splineValue = v_splines.at(index).Eval(dial_value);
+
+    if(splineValue > 1E3)
+    {
+        splineValue = v_splines.at(index).Eval(m_limit_lo+0.13);
+    }
+// std::cout << TAG << "Dial value is " << dial_value << " (should be between " << m_limit_lo << " and " << m_limit_hi << ") "
+//                      << "and spline value is " << splineValue << std::endl;
+//     
     if(index >= 0)
-        return v_splines.at(index).Eval(dial_value);
+        return splineValue;
     else
         return 1.0;
 }

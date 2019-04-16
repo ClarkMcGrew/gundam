@@ -19,12 +19,14 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
     const std::string file_name_input = Form("../outputs/%s.root", file_name.c_str());
 
     std::string name;
+    std::string title;
     std::stringstream ss;
 
     TFile* file = TFile::Open(file_name_input.c_str(), "READ");
 
     const int Npar = 4;
-    std::string par_name[Npar] = {"par_fit", "par_flux", "par_xsec", "par_det"};
+    std::string par_name[Npar]  = {"par_fit", "par_flux", "par_xsec", "par_det"};
+    std::string par_title[Npar] = {"Template parameters", "Flux parameters", "Xsec model parameters", "Detector parameters"};
 
 
     std::cout << std::endl;
@@ -37,7 +39,9 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
     for(int j = 0; j<Npar; j++)
     {
         name = par_name[j];
-        std::cout << "----- for " << name << " -----" << std::endl;
+        title = par_title[j];
+
+        std::cout << "----- for " << title << " (" << name << ") -----" << std::endl;
 
         std::cout << "----- get histograms -----" << std::endl;
 
@@ -98,8 +102,9 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
         if(drawParThrow) h_iter0 -> Draw("P same");
         h_final -> Draw("P E2 same");
 
-        TLegend* legend = new TLegend(0.7,0.75,0.9,0.9);
+        TLegend* legend = new TLegend(0.55,0.67,0.9,0.9);
         legend -> SetFillColor(0);
+        legend -> SetHeader(Form("%s", title.c_str()));
         legend -> AddEntry(h_prior, "Prior","p");
         if(drawParThrow) legend -> AddEntry(h_iter0, "Initial","p");
         legend -> AddEntry(h_final, "Final","p");
@@ -136,8 +141,9 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
         h_err_final -> Draw("hist");
         h_err_prior -> Draw("hist same");
 
-        TLegend* legend = new TLegend(0.55,0.75,0.9,0.9);
+        TLegend* legend = new TLegend(0.55,0.65,0.9,0.9);
         legend -> SetFillColor(0);
+        legend -> SetHeader(Form("%s", title.c_str()));
         legend -> AddEntry(h_err_prior, "Prior error","l");
         legend -> AddEntry(h_err_final, "Final error","l");
         legend -> Draw();

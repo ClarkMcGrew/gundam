@@ -310,19 +310,23 @@ int main(int argc, char** argv)
             
             if(do_fakedata==1)
             {
-                if(h2target == 6) weight = 1.3*weight;
+                if(h2target == 6) weight      = 1.3*weight;
+                if(h2target == 6) weight_true = 1.3*weight_true;
             }
             else if(do_fakedata==2)
             {
-                if(h2target == 6) weight = 0.7*weight;
+                if(h2target == 6) weight      = 0.7*weight;
+                if(h2target == 6) weight_true = 0.7*weight_true;
             }
             else if(do_fakedata==3)
             {
-                if(h2target == 8) weight = 1.3*weight;
+                if(h2target == 8) weight      = 1.3*weight;
+                if(h2target == 8) weight_true = 1.3*weight_true;
             }
             else if(do_fakedata==4)
             {
-                if(h2target == 8) weight = 0.7*weight;
+                if(h2target == 8) weight      = 0.7*weight;
+                if(h2target == 8) weight_true = 0.7*weight_true;
             }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 

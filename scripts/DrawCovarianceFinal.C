@@ -101,6 +101,9 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 	verlineTar ->Draw();
 	orlineTar  ->Draw();
 
+	c2->Print(Form("plots/xsecResults/%s/FinalXsecCovMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
+
+
 	// //=== Draw correlation matrix
 	TCanvas *c3 = new TCanvas("c3","c3",1050,900);
 	c3 -> Draw();
@@ -111,8 +114,6 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 
 	cor_mat_th2 -> Draw("colz");
 
-	// cor_mat_th2 -> SetMinimum(-1.0);
-
 	for(int il=0; il<Nlines; il++) orline[il]  -> Draw();
 	for(int il=0; il<Nlines; il++) verline[il] -> Draw();
 	verlineTar ->Draw();
@@ -120,7 +121,7 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 
 	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
 	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
-
+	
 
 	// Draw matrix diagonal elements
 	// for(int i=0; i<Nbins; i++)

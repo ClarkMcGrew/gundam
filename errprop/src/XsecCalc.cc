@@ -82,6 +82,7 @@ void XsecCalc::ReadFitFile(const std::string& file)
     if(postfit_cor != nullptr)
         delete postfit_cor;
     postfit_param.clear();
+    prefit_param.clear();
 
     std::cout << TAG << "Opening " << file << std::endl;
     input_file = file;
@@ -90,9 +91,34 @@ void XsecCalc::ReadFitFile(const std::string& file)
     postfit_cov   = (TMatrixDSym*)postfit_file->Get("res_cov_matrix");
     postfit_cor   = (TMatrixDSym*)postfit_file->Get("res_cor_matrix");
 
+    /////////////////////// DEBUG //////////////////////////////
+    // for(int i=0; i<postfit_cov->GetNcols(); ++i)
+    //     for (int j=0; j<postfit_cov->GetNcols(); ++j)
+    //         if(i!=j && (*postfit_cov)(i,j) < 1E-4)
+    //             (*postfit_cov)(i,j) = 0.0;
+    /////////////////////// DEBUG //////////////////////////////
+
     TVectorD* postfit_param_root = (TVectorD*)postfit_file->Get("res_vector");
     for(int i = 0; i < postfit_param_root->GetNoElements(); ++i)
         postfit_param.emplace_back((*postfit_param_root)[i]);
+
+    TH1D* prefit_param_fit  = (TH1D*)(postfit_file->Get("hist_par_fit_prior"));
+    TH1D* prefit_param_flux = (TH1D*)(postfit_file->Get("hist_par_flux_prior"));
+    TH1D* prefit_param_xsec = (TH1D*)(postfit_file->Get("hist_par_xsec_prior"));
+    TH1D* prefit_param_det  = (TH1D*)(postfit_file->Get("hist_par_det_prior"));
+    
+    for(int i = 0; i < prefit_param_fit->GetNbinsX(); i++)
+        prefit_param.emplace_back(prefit_param_fit->GetBinContent(i+1));
+
+    for(int i = 0; i < prefit_param_flux->GetNbinsX(); i++)
+        prefit_param.emplace_back(prefit_param_flux->GetBinContent(i+1));
+
+    for(int i = 0; i < prefit_param_xsec->GetNbinsX(); i++)
+        prefit_param.emplace_back(prefit_param_xsec->GetBinContent(i+1));
+
+    for(int i = 0; i < prefit_param_det->GetNbinsX(); i++)
+        prefit_param.emplace_back(prefit_param_det->GetBinContent(i+1));
+
 
     postfit_file->Close();
     use_prefit_cov = false;
@@ -251,7 +277,7 @@ void XsecCalc::ReweightBestFit()
     ApplyNorm(sel_hists, postfit_param, false);
     ApplyNormTargetsRatio(ratio_hists, false);
     
-    ApplyNorm(truth_hists, postfit_param, false);
+    ApplyNorm(truth_hists, prefit_param, false);
     ApplyNormTargetsRatio(truth_ratio_hists, false);
     
     //Concatenate the signal histograms together for later use
@@ -303,10 +329,10 @@ void XsecCalc::GenerateToys(const int ntoys)
 
         std::transform(toy.begin(), toy.end(), postfit_param.begin(), toy.begin(),
                        std::plus<double>());
-        for(int i = 0; i < npar; ++i)
+        for(int j = 0; j < npar; ++j)
         {
-            if(toy[i] < 0.0)
-                toy[i] = 0.01;
+            if(toy[j] < 0.0)
+                toy[j] = 0.01;
         }
 
         selected_events->ReweightEvents(toy);
@@ -324,14 +350,13 @@ void XsecCalc::GenerateToys(const int ntoys)
         toys_tru_events.emplace_back(ConcatHist(tru_hists, ("tru_signal_toy" + std::to_string(i))));
         toys_ratio.emplace_back(ratio_hists);
 
-        /*
-        total_signal_bins = npar;
-        std::string temp = "toy" + std::to_string(i);
-        TH1D h_toy(temp.c_str(), temp.c_str(), total_signal_bins, 0, total_signal_bins);
-        for(int i = 0; i < total_signal_bins; ++i)
-            h_toy.SetBinContent(i+1, toy[i]);
-        toys_sel_events.emplace_back(h_toy);
-        */
+        //LM uncomment this and modified to debug weird toys
+        std::string temp = "param_toy" + std::to_string(i);
+        TH1D h_toy(temp.c_str(), temp.c_str(), npar, 0, npar);
+        for(int j = 0; j < npar; ++j)
+            h_toy.SetBinContent(j+1, toy[j]);
+        toys_param.emplace_back(h_toy);
+        
     }
 }
 
@@ -630,6 +655,8 @@ void XsecCalc::SaveOutput(bool save_toys)
             toys_sel_events.at(i).Write();
             toys_tru_events.at(i).Write();
             toys_eff.at(i).Write();
+            toys_ratio.at(i).Write();
+            toys_param.at(i).Write();
         }
     }
 
@@ -652,6 +679,9 @@ void XsecCalc::SaveOutput(bool save_toys)
 
     TVectorD postfit_param_root(postfit_param.size(), postfit_param.data());
     postfit_param_root.Write("postfit_param");
+    
+    TVectorD prefit_param_root(prefit_param.size(), prefit_param.data());
+    prefit_param_root.Write("prefit_param");
 
     SaveSignalHist(file);
     SaveRatioHist(file);

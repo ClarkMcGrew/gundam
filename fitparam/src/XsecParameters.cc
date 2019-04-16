@@ -125,20 +125,25 @@ void XsecParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
         double dial_weight = v_dials[d].GetSplineValue(idx, params[d + m_offset.at(det)]);
         weight *= dial_weight;
 
-        /*
-        if(dial_weight != 1.0 && det == "INGRID")
+        if(dial_weight > 10.0)
         {
-            std::cout << "--------------" << std::endl;
-            std::cout << "Ev T: " << event -> GetTopology() << std::endl
-                      << "Ev R: " << event -> GetReaction() << std::endl
-                      << "Ev Q: " << event -> GetQ2() << std::endl;
-            std::cout << "Ev I: " << idx << std::endl;
-            std::cout << "Ev W: " << dial_weight << std::endl;
-            std::cout << "Dl V: " << params[d + m_offset.at(det)] << std::endl;
-            std::cout << "Dl N: " << det << "_" << v_dials[d].GetName() << std::endl;
-            std::cout << "Sp N: " << v_dials[d].GetSplineName(idx) << std::endl;
+            std::cout << ERR <<"------- In XsecParameters::ReWeight()-------" << std::endl;
+            std::cout << ERR << "Dial Weight:  " << dial_weight << std::endl
+                      << ERR << "Is true ev:   " << event -> isTrueEvent() << std::endl
+                      << ERR << "Dl Par value: " << params[d + m_offset.at(det)] << std::endl
+                      << ERR << "Dl Par name:  " << det << "_" << v_dials[d].GetName() << std::endl
+                      << ERR << "Spline:       " << v_dials[d].GetSplineName(idx) << std::endl;
         }
-        */
+        // else if(dial_weight <= 0.01)
+        // {
+        //     std::cout << TAG <<"------- In XsecParameters::ReWeight()-------" << std::endl;
+        //     std::cout << TAG << "Dial Weight:  " << dial_weight << std::endl
+        //               << TAG << "Is true ev:   " << event -> isTrueEvent() << std::endl
+        //               << TAG << "Dl Par value: " << params[d + m_offset.at(det)] << std::endl
+        //               << TAG << "Dl Par name:  " << det << "_" << v_dials[d].GetName() << std::endl
+        //               << TAG << "Spline:       " << v_dials[d].GetSplineName(idx) << std::endl;
+        // }
+        
     }
 
     event -> AddEvWght(weight);

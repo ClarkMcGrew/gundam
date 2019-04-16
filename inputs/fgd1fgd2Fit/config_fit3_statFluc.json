@@ -9,7 +9,7 @@
     "data_POT"  : 9.32945E20,
     "mc_POT"    : 159.6275E20,
     "rng_seed"  : 12258,
-    "num_threads" : 32,
+    "num_threads" : 16,
     "sample_topology" : ["cc0pi", "cc1pi", "ccother", "bkg", "oofv"],
     "min_settings" : {
         "minimizer" : "Minuit2",

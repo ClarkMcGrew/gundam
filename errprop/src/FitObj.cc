@@ -143,7 +143,8 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         if(is_true_tree)
             detpara->InitEventMap(samples, 2);
         else
-            detpara->InitEventMap(samples, 0);
+            detpara->InitEventMap(samples, 0); //AC original
+            // detpara->InitEventMap(samples, 2); //LM DEBUG commented out in order to fix the detector parameters
         fit_par.push_back(detpara);
         npar += detpara->GetNpar();
     }
@@ -230,7 +231,7 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
             ev->ResetEvWght();
 
             for(int f = 0; f < fit_par.size(); ++f)
-                fit_par[f]->ReWeight(ev, det, s, i, new_par.at(f)); ///// THERE WAS A BUG WHILE DOING THIS, FOR THE TRUTH TREE ONLY //////
+                fit_par[f]->ReWeight(ev, det, s, i, new_par.at(f)); /////LM CHECK HERE FOR BUGS
         }
     }
 
@@ -263,7 +264,7 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
                 int signal_id = ev->GetSignalType();
                 int bin_idx = signal_bins[signal_id].GetBinIndex(
                     std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
-                signal_true_hist[signal_id].Fill(bin_idx + 0.5, 1.0);
+                signal_true_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWghtMC());
             }
         }
     }

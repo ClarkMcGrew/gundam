@@ -4,13 +4,13 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
-rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
+# rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
+# rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
 
 source /usr/local/shared/bin/openmpi_env.sh
 
 
-for N in {1..100}; # loop over toys
+for N in {101..300}; # loop over toys
 do
 	# Write a file containing the inputs for the fitter
 	echo -e "{
@@ -24,13 +24,13 @@ do
     \"data_POT\"  : 5.19781E20,
     \"mc_POT\"    : 96.8906E20,
     \"rng_seed\"  : $((12258 + N)),
-    \"num_threads\" : 8,
+    \"num_threads\" : 16,
     \"sample_topology\" : [\"cc0pi\", \"cc1pi\", \"ccother\", \"bkg\", \"oofv\"],
     \"min_settings\" : {
         \"minimizer\" : \"Minuit2\",
         \"algorithm\" : \"Migrad\",
         \"print_level\" : 2,
-        \"tolerance\" : 1E-2,
+        \"tolerance\" : 1E-1,
         \"strategy\" : 1,
         \"max_iter\" : 1E6,
         \"max_fcn\" : 1E9

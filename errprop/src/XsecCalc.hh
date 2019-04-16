@@ -105,6 +105,7 @@ private:
     TMatrixDSym* postfit_cov;
     TMatrixDSym* postfit_cor;
     std::vector<double> postfit_param;
+    std::vector<double> prefit_param; //LM added 28mars
 
     TMatrixDSym* protonfsi_cov;
 
@@ -125,6 +126,7 @@ private:
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;
     std::vector<TH1D> toys_ratio; //LM
+    std::vector<TH1D> toys_param; //LM
     std::vector<SigNorm> v_normalization;
 
     std::string input_file;

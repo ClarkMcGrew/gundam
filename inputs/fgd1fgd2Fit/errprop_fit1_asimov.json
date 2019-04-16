@@ -3,7 +3,7 @@
     "output_file" : "/outputs/xsec_fit1_asimov.root",
     "extra_hists" : "",
     "proton_fsi_cov" : "/inputs/fgd1fgd2Fit/xsllh_covarProtonFSI.root",
-    "num_toys" : 10000,
+    "num_toys" : 100,
     "rng_seed" : 12257,
     "do_ratio" : true,
     "sel_config" : "/inputs/fgd1fgd2Fit/config_fit1_asimov.json",

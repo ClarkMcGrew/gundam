@@ -86,14 +86,15 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		}
 
 	const int Nbins = hSample_prefit[0][0] -> GetNbinsX();
-	string h_title[Nsample] = {"muTPC",
+	string h_title[Nsample+1] = {"muTPC",
 	                           "muTPCpTPC",
 	                           "muTPCpFGD",
 	                           "muFGDpTPC",
 	                           "muFGD",
 	                           "CC1pi",
 	                           "CCOther",
-	                           "CCMichel"
+	                           "CCMichel",
+	                           "all muTPC"
 	                           };
 
 
@@ -124,6 +125,25 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	}
 
 	//======================================================================================================
+
+
+	//======================================================================================================  
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Put all muTPC+... together =====" << std::endl;
+	
+	hSample_prefit_allSubDet.push_back(  (TH1D*)(hSample_prefit_allSubDet[0] -> Clone("hSample_prefit_allSubDet_allMuTPC")));
+	hSample_postfit_allSubDet.push_back( (TH1D*)(hSample_postfit_allSubDet[0]-> Clone("hSample_postfit_allSubDet_allMuTPC")));
+	hSample_data_allSubDet.push_back(    (TH1D*)(hSample_data_allSubDet[0]   -> Clone("hSample_data_allSubDet_allMuTPC")));
+
+	for(int ns=1; ns<3; ns++)
+	{
+		hSample_prefit_allSubDet[Nsample] -> Add(hSample_prefit_allSubDet[ns]);
+		hSample_postfit_allSubDet[Nsample]-> Add(hSample_postfit_allSubDet[ns]);
+		hSample_data_allSubDet[Nsample]   -> Add(hSample_data_allSubDet[ns]);
+	}
+	//======================================================================================================
+
+
 
 
 	//======================================================================================================
@@ -240,6 +260,12 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		hSample_postfit_allSubDet[is]->Draw("SAME");
 		hSample_data_allSubDet[is]   ->Draw("E SAME"); // with error bars
 
+		TPaveText *pave = new TPaveText(0.6, 0.75, 0.9, 0.87, "NDC");
+		pave->SetFillColor(0);
+		TText *t1=pave->AddText(Form("''#chi^{2}'' = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
+		pave->Draw();
+		c_events_allSubDet->Update();
+
 		if(ipad==4)
 		{
 			leg_allSubDet = new TLegend(0.2,0.24,0.8,0.64);
@@ -261,6 +287,73 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	c_events_allSubDet->Print(Form("plots/fitteroutput/%s/eventDistr_%s_allSubDet.pdf", dir_name.c_str(), inputname.c_str()));
 	
 
+
+
+	//===================================================================================================================
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Draw comparison between data, nominal and post-fit distributions =====" << std::endl;
+	std::cout << "===== For all subdetector together (FGD1 + FGD2x + FGD2y) =====" << std::endl;
+	std::cout << "===== With muTPC grouped regions =====" << std::endl;
+
+	TCanvas* c_events_allSubDet_grouped = new TCanvas("NeventsGrouped","NeventsGrouped",1700,1000);
+	c_events_allSubDet_grouped -> Divide(3,3);
+	TLegend* leg_allSubDet_grouped;
+	
+	ipad = 0;
+
+	for(int IS=0; IS<Nsample; IS++)
+	{
+		if(IS==0) is = Nsample;
+		else      is = IS;
+
+		ymax = TMath::Max(hSample_prefit_allSubDet[is]->GetMaximum(), hSample_postfit_allSubDet[is]->GetMaximum());
+		ymax = TMath::Max(hSample_data_allSubDet[is]->GetMaximum(), ymax);
+
+		hSample_prefit_allSubDet[is] -> GetYaxis()->SetRangeUser(0, ymax*1.3);
+		hSample_prefit_allSubDet[is] -> SetStats(false);
+
+		hSample_prefit_allSubDet[is] -> SetTitle(h_title[is].c_str());
+		hSample_prefit_allSubDet[is] -> GetXaxis() -> SetTitle("Analysis bins");
+		hSample_prefit_allSubDet[is] -> GetYaxis() -> SetTitle("# events");
+
+		hSample_data_allSubDet[is]    -> SetLineColor(kBlack);
+		hSample_prefit_allSubDet[is]  -> SetLineColor(kRed);
+		hSample_postfit_allSubDet[is] -> SetLineColor(kBlue);
+
+		hSample_data_allSubDet[is]    -> SetMarkerColor(kBlack);
+		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kRed);
+		hSample_postfit_allSubDet[is] -> SetMarkerColor(kBlue);
+
+		c_events_allSubDet_grouped -> cd(ipad+1);
+
+		hSample_prefit_allSubDet[is] ->Draw();
+		hSample_postfit_allSubDet[is]->Draw("SAME");
+		hSample_data_allSubDet[is]   ->Draw("E SAME"); // with error bars
+
+		TPaveText *pave = new TPaveText(0.6, 0.75, 0.9, 0.87, "NDC");
+		pave->SetFillColor(0);
+		TText *t1=pave->AddText(Form("''#chi^{2}'' = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
+		pave->Draw();
+		c_events_allSubDet_grouped->Update();
+
+		if(IS==0) IS = 2;
+		ipad++;
+	}
+
+	leg_allSubDet_grouped = new TLegend(0.2,0.24,0.8,0.64);
+	leg_allSubDet_grouped -> SetFillColor(0);
+	leg_allSubDet_grouped -> SetBorderSize(1);
+	leg_allSubDet_grouped -> SetFillStyle(0);
+	//leg_allSubDet_grouped->SetTextSize(0.075);
+	leg_allSubDet_grouped -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
+	leg_allSubDet_grouped -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
+	leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
+	c_events_allSubDet_grouped->cd(7);
+	leg_allSubDet_grouped->Draw();
+
+	c_events_allSubDet_grouped->Print(Form("plots/fitteroutput/%s/eventDistr_%s_allSubDet_muTPCgrouped.pdf", dir_name.c_str(), inputname.c_str()));
+	
+
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== End of script =====" << std::endl;
 	std::cout << "================================================" << std::endl;                                                                                               
@@ -269,3 +362,15 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 }
 
 
+
+double calculateChi2(TH1D* hist1, TH1D* hist2)
+{
+	double chi2 = 0.0;
+
+	for(int i=1; i<=hist1->GetNbinsX(); i++)
+		if(hist1->GetBinContent(i) > 0)
+			chi2 = chi2 + (hist1->GetBinContent(i) - hist2->GetBinContent(i))*(hist1->GetBinContent(i) - hist2->GetBinContent(i))/ (hist1->GetBinContent(i));
+		else
+			std::cout << "WARNING : bin " << i << " has 0 content !!!" << std::endl;
+	return chi2;
+}
