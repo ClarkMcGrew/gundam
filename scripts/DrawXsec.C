@@ -25,6 +25,9 @@ double calcChi2_M(TH1D*, TH1D*, TMatrixD);
 void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
+	bool drawNEUT = true;
+	if(inputname == "fit1_asimov") drawNEUT = false;
+
 	const int Ntarget = 2;
 	string targetlist[Ntarget] = {"Carbon", "Oxygen"};
 
@@ -111,14 +114,19 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	std::cout << "===== Get NEUT histos truth =====" << std::endl;
 	
 	vector< vector<TH1D*> > h_xsec_truth_NEUT(Ntarget);
-
+	if(drawNEUT)
+	{
 	for(int itar = 0; itar < Ntarget; itar++)
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 			h_xsec_truth_NEUT[itar].push_back( (TH1D*)(fin_NEUT -> Get( Form("CC0pi%s_cos_bin%d_truth", targetlist[itar].c_str(), nbcth) )) );
+	}
 
 	vector< TH1D* > h_ratio_truth_NEUT;
+	if(drawNEUT)
+	{
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		h_ratio_truth_NEUT.push_back( (TH1D*)(fin_NEUT -> Get( Form("CC0piOCRatio_cos_bin%d_truth", nbcth) )) );
+	}
 	
 	//======================================================================================================
 
@@ -166,12 +174,15 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	std::cout << "===== Get covariance matrix and compute chi2 =====" << std::endl;
 	
 	TMatrixDSym *cov_mat = (TMatrixDSym*)(fin -> Get("xsec_cov"));
-	TH1D* h_sel_best_fit = (TH1D*)(fin->Get("sel_best_fit"));
-	TH1D* h_tru_best_fit = (TH1D*)(fin->Get("tru_best_fit"));
+	TH1D* h_sel_best_fit      = (TH1D*)(fin->Get("sel_best_fit"));
+	TH1D* h_tru_best_fit      = (TH1D*)(fin->Get("tru_best_fit"));
 	TH1D* h_tru_best_fit_NEUT = (TH1D*)(fin_NEUT->Get("tru_best_fit"));
 
 	double chi2      = calcChi2_M(h_sel_best_fit, h_tru_best_fit, *cov_mat);
+	std::cout << "===== Chi2 = " << chi2 << std::endl;
+
 	double chi2_NEUT = calcChi2_M(h_sel_best_fit, h_tru_best_fit_NEUT, *cov_mat);
+	std::cout << "===== Chi2 NEUT truth = " << chi2_NEUT << std::endl;
 
 	//======================================================================================================
 
@@ -205,17 +216,19 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 			max = MAX(h_xsec_truth[itar][nbcth]->GetMaximum(), h_xsec_postfit[itar][nbcth]->GetMaximum());
 			h_xsec_truth[itar][nbcth] -> GetYaxis() -> SetRangeUser(0, 1.3*max);
 
-			h_xsec_truth[itar][nbcth]      -> SetLineColor(kGreen+2);
-			h_xsec_truth_NEUT[itar][nbcth] -> SetLineColor(kRed+2);
-			h_xsec_postfit[itar][nbcth]    -> SetLineColor(kBlue+1);
+			h_xsec_truth[itar][nbcth]          -> SetLineColor(kGreen+2);
+			if(drawNEUT)
+				h_xsec_truth_NEUT[itar][nbcth] -> SetLineColor(kRed+2);
+			h_xsec_postfit[itar][nbcth]        -> SetLineColor(kBlue+1);
 
 			c_xsec[itar] -> cd(nbcth+1);
 
 			if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec_truth[itar][nbcth]      -> Draw("hist");
-			// h_xsec_truth_NEUT[itar][nbcth] -> Draw("same hist"); // with error bars
-			h_xsec_postfit[itar][nbcth]    -> Draw("same E"); // with error bars
+			h_xsec_truth[itar][nbcth]          -> Draw("hist");
+			if(drawNEUT) 
+				h_xsec_truth_NEUT[itar][nbcth] -> Draw("same hist"); // with error bars
+			h_xsec_postfit[itar][nbcth]        -> Draw("same E"); // with error bars
 
 			if(nbcth==0)
 			{
@@ -226,8 +239,9 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 				//leg[itar]->SetTextSize(0.075);
 				// leg[itar] -> SetHeader(Form("#chi^{2}  = %d", (int)chi2));
 				leg[itar] -> AddEntry(h_xsec_postfit[itar][0],    "post-fit", "lep");
-				// leg[itar] -> AddEntry(h_xsec_truth_NEUT[itar][0], Form("NEUT truth, #chi^{2} = %d",      (int)chi2),     "l");
-				leg[itar] -> AddEntry(h_xsec_truth[itar][0],      Form("Fake data truth, #chi^{2} = %d", (int)chi2_NEUT),"l");
+				if(drawNEUT)
+					leg[itar] -> AddEntry(h_xsec_truth_NEUT[itar][0], Form("NEUT truth, #chi^{2} = %d",      (int)chi2_NEUT), "l");
+				leg[itar] -> AddEntry(h_xsec_truth[itar][0],          Form("Fake data truth, #chi^{2} = %d", (int)chi2),      "l");
 				// leg[itar] -> AddEntry(h_xsec_truth_NEUT[itar][0], Form("NEUT truth"),     "l");
 				// leg[itar] -> AddEntry(h_xsec_truth[itar][0],      Form("Fake data truth"),"l");
 				c_xsec[itar]->cd(1);
@@ -270,18 +284,20 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 		h_ratio_truth[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
 		h_ratio_truth[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 2.0);
 		
-		h_ratio_truth[nbcth]      -> SetLineWidth(2);
-		h_ratio_truth[nbcth]      -> SetLineColor(kGreen+2);
-		h_ratio_truth_NEUT[nbcth] -> SetLineColor(kRed+2);
-		h_ratio_postfit[nbcth]    -> SetLineColor(kBlue+1);
+		// h_ratio_truth[nbcth]          -> SetLineWidth(2);
+		h_ratio_truth[nbcth]          -> SetLineColor(kGreen+2);
+		if(drawNEUT)
+			h_ratio_truth_NEUT[nbcth] -> SetLineColor(kRed+2);
+		h_ratio_postfit[nbcth]        -> SetLineColor(kBlue+1);
 
 		c_ratio -> cd(nbcth+1);
 
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_ratio_truth[nbcth]      -> Draw("hist");
-		// h_ratio_truth_NEUT[nbcth] -> Draw("same hist");
-		h_ratio_postfit[nbcth]    -> Draw("same E"); // with error bars
+		h_ratio_truth[nbcth]          -> Draw("hist");
+		if(drawNEUT)
+			h_ratio_truth_NEUT[nbcth] -> Draw("same hist");
+		h_ratio_postfit[nbcth]        -> Draw("same E"); // with error bars
 
 		// if(nbcth==0)
 		// {

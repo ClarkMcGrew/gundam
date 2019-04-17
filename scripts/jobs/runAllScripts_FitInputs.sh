@@ -34,7 +34,13 @@ xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_genie.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_nuwro.json
+
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_p30Carbon.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_m30Carbon.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_p30Oxygen.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_m30Oxygen.json
+
+xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_p30Res.json
+xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_m30Res.json
+xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_p30DIS.json
+xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_m30DIS.json

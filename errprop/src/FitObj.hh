@@ -45,6 +45,7 @@ public:
     TH1D GetHistCombined(const std::string& suffix = "") const;
     std::vector<TH1D> GetSignalHist() const { return signal_hist; };
     TH1D GetSignalHist(const int signal_id) const { return signal_hist.at(signal_id); }
+    TH1D GetRatioHist() const { return ratio_hist; }
 
     std::vector<SignalDef> GetSignalDef() const { return signal_def; };
     BinManager& GetBinManager(const int signal_id) { return signal_bins.at(signal_id); };
@@ -68,6 +69,7 @@ private:
 
     std::vector<TH1D> signal_hist;
     std::vector<BinManager> signal_bins;
+    TH1D ratio_hist; //LM
     std::vector<SignalDef> signal_def;
 
     int m_threads;

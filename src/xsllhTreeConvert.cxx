@@ -120,6 +120,14 @@ int main(int argc, char** argv)
                 std::cout << " -> Do fake data : add 30 percent of oxygen events." << std::endl;
             else if(do_fakedata==4)
                 std::cout << " -> Do fake data : remove 30 percent of oxygen events." << std::endl;
+            else if(do_fakedata==5)
+                std::cout << " -> Do fake data : add 30 percent of RES reaction events." << std::endl;
+            else if(do_fakedata==6)
+                std::cout << " -> Do fake data : remove 30 percent of RES reaction events." << std::endl;
+            else if(do_fakedata==7)
+                std::cout << " -> Do fake data : add 30 percent of DIS reaction events." << std::endl;
+            else if(do_fakedata==8)
+                std::cout << " -> Do fake data : remove 30 percent of DIS reaction events." << std::endl;
             else
                 std::cout << std::endl << ERR << "Error in the input fake data variable, do_fakedata should be equal to 0, 1, 2, 3 or 4." << std::endl;
 
@@ -327,6 +335,26 @@ int main(int argc, char** argv)
             {
                 if(h2target == 8) weight      = 0.7*weight;
                 if(h2target == 8) weight_true = 0.7*weight_true;
+            }
+            else if(do_fakedata==5)
+            {
+                if(reaction==1) weight      = 1.3*weight;
+                if(reaction==1) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==6)
+            {
+                if(reaction==1) weight      = 0.7*weight;
+                if(reaction==1) weight_true = 0.7*weight_true;
+            }
+            else if(do_fakedata==7)
+            {
+                if(reaction==2) weight      = 1.3*weight;
+                if(reaction==2) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==8)
+            {
+                if(reaction==2) weight      = 0.7*weight;
+                if(reaction==2) weight_true = 0.7*weight_true;
             }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 

@@ -64,7 +64,7 @@ void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLh
                             1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
     h_flux_nom_numu = (TH1D*)h_flux_total_numu -> Rebin(nbins, "h_flux_nom_numu", flux_bins);
 
-    TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/weighted_flux13av2_run2-4.root", "RECREATE");
+    TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/weighted_flux13av2_run2-3-4-8.root", "RECREATE");
     output -> cd();
     h_flux_total_numu -> Write("flux_fine");
     h_flux_nom_numu -> Write("flux_rebin");
