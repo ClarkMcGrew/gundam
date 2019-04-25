@@ -259,17 +259,39 @@ void XsecCalc::InitNormalization(const nlohmann::json& j, const std::string inpu
 
 void XsecCalc::ReweightBestFit()
 {
+    //We need the ratio of the selected to true events for the efficiency
+    //But they need to have the same weights applied, so the postfit parameters
+    //are applied to the true events. The nominal weights for both the selected
+    //and true events could have been used here, and then the selected events
+    //would be reweighted again using the postfit parameters.
     selected_events->ReweightEvents(postfit_param);
     true_events->ReweightEvents(postfit_param);
 
+    //Get the histograms. Currently both selected and true events have the
+    //postfit parameters applied.
     auto sel_hists = selected_events->GetSignalHist();
     auto tru_hists = true_events->GetSignalHist();
     auto sel_ratio_hists = selected_events->GetRatioHist();
     auto tru_ratio_hists = true_events->GetRatioHist();
 
+    //Calculate and apply efficiency using the postfit weighted selected
+    //and true events. Apply the rest of the normalizations using the postfit
+    //parameters to the selected events. Now we have the postfit cross-section.
     ApplyEff(sel_hists, tru_hists, false);
     ApplyNorm(sel_hists, postfit_param, false);
 
+    //For comparisons, we need the nominal truth weights for the true events. Or
+    //in the case of a toy throw, the nominal weights using the toy parameters.
+    //Currently from above the true events have the postfit parameters applied, and
+    //we need the nominal or toy parameters. So the true events have to be weighted
+    //again with either the nominal or toy parameters.
+    
+    //Then we apply the normalizations to the true events using either the original
+    //or toy flux parameters to have the truth cross-section. This is the only place
+    //where the normalization is applied to the true events.
+    
+    //One operation that is not obvious from looking at this code is that the
+    //ReweightEvents function always starts from the original MC weights.
     if(is_fit_type_throw)
     {
         true_events->ReweightEvents(prefit_param_toy);
@@ -286,6 +308,7 @@ void XsecCalc::ReweightBestFit()
     ApplyNormTargetsRatio(sel_ratio_hists, false);
     ApplyNormTargetsRatio(tru_ratio_hists, false);
 
+    //Store histograms for later.
     sel_best_fit = ConcatHist(sel_hists, "sel_best_fit");
     tru_best_fit = ConcatHist(tru_hists, "tru_best_fit");
     signal_best_fit = std::move(sel_hists);
@@ -755,7 +778,8 @@ void XsecCalc::SaveSignalHist(TFile* file)
                 temp.SetBinError(l, signal_truth.at(id).GetBinError(l+offset));
             }
             offset += temp.GetNbinsX();
-            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1); //AC --> don't save highest momentum bin
+            // temp.GetXaxis()->SetRange(1,temp.GetNbinsX());   //LM --> save highest momentum bin
             temp.Write();
         }
     }

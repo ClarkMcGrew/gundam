@@ -167,9 +167,9 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.09,
-            "limit_hi" : 2.26,
+            "limit_hi" : 3.03,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_inel_lo_splines.root",
+            "splines" : "splines/fsi_inel_lo_splines.root",
             "use" : true
         },
         {
@@ -177,9 +177,9 @@
             "nominal" : 1.10,
             "step" : 0.05,
             "limit_lo" : 0.12,
-            "limit_hi" : 2.43,
+            "limit_hi" : 3.34,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_pi_abs_splines.root",
+            "splines" : "splines/fsi_pi_abs_splines.root",
             "use" : true
         },
         {
@@ -187,9 +187,9 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.09,
-            "limit_hi" : 2.68,
+            "limit_hi" : 3.87,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_cex_lo_splines.root",
+            "splines" : "splines/fsi_cex_lo_splines.root",
             "use" : true
         },
         {
@@ -197,9 +197,9 @@
             "nominal" : 1.80,
             "step" : 0.05,
             "limit_lo" : 0.12,
-            "limit_hi" : 3.62,
+            "limit_hi" : 4.88,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_pi_prod_splines.root",
+            "splines" : "splines/fsi_pi_prod_splines.root",
             "use" : true
         },
         {
@@ -207,9 +207,9 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.09,
-            "limit_hi" : 2.47,
+            "limit_hi" : 3.52,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_inel_hi_splines.root",
+            "splines" : "splines/fsi_inel_hi_splines.root",
             "use" : true
         },
         {
@@ -217,9 +217,9 @@
             "nominal" : 1.80,
             "step" : 0.05,
             "limit_lo" : 0.12,
-            "limit_hi" : 3.34,
+            "limit_hi" : 4.32,
             "binning" : "binning/tn337_binning.txt",
-            "splines" : "splinesTruth/fsi_cex_hi_splines.root",
+            "splines" : "splines/fsi_cex_hi_splines.root",
             "use" : true
         }
     ]

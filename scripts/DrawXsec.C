@@ -26,7 +26,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 {
 
 	bool drawNEUT = true;
-	if(inputname == "fit1_asimov") drawNEUT = false;
+	if(inputname == "fit1_asimov" || inputname == "fit3_statFluc") drawNEUT = false;
 
 	const int Ntarget = 2;
 	string targetlist[Ntarget] = {"Carbon", "Oxygen"};
@@ -223,7 +223,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 			c_xsec[itar] -> cd(nbcth+1);
 
-			if(nbcth!=0) gPad->SetLogx();
+			// if(nbcth!=0) gPad->SetLogx();
 
 			h_xsec_truth[itar][nbcth]          -> Draw("hist");
 			if(drawNEUT) 

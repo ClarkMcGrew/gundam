@@ -3,11 +3,12 @@
 * mail : lucie.maret@cern.ch
 *******************************************/
 
-// root -b -q 'pull_study.C("fit",  "Template parameters",   116)'
-// root -b -q 'pull_study.C("flux", "Flux parameters",        20)'
-// root -b -q 'pull_study.C("xsec", "Xsec model parameters",  22)'
-// root -b -q 'pull_study.C("det",  "Detector parameters",  1164)'
-
+/*
+root -b -q 'pull_study.C("fit",  "Template parameters",   116)'
+root -b -q 'pull_study.C("flux", "Flux parameters",        20)'
+root -b -q 'pull_study.C("xsec", "Xsec model parameters",  22)'
+root -b -q 'pull_study.C("det",  "Detector parameters",  1164)'
+*/
 
 // #include <unistd.h>
 // #include <TFile.h>
@@ -43,7 +44,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit3_statFluc_toy";
 
 
-	std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
+	// std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
 
 	//for(int toyi = 1; toyi <= ntoys; toyi++)
 	//{
@@ -83,7 +84,6 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 		}
 		else
 			h_pull -> Fill(pull_and_sigma_in_bin_j[0]);
-
 	}
 
 

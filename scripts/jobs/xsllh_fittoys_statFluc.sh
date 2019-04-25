@@ -4,13 +4,13 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-# rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
-# rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
+rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
+rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
 
 source /usr/local/shared/bin/openmpi_env.sh
 
 
-for N in {101..300}; # loop over toys
+for N in {1..200}; # loop over toys
 do
 	# Write a file containing the inputs for the fitter
 	echo -e "{
