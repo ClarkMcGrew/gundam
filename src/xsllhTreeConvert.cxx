@@ -429,7 +429,10 @@ int main(int argc, char** argv)
             cut_branch = file.branch;
             weight = event_weight;
 
-            if(selected_sample == 0 && track_sample < 4)
+            if(selected_sample == 1)
+                weight *= 1.16;
+
+            if(selected_sample == file.sample && track_sample < 6)
             {
                 out_seltree -> Fill();
                 sel_events += weight;

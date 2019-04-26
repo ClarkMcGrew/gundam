@@ -4,7 +4,7 @@
     "dials" : [
         {
             "name" : "MACCQE",
-            "nominal" : 1.21,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
@@ -14,10 +14,10 @@
         },
         {
             "name" : "PF_C",
-            "nominal" : 217,
+            "nominal" : 1.00,
             "step" : 0.05,
-            "limit_lo" : 200,
-            "limit_hi" : 300,
+            "limit_lo" : 0.5,
+            "limit_hi" : 1.5,
             "binning" : "ingrid_splines/ingrid_true_binning.txt",
             "splines" : "ingrid_splines/pf_c_splines.root",
             "use" : false
@@ -74,7 +74,7 @@
         },
         {
             "name" : "MARES",
-            "nominal" : 0.95,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
@@ -84,7 +84,7 @@
         },
         {
             "name" : "CA5",
-            "nominal" : 1.01,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
@@ -94,7 +94,7 @@
         },
         {
             "name" : "I12RES",
-            "nominal" : 1.30,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
@@ -204,7 +204,7 @@
         },
         {
             "name" : "FSI_PI_ABS",
-            "nominal" : 1.10,
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
             "limit_hi" : 2.00,
@@ -223,16 +223,6 @@
             "use" : true
         },
         {
-            "name" : "FSI_PI_PROD",
-            "nominal" : 1.80,
-            "step" : 0.05,
-            "limit_lo" : 0.00,
-            "limit_hi" : 3.00,
-            "binning" : "ingrid_splines/ingrid_true_binning.txt",
-            "splines" : "ingrid_splines/fsi_pi_prod_splines.root",
-            "use" : true
-        },
-        {
             "name" : "FSI_INEL_HI",
             "nominal" : 1.00,
             "step" : 0.05,
@@ -243,11 +233,21 @@
             "use" : true
         },
         {
-            "name" : "FSI_CEX_HI",
-            "nominal" : 1.80,
+            "name" : "FSI_PI_PROD",
+            "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.00,
-            "limit_hi" : 3.00,
+            "limit_hi" : 2.00,
+            "binning" : "ingrid_splines/ingrid_true_binning.txt",
+            "splines" : "ingrid_splines/fsi_pi_prod_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "FSI_CEX_HI",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.00,
+            "limit_hi" : 2.00,
             "binning" : "ingrid_splines/ingrid_true_binning.txt",
             "splines" : "ingrid_splines/fsi_cex_hi_splines.root",
             "use" : true

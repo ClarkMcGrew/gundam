@@ -82,6 +82,14 @@
             "sample" : 0,
             "branch" : 10,
             "use" : true
+        },
+        {
+            "fname" : "/mnt/home/cuddandr/work/ingrid/files/TestPM_Reweight_CC1pi.root",
+            "file_id" : 1,
+            "event_tree" : "wtree",
+            "sample" : 1,
+            "branch" : 11,
+            "use" : true
         }
     ]
 }

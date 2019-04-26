@@ -3,7 +3,7 @@ void make_ingrid_detcov(const std::string& nd280_cov_name)
     TFile* nd280_file = TFile::Open(nd280_cov_name.c_str(), "READ");
     TMatrixTSym<double>* nd280_cov = (TMatrixTSym<double>*)nd280_file -> Get("cov_mat");
 
-    unsigned int ingrid_bins = 90;
+    unsigned int ingrid_bins = 180;
     unsigned int nd280_bins = nd280_cov -> GetNrows();
     unsigned int total_bins = nd280_bins + ingrid_bins;
 

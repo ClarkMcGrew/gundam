@@ -1,10 +1,10 @@
 {
-    "data_file" : "xsllh_test.root",
-    "mc_file"   : "xsllh_test.root",
+    "data_file" : "xsllh_nominal_v2.root",
+    "mc_file"   : "xsllh_nominal_v2.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
     "fit_type"  : 0,
-    "stat_fluc" : true,
+    "stat_fluc" : false,
     "zero_syst" : false,
     "data_POT"  : 5.76E20,
     "mc_POT"    : 1.32E21,
@@ -30,12 +30,12 @@
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "combined_detcov.root",
+        "file" : "combined_detcov_v2.root",
         "matrix" : "det_cov",
         "throw"  : false,
-        "decomp" : false,
+        "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "xsec_cov" : {
         "file" : "xsec_cov_normalized.root",
@@ -79,7 +79,7 @@
                 {
                     "name" : "ingrid_CC0pi",
                     "binning" : "ingrid_true_binning.txt",
-                    "signal" : {"sample" : [-10,10], "topology" : [0,1,2]},
+                    "signal" : {"sample" : [-10,10,11], "topology" : [0,1,2]},
                     "use" : true
                 }
             ],
@@ -145,7 +145,15 @@
         },
         {
             "cut_branch" : 10,
-            "name": "INGRID",
+            "name": "INGRID_CC0pi",
+            "detector" : "INGRID",
+            "binning" : "ingrid_reco_fine.txt",
+            "use_pot" : false,
+            "use_sample" : true
+        },
+        {
+            "cut_branch" : 11,
+            "name": "INGRID_CC1pi",
             "detector" : "INGRID",
             "binning" : "ingrid_reco_fine.txt",
             "use_pot" : false,

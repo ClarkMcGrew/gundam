@@ -174,14 +174,15 @@ void plot_ingrid(const std::string fname)
             sel += event_weight;
 
         if(is_fv && !is_anti && !is_nue && fsi_int < 3 && new_event == 1)
-        //if(is_fv && !is_anti && !is_nue && fsi_int == 4 && new_event == 1)
+        //if(is_fv && !is_anti && !is_nue && fsi_int == 3 && new_event == 1)
             gen += event_weight;
 
         if(selected_sample == 0 && fsi_int < 3 && !is_anti && !is_nue && track_sample < 4)
-        //if(selected_sample == 1 && fsi_int == 4 && !is_anti && !is_nue && track_sample < 4)
+        //if(selected_sample == 1 && fsi_int == 3 && !is_anti && !is_nue && track_sample < 4)
             sig += event_weight;
 
         if(selected_sample == 0 && track_sample < 4)
+        //if(selected_sample == 1 && track_sample < 4)
         {
             h1d_angle->Fill(angle_reco, event_weight);
             h1d_dist->Fill(pmu_reco, event_weight);
