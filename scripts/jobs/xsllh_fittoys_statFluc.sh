@@ -4,8 +4,8 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
-rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
+# rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
+# rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
 
 source /usr/local/shared/bin/openmpi_env.sh
 
@@ -267,10 +267,10 @@ do
         }
     ]
 }
-" >> $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json
+" > $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json
 
 	# Write a file containing the job
-	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json" >> job_xsllh_toy${N}.sh
+	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json" > job_xsllh_toy${N}.sh
 
 	# Submit job
 	qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long job_xsllh_toy${N}.sh

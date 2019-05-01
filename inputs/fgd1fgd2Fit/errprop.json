@@ -1,12 +1,14 @@
 {
-    "input_fit_file" : "/outputs/fit1_asimov.root",
-    "output_file" : "/outputs/xsec_fit1_asimov_TEST.root",
-    "extra_hists" : "/inputs/fgd1fgd2Fit/extra_hists.txt",
-    "num_toys" : 10000,
-    "rng_seed" : 12257,
+    "input_fit_file" : "/outputs/fit1_statFluc_TEST.root",
+    "output_file" : "/outputs/xsec_fit1_statFluc_TEST.root",
+    "extra_hists" : "",
+    "proton_fsi_cov" : "/inputs/fgd1fgd2Fit/xsllh_covarProtonFSI.root",
+    "num_toys" : 1000,
+    "rng_seed" : 12258,
     "do_ratio" : true,
     "sel_config" : "/inputs/fgd1fgd2Fit/config.json",
     "tru_config" : "/inputs/fgd1fgd2Fit/config.json",
+    "dat_config" : "/inputs/fgd1fgd2Fit/config.json",
     "decomposition" : {
         "do_force_posdef" : true,
         "force_posdef_val" : 1E-6,
@@ -15,9 +17,9 @@
     },
     "sig_norm" : {
         "CC0piCarbon" : {
-            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-3-4-8.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av2_run2.root",
             "flux_hist" : "flux_rebin",
-            "flux_int"  : 2.19E13,
+            "flux_int"  : 1.51e+12,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
             "num_targets_val" : 7.439E29,
@@ -25,9 +27,9 @@
             "relative_err" : true
         },
         "CC0piOxygen" : {
-            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-3-4-8.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av2_run2.root",
             "flux_hist" : "flux_rebin",
-            "flux_int"  : 2.19E13,
+            "flux_int"  : 1.51e+12,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
             "num_targets_val" : 2.581E29,

@@ -42,31 +42,36 @@ XsecCalc::XsecCalc(const std::string& json_config, const std::string& cli_filena
     num_toys = j["num_toys"];
     rng_seed = j["rng_seed"];
 
-std::cout << "DEBUG 1" << std::endl;
-
     do_incompl_chol = j["decomposition"].value("incomplete_chol", false);
     dropout_tol = j["decomposition"].value("drop_tolerance", 1.0E-3);
     do_force_posdef = j["decomposition"].value("do_force_posdef", false);
     force_padd = j["decomposition"].value("force_posdef_val", 1.0E-9);
 
-std::cout << "DEBUG 2" << std::endl;
-
     std::string sel_json_config = input_dir + j["sel_config"].get<std::string>();
     std::string tru_json_config = input_dir + j["tru_config"].get<std::string>();
+    std::string dat_json_config = input_dir + j["dat_config"].get<std::string>();
 
     std::cout << TAG << "Input file from fit: " << input_file << std::endl
               << TAG << "Output xsec file: " << output_file << std::endl
               << TAG << "Num. toys: " << num_toys << std::endl
               << TAG << "RNG  seed: " << rng_seed << std::endl
               << TAG << "Selected events config: " << sel_json_config << std::endl
-              << TAG << "True events config: " << tru_json_config << std::endl;
+              << TAG << "True events config: " << tru_json_config << std::endl
+              << TAG << "(Fake) data events config: " << dat_json_config << std::endl;
 
     std::cout << TAG << "Initializing fit objects..." << std::endl;
     selected_events = new FitObj(sel_json_config, "selectedEvents", false);
-    true_events = new FitObj(tru_json_config, "trueEvents", true);
+    true_events     = new FitObj(tru_json_config, "trueEvents", true);
+    
+    is_fit_type_throw = selected_events->GetFitType() == 3 ? true : false;
+    is_real_data      = selected_events->GetFitType() == 2 ? true : false;
+    if(!is_real_data)
+        data_events = new FitObj(dat_json_config, "trueEvents", true);
+    else
+        data_events = new FitObj(tru_json_config, "trueEvents", true);
+
     total_signal_bins = selected_events->GetNumSignalBins();
     signal_bins = total_signal_bins/2;
-    is_fit_type_throw = selected_events->GetFitType() == 3 ? true : false;
 
     std::cout << TAG << "Reading post-fit file..." << std::endl;
     TH1::AddDirectory(false);
@@ -81,6 +86,7 @@ XsecCalc::~XsecCalc()
     delete toy_thrower;
     delete selected_events;
     delete true_events;
+    delete data_events;
 
     delete postfit_cov;
     delete postfit_cor;
@@ -271,6 +277,7 @@ void XsecCalc::ReweightBestFit()
     //postfit parameters applied.
     auto sel_hists = selected_events->GetSignalHist();
     auto tru_hists = true_events->GetSignalHist();
+    auto dat_hists = data_events->GetSignalHist();
     auto sel_ratio_hists = selected_events->GetRatioHist();
     auto tru_ratio_hists = true_events->GetRatioHist();
 
@@ -297,22 +304,34 @@ void XsecCalc::ReweightBestFit()
         true_events->ReweightEvents(prefit_param_toy);
         tru_hists = true_events->GetSignalHist();
         ApplyNorm(tru_hists, prefit_param_toy, false);
+
+        data_events->ReweightEvents(prefit_param_toy);
+        dat_hists = data_events->GetSignalHist();
+        ApplyNorm(dat_hists, prefit_param_toy, false);
     }
     else
     {
         true_events->ReweightNominal();
         tru_hists = true_events->GetSignalHist();
         ApplyNorm(tru_hists, prefit_param_original, false);
+
+        data_events->ReweightNominal();
+        dat_hists = data_events->GetSignalHist();
+        ApplyNorm(dat_hists, prefit_param_original, false);
     }
 
     ApplyNormTargetsRatio(sel_ratio_hists, false);
     ApplyNormTargetsRatio(tru_ratio_hists, false);
+    // ApplyNormTargetsRatio(dat_ratio_hists, false);
 
     //Store histograms for later.
     sel_best_fit = ConcatHist(sel_hists, "sel_best_fit");
     tru_best_fit = ConcatHist(tru_hists, "tru_best_fit");
+    dat_best_fit = ConcatHist(dat_hists, "dat_best_fit");
+    
     signal_best_fit = std::move(sel_hists);
     signal_truth    = std::move(tru_hists);
+    signal_data     = std::move(dat_hists);
 
     ratio_best_fit = std::move(sel_ratio_hists);
     ratio_truth    = std::move(tru_ratio_hists);
@@ -667,6 +686,7 @@ void XsecCalc::SaveOutput(bool save_toys)
 
     sel_best_fit.Write("sel_best_fit");
     tru_best_fit.Write("tru_best_fit");
+    dat_best_fit.Write("dat_best_fit");
     eff_best_fit.Write("eff_best_fit");
     ratio_best_fit.Write("ratio_best_fit");
 
@@ -782,6 +802,24 @@ void XsecCalc::SaveSignalHist(TFile* file)
             // temp.GetXaxis()->SetRange(1,temp.GetNbinsX());   //LM --> save highest momentum bin
             temp.Write();
         }
+
+        // Save cross-section from fake data truth
+        offset = 0;
+        for(int k = 0; k < bin_edges.size(); ++k)
+        {
+            std::string name = v_normalization.at(id).name + "_cos_bin" + std::to_string(k) + "_fakedata";
+            TH1D temp(name.c_str(), name.c_str(), bin_edges.at(k).size()-1, bin_edges.at(k).data());
+
+            for(int l = 1; l <= temp.GetNbinsX(); ++l)
+            {
+                temp.SetBinContent(l, signal_data.at(id).GetBinContent(l+offset));
+                temp.SetBinError(l, signal_data.at(id).GetBinError(l+offset));
+            }
+            offset += temp.GetNbinsX();
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1); //AC --> don't save highest momentum bin
+            // temp.GetXaxis()->SetRange(1,temp.GetNbinsX());   //LM --> save highest momentum bin
+            temp.Write();
+        }
     }
 }
 
@@ -873,7 +911,8 @@ void XsecCalc::SaveExtra(TFile* output)
             if(line.front() != COMMENT_CHAR)
             {
                 TH1D* temp = (TH1D*)file->Get(line.c_str());
-                temp->Write();
+                if(temp != nullptr)
+                    temp->Write();
             }
         }
         file->Close();

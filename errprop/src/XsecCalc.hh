@@ -73,11 +73,11 @@ public:
 
     TH1D ConcatHist(const std::vector<TH1D>& vec_hists, const std::string& hist_name = "");
 
-    std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
-    TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
+    // std::vector<TH1D> GetSelSignal() { return selected_events->GetSignalHist(); };
+    // TH1D GetSelSignal(const int signal_id) { return selected_events->GetSignalHist(signal_id); };
 
-    std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
-    TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
+    // std::vector<TH1D> GetTruSignal() { return true_events->GetSignalHist(); };
+    // TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
 
     void SaveOutput(bool save_toys = false);
     void SaveSignalHist(TFile* file);
@@ -97,6 +97,7 @@ private:
 
     FitObj* selected_events;
     FitObj* true_events;
+    FitObj* data_events;
 
     ToyThrower* toy_thrower;
 
@@ -117,11 +118,13 @@ private:
 
     TH1D sel_best_fit;
     TH1D tru_best_fit;
+    TH1D dat_best_fit;
     TH1D eff_best_fit;
     TH1D ratio_best_fit; //LM
     TH1D ratio_truth; //LM
     std::vector<TH1D> signal_best_fit;
     std::vector<TH1D> signal_truth;
+    std::vector<TH1D> signal_data;
     std::vector<TH1D> toys_sel_events;
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;
@@ -133,6 +136,7 @@ private:
     std::string extra_hists;
 
     bool is_fit_type_throw;
+    bool is_real_data;
     unsigned int num_toys;
     unsigned int rng_seed;
     unsigned int num_signals;

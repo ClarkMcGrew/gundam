@@ -288,11 +288,6 @@ int main(int argc, char** argv)
                 }
             }
 
-            float selmu_mom = D1Reco;
-            float selmu_cos = D2Reco;
-            float selmu_mom_true = D1True;
-            float selmu_cos_true = D2True;
-
             for(const auto& kv : file.topologymap)
             {
                 if(topology == kv.second) topology = kv.first;
@@ -306,6 +301,11 @@ int main(int argc, char** argv)
                 }
             }
 
+            float selmu_mom = D1Reco;
+            float selmu_cos = D2Reco;
+            float selmu_mom_true = D1True;
+            float selmu_cos_true = D2True;
+
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
@@ -315,46 +315,38 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
-            
-            if(do_fakedata==1)
+
+            if(do_fakedata==1) // +30% carbon
             {
-                if(h2target == 6) weight      = 1.3*weight;
-                if(h2target == 6) weight_true = 1.3*weight_true;
+                if(fgdtarget == 3) weight      = 1.3*weight;
             }
-            else if(do_fakedata==2)
+            else if(do_fakedata==2) // -30% carbon
             {
-                if(h2target == 6) weight      = 0.7*weight;
-                if(h2target == 6) weight_true = 0.7*weight_true;
+                if(fgdtarget == 3) weight      = 0.7*weight;
             }
-            else if(do_fakedata==3)
+            else if(do_fakedata==3) // +30% oxygen
             {
-                if(h2target == 8) weight      = 1.3*weight;
-                if(h2target == 8) weight_true = 1.3*weight_true;
+                if(fgdtarget == 0) weight      = 1.3*weight;
             }
-            else if(do_fakedata==4)
+            else if(do_fakedata==4) // -30% oxygen
             {
-                if(h2target == 8) weight      = 0.7*weight;
-                if(h2target == 8) weight_true = 0.7*weight_true;
+                if(fgdtarget == 0) weight      = 0.7*weight;
             }
-            else if(do_fakedata==5)
+            else if(do_fakedata==5) // +30% resonant
             {
                 if(reaction==1) weight      = 1.3*weight;
-                if(reaction==1) weight_true = 1.3*weight_true;
             }
-            else if(do_fakedata==6)
+            else if(do_fakedata==6) // -30% resonant
             {
                 if(reaction==1) weight      = 0.7*weight;
-                if(reaction==1) weight_true = 0.7*weight_true;
             }
-            else if(do_fakedata==7)
+            else if(do_fakedata==7) // +30% DIS
             {
                 if(reaction==2) weight      = 1.3*weight;
-                if(reaction==2) weight_true = 1.3*weight_true;
             }
-            else if(do_fakedata==8)
+            else if(do_fakedata==8) // -30% DIS
             {
                 if(reaction==2) weight      = 0.7*weight;
-                if(reaction==2) weight_true = 0.7*weight_true;
             }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
@@ -384,9 +376,6 @@ int main(int argc, char** argv)
             hl2_trutree -> GetEntry(i);
             cut_branch = -1;
 
-            float selmu_mom_true = D1True;
-            float selmu_cos_true = D2True;
-
             for(const auto& kv : file.topologymap)
             {
                 if(topology_true == kv.second) topology_true = kv.first;
@@ -396,13 +385,52 @@ int main(int argc, char** argv)
             {
                 for(const auto& h2t : kv.second)
                 {
-                    if(h2target == h2t) target = kv.first;
+                    if(h2target_true == h2t) target_true = kv.first;
                 }
             }
+
+            float selmu_mom_true = D1True;
+            float selmu_cos_true = D2True;
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
+
+            ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
+
+            if(do_fakedata==1) // +30% carbon
+            {
+                if(fgdtarget_true == 3) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==2) // -30% carbon
+            {
+                if(fgdtarget_true == 3) weight_true = 0.7*weight_true;
+            }
+            else if(do_fakedata==3) // +30% oxygen
+            {
+                if(fgdtarget_true == 0) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==4) // -30% oxygen
+            {
+                if(fgdtarget_true == 0) weight_true = 0.7*weight_true;
+            }
+            else if(do_fakedata==5) // +30% resonant
+            {
+                if(reaction_true==1) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==6) // -30% resonant
+            {
+                if(reaction_true==1) weight_true = 0.7*weight_true;
+            }
+            else if(do_fakedata==7) // +30% DIS
+            {
+                if(reaction_true==2) weight_true = 1.3*weight_true;
+            }
+            else if(do_fakedata==8) // -30% DIS
+            {
+                if(reaction_true==2) weight_true = 0.7*weight_true;
+            }
+            ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
             out_trutree -> Fill();
 

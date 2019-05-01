@@ -272,5 +272,5 @@ int main(int argc, char** argv)
 
     std::cout << TAG << "\u3042\u308a\u304c\u3068\u3046\u3054\u3056\u3044\u307e\u3057\u305f\uff01" << std::endl;
 
-    return 0;
+    return did_converge ? 0 : 121;
 }
