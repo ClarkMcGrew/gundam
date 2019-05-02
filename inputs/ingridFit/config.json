@@ -3,7 +3,7 @@
     "mc_file"   : "xsllh_nominal_v2.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
-    "fit_type"  : 0,
+    "fit_type"  : 1,
     "stat_fluc" : false,
     "zero_syst" : false,
     "data_POT"  : 5.76E20,
@@ -15,7 +15,7 @@
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
         "print_level" : 2,
-        "tolerance" : 1E-1,
+        "tolerance" : 1E-0,
         "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsec_cov_normalized.root",
@@ -74,11 +74,11 @@
         {
             "name" : "INGRID",
             "xsec_config" : "ingrid_dials.json",
-            "binning" : "ingrid_true_binning.txt",
+            "binning" : "binning/ingrid_analysis_binning.txt",
             "template_par" : [
                 {
                     "name" : "ingrid_CC0pi",
-                    "binning" : "ingrid_true_binning.txt",
+                    "binning" : "binning/ingrid_analysis_binning.txt",
                     "signal" : {"sample" : [-10,10,11], "topology" : [0,1,2]},
                     "use" : true
                 }
@@ -147,7 +147,7 @@
             "cut_branch" : 10,
             "name": "INGRID_CC0pi",
             "detector" : "INGRID",
-            "binning" : "ingrid_reco_fine.txt",
+            "binning" : "binning/ingrid_sample_binning.txt",
             "use_pot" : false,
             "use_sample" : true
         },
@@ -155,7 +155,7 @@
             "cut_branch" : 11,
             "name": "INGRID_CC1pi",
             "detector" : "INGRID",
-            "binning" : "ingrid_reco_fine.txt",
+            "binning" : "binning/ingrid_sample_binning.txt",
             "use_pot" : false,
             "use_sample" : true
         },
@@ -163,7 +163,7 @@
             "cut_branch" : -10,
             "name": "ingrid_truth",
             "detector" : "INGRID",
-            "binning" : "ingrid_reco_fine.txt",
+            "binning" : "binning/ingrid_sample_binning.txt",
             "use_pot" : false,
             "use_sample" : true
         }

@@ -65,6 +65,8 @@ int GetIngridNutype(bool anti, bool nue);
 int GetIngridReaction(int code);
 int GetIngridTopology(int code);
 
+double GetTestEnuWeight(double enu);
+
 int main(int argc, char** argv)
 {
     const std::string TAG = color::GREEN_STR + "[xsTreeConvert]: " + color::RESET_STR;
@@ -79,20 +81,26 @@ int main(int argc, char** argv)
               << TAG << "Welcome to the Super-xsLLh Tree Converter.\n"
               << TAG << "Initializing the tree machinery..." << std::endl;
 
+    const double POT_norm = 0.4363;
+    bool do_apply_weights = false;
     std::string json_file;
 
     char option;
-    while((option = getopt(argc, argv, "j:h")) != -1)
+    while((option = getopt(argc, argv, "j:Wh")) != -1)
     {
         switch(option)
         {
             case 'j':
                 json_file = optarg;
                 break;
+            case 'W':
+                do_apply_weights = true;
+                break;
             case 'h':
                 std::cout << "USAGE: "
                           << argv[0] << "\nOPTIONS:\n"
-                          << "-j : JSON input\n";
+                          << "-j : JSON input\n"
+                          << "-W : Enable extra/arbitrary event weights.\n";
             default:
                 return 0;
         }
@@ -258,6 +266,9 @@ int main(int argc, char** argv)
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
                 - mu_mass * mu_mass;
 
+            if(do_apply_weights)
+                weight = weight * GetTestEnuWeight(enu_true) * POT_norm;
+
             if(event_passed)
                 out_seltree -> Fill();
 
@@ -289,6 +300,9 @@ int main(int argc, char** argv)
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
+
+            if(do_apply_weights)
+                weight_true = weight_true * GetTestEnuWeight(enu_true) * POT_norm;
 
             out_trutree -> Fill();
 
@@ -429,6 +443,9 @@ int main(int argc, char** argv)
             cut_branch = file.branch;
             weight = event_weight;
 
+            if(do_apply_weights)
+                weight = weight * GetTestEnuWeight(enu_true);
+
             if(selected_sample == 1)
                 weight *= 1.16;
 
@@ -550,4 +567,20 @@ int GetIngridTopology(int code)
     }
 
     return topology;
+}
+
+double GetTestEnuWeight(double enu)
+{
+    double weight = 1.0;
+
+    if(enu < 500)
+        weight = 1 + (0.5 * enu) / 500.0;
+    else if(enu > 500 && enu < 1500)
+        weight = 2 - enu / 1000.0;
+    else if(enu > 1500 && enu < 2000)
+        weight = (0.5 * enu) / 500.0 - 1;
+    else
+        weight = 1.0;
+
+    return weight;
 }

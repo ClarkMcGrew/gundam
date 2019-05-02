@@ -359,14 +359,14 @@ void XsecCalc::ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist
     }
 }
 
-void XsecCalc::ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy)
+void XsecCalc::ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy, bool is_data)
 {
     for(unsigned int i = 0; i < num_signals; ++i)
     {
         ApplyTargets(i, vec_hist[i], is_toy);
         ApplyFlux(i, vec_hist[i], param, is_toy);
         ApplyBinWidth(i, vec_hist[i], perGeV);
-        ApplyPOT(i, vec_hist[i]);
+        ApplyPOT(i, vec_hist[i], is_data);
     }
 }
 
@@ -424,9 +424,10 @@ void XsecCalc::ApplyBinWidth(const unsigned int signal_id, TH1D& hist, const dou
     }
 }
 
-void XsecCalc::ApplyPOT(const unsigned int signal_id, TH1D& hist)
+void XsecCalc::ApplyPOT(const unsigned int signal_id, TH1D& hist, bool is_data)
 {
-    hist.Scale(v_normalization[signal_id].pot_norm);
+    if(!is_data)
+        hist.Scale(v_normalization[signal_id].pot_norm);
 }
 
 TH1D XsecCalc::ConcatHist(const std::vector<TH1D>& vec_hist, const std::string& hist_name)
@@ -689,7 +690,7 @@ void XsecCalc::SaveDataEvents(TFile* output)
 
     fake_data_events.ReweightNominal();
     auto fake_data_hists = fake_data_events.GetSignalHist();
-    ApplyNorm(fake_data_hists, prefit_param_original, false);
+    ApplyNorm(fake_data_hists, prefit_param_original, false, true);
 
     for(unsigned int i = 0; i < fake_data_hists.size(); ++i)
     {

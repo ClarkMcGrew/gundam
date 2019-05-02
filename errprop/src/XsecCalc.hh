@@ -66,12 +66,12 @@ public:
     void CalcCovariance(bool use_best_fit);
 
     void ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy);
-    void ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy);
+    void ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy, bool is_data = false);
     void ApplyTargets(const unsigned int signal_id, TH1D& hist, bool is_toy);
     void ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::vector<double>& param,
                    bool is_toy);
     void ApplyBinWidth(const unsigned int signal_id, TH1D& hist, const double unit_scale);
-    void ApplyPOT(const unsigned int signal_id, TH1D& hist);
+    void ApplyPOT(const unsigned int signal_id, TH1D& hist, bool is_data = false);
 
     TH1D ConcatHist(const std::vector<TH1D>& vec_hists, const std::string& hist_name = "");
 

@@ -133,6 +133,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         file_xsec_cov -> Close();
 
         xsecpara->SetCovarianceMatrix(*cov_xsec, parser.xsec_cov.decompose);
+        xsecpara->SetWeightCap(5);
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
