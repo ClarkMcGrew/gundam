@@ -1,10 +1,10 @@
 {
-    "data_file" : "xsllh_nominal_v2.root",
+    "data_file" : "xsllh_enu_test.root",
     "mc_file"   : "xsllh_nominal_v2.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
     "fit_type"  : 1,
-    "stat_fluc" : false,
+    "stat_fluc" : true,
     "zero_syst" : false,
     "data_POT"  : 5.76E20,
     "mc_POT"    : 1.32E21,

@@ -270,10 +270,10 @@ int main(int argc, char** argv)
     xsecfit.InitFitter(fitpara);
     std::cout << TAG << "Fitter initialised." << std::endl;
 
-    xsecfit.FixParameter("par_fit_sig1_0", 1.0);
-    xsecfit.FixParameter("par_fit_sig1_1", 1.0);
-    xsecfit.FixParameter("par_fit_sig1_6", 1.0);
-    xsecfit.FixParameter("par_fit_sig1_11", 1.0);
+    //xsecfit.FixParameter("par_fit_sig1_0", 1.0);
+    //xsecfit.FixParameter("par_fit_sig1_1", 1.0);
+    //xsecfit.FixParameter("par_fit_sig1_6", 1.0);
+    //xsecfit.FixParameter("par_fit_sig1_11", 1.0);
 
     bool did_converge = false;
     if(!dry_run)
