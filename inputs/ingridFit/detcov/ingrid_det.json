@@ -1,0 +1,10 @@
+{
+    "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/ingrid_cc0pi_selection_pm.root",
+    "fname_output" : "ingrid_detcov.root",
+    "covariance_file" : "pm_detector_errors.root",
+    "covariance_name" : "CovarianceDetector",
+    "true_binning" : "ingrid_true_binning.txt",
+    "reco_binning" : "ingrid_sample_binning.txt",
+    "cov_offset" : 1E-6,
+    "num_toys" : 20000
+}
