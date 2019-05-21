@@ -143,6 +143,8 @@ int main(int argc, char** argv)
     float D2True, D2Reco;
     float weight, weight_true;
 
+    float selmu_mom_range;
+
     out_seltree -> Branch("nutype", &nutype, "nutype/I");
     out_seltree -> Branch("reaction", &reaction, "reaction/I");
     out_seltree -> Branch("topology", &topology, "topology/I");
@@ -229,6 +231,8 @@ int main(int argc, char** argv)
         hl2_seltree -> SetBranchAddress(file.sel_var.enu_reco.c_str(), &enu_reco);
         hl2_seltree -> SetBranchAddress(file.sel_var.weight.c_str(), &weight);
 
+        hl2_seltree -> SetBranchAddress("selmu_mom_range_oarecon", &selmu_mom_range);
+
         long int npassed = 0;
         long int nevents = hl2_seltree -> GetEntries();
         std::cout << TAG << "Reading selected events tree." << std::endl
@@ -252,6 +256,9 @@ int main(int argc, char** argv)
                     }
                 }
             }
+
+            if(cut_branch == 3 || cut_branch == 4)
+                D1Reco = selmu_mom_range;
 
             float selmu_mom = D1Reco;
             float selmu_cos = D2Reco;
