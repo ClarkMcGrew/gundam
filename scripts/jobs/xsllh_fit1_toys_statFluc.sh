@@ -4,9 +4,6 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-# rm $WORKDIR/scripts/jobs/toSubmit/job_xsllh_toy*.sh
-# rm $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy*.json
-
 source /usr/local/shared/bin/openmpi_env.sh
 
 
@@ -16,15 +13,15 @@ do
 	echo -e "{
     \"data_file\" : \"xsllh_fakedata.root\",
     \"mc_file\"   : \"xsllh_nominal.root\",
-    \"output_file\" : \"/outputs/toys/fit3_statFluc_toy${N}.root\",
+    \"output_file\" : \"/outputs/toys/fit1_statFluc_toy${N}.root\",
     \"input_dir\" : \"/inputs/fgd1fgd2Fit/\",
-    \"fit_type\"  : 3,
+    \"fit_type\"  : 1,
     \"stat_fluc\" : true,
     \"zero_syst\" : false,
-    \"data_POT\"  : 5.19781E20,
-    \"mc_POT\"    : 96.8906E20,
+    \"data_POT\"  : 9.32945E20,
+    \"mc_POT\"    : 159.6275E20,
     \"rng_seed\"  : $((12258 + N)),
-    \"num_threads\" : 16,
+    \"num_threads\" : 8,
     \"sample_topology\" : [\"cc0pi\", \"cc1pi\", \"ccother\", \"bkg\", \"oofv\"],
     \"min_settings\" : {
         \"minimizer\" : \"Minuit2\",
@@ -39,7 +36,7 @@ do
         \"file\" : \"xsllh_fluxcovmat.root\",
         \"matrix\" : \"flux_numu_cov\",
         \"binning\" : \"flux_binning\",
-        \"throw\"  : true,
+        \"throw\"  : false,
         \"decomp\" : true,
         \"variance\" : 0.99,
         \"fit_par\" : true
@@ -47,8 +44,7 @@ do
     \"det_cov\" : {
         \"file\" : \"xsllh_detcovmat.root\",
         \"matrix\" : \"cov_mat\",
-        \"binning\" : \"binning/tn337_binning.txt\",
-        \"throw\"  : true,
+        \"throw\"  : false,
         \"decomp\" : true,
         \"variance\" : 0.99,
         \"fit_par\" : true
@@ -56,7 +52,7 @@ do
     \"xsec_cov\" : {
         \"file\" : \"xsllh_xseccovmat.root\",
         \"matrix\" : \"xsec_cov\",
-        \"throw\"  : true,
+        \"throw\"  : false,
         \"decomp\" : false,
         \"variance\" : 1.00,
         \"fit_par\" : true
@@ -267,16 +263,16 @@ do
         }
     ]
 }
-" > $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json
+" > $WORKDIR/inputs/fgd1fgd2Fit/toys/config_fit1_toy${N}.json
 
 	# Write a file containing the job
-	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_toy${N}.json" > job_xsllh_toy${N}.sh
+	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_fit1_toy${N}.json" > job_xsllh_fit1_toy${N}.sh
 
 	# Submit job
-	qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long job_xsllh_toy${N}.sh
+	qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long job_xsllh_fit1_toy${N}.sh
 
 done
 
-cd $HOME
+cd -
 
 ###########################################################

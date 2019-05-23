@@ -30,6 +30,7 @@ struct HL2TreeVar
     std::string enu_true;
     std::string enu_reco;
     std::string weight;
+    // std::string selmu_mom_range_oarecon;
     std::string D1True;
     std::string D1Reco;
     std::string D2True;
@@ -144,7 +145,7 @@ int main(int argc, char** argv)
     int cut_branch;
     float enu_true, enu_reco;
     float q2_true, q2_reco;
-    float D1True, D1Reco;
+    float D1True, D1Reco, selmu_mom_range_oarecon;
     float D2True, D2Reco;
     float weight, weight_true;
 
@@ -256,6 +257,7 @@ int main(int argc, char** argv)
         hl2_seltree -> SetBranchAddress(file.sel_var.target.c_str(),    &h2target);
         hl2_seltree -> SetBranchAddress(file.sel_var.fgdtarget.c_str(), &fgdtarget);
         hl2_seltree -> SetBranchAddress(file.sel_var.D1Reco.c_str(),    &D1Reco);
+        hl2_seltree -> SetBranchAddress("selmu_mom_range_oarecon",      &selmu_mom_range_oarecon);
         hl2_seltree -> SetBranchAddress(file.sel_var.D2Reco.c_str(),    &D2Reco);
         hl2_seltree -> SetBranchAddress(file.sel_var.D1True.c_str(),    &D1True);
         hl2_seltree -> SetBranchAddress(file.sel_var.D2True.c_str(),    &D2True);
@@ -301,18 +303,23 @@ int main(int argc, char** argv)
                 }
             }
 
+            /////////////////////////////////////////////////////////////////////////////////////
+            ////// HARD-CODED FIX : For muFGD topologies, use different selmu mom variable //////
+            if(cut_branch == 3 || cut_branch == 4 || cut_branch == 11 || cut_branch == 12 || cut_branch == 19 || cut_branch == 20)
+                D1Reco= selmu_mom_range_oarecon;
+            /////////////////////////////////////////////////////////////////////////////////////
+            
             float selmu_mom = D1Reco;
+
             float selmu_cos = D2Reco;
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
-            q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
-                - mu_mass * mu_mass;
+            q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true) - mu_mass * mu_mass;
 
             double emu_reco = std::sqrt(selmu_mom * selmu_mom + mu_mass * mu_mass);
-            q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
-                - mu_mass * mu_mass;
+            q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos) - mu_mass * mu_mass;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
@@ -357,6 +364,9 @@ int main(int argc, char** argv)
                 pbar.Print(i, nevents-1);
         }
         std::cout << TAG << "Selected events passing cuts: " << npassed << std::endl;
+
+
+
 
         hl2_trutree -> SetBranchAddress(file.tru_var.nutype.c_str(),    &nutype_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.reaction.c_str(),  &reaction_true);
@@ -460,6 +470,7 @@ HL2TreeVar ParseHL2Var(T j, bool reco_info)
     v.nutype      = j["nutype"];
     v.enu_true    = j["enu_true"];
     v.weight      = j["weight"];
+    // v.selmu_mom_range_oarecon = j["selmu_mom_range_oarecon"];
 
     v.D1True      = j["D1True"];
     v.D2True      = j["D2True"];

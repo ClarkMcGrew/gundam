@@ -8,7 +8,7 @@
 
     "highland_files" : [
         {
-            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd1_500toys.root",
+            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd1_500toysAllEvents.root",
             "file_id" : 0,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -44,7 +44,7 @@
             }
         },
         {
-            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd2_500toys.root",
+            "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_fgd2_500toysAllEvents.root",
             "file_id" : 1,
             "sel_tree" : "default",
             "tru_tree" : "truth",

@@ -4,20 +4,25 @@
 *******************************************/
 
 /*
-root -b -q 'pull_study.C("fit",  "Template parameters",   116)'
-root -b -q 'pull_study.C("flux", "Flux parameters",        20)'
-root -b -q 'pull_study.C("xsec", "Xsec model parameters",  22)'
-root -b -q 'pull_study.C("det",  "Detector parameters",  1164)'
+
+root -b -q 'pull_study.C("fit",  "Template parameters",   116, "fit1_statFluc")'
+root -b -q 'pull_study.C("flux", "Flux parameters",        20, "fit1_statFluc")'
+root -b -q 'pull_study.C("xsec", "Xsec model parameters",  22, "fit1_statFluc")'
+root -b -q 'pull_study.C("det",  "Detector parameters",  1164, "fit1_statFluc")'
+
+root -b -q 'pull_study.C("fit",  "Template parameters",   116, "fit3_statFluc")'
+root -b -q 'pull_study.C("flux", "Flux parameters",        20, "fit3_statFluc")'
+root -b -q 'pull_study.C("xsec", "Xsec model parameters",  22, "fit3_statFluc")'
+root -b -q 'pull_study.C("det",  "Detector parameters",  1164, "fit3_statFluc")'
+
 */
 
-// #include <unistd.h>
-// #include <TFile.h>
 #include "CommonStyle.h"
 #include "CommonHeader.h"
 
 
 // Compute the pull for each parameter
-void pull_study(string par_name = "fit", string par_title = "Template parameters", int Nparam = 116)
+void pull_study(string par_name = "fit", string par_title = "Template parameters", int Nparam = 116, string fit_type = "fit3_statFluc")
 {
 	
 	//======================================================================================================  
@@ -30,18 +35,22 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 	std::cout << "------------------------" << std::endl;
 	std::cout << "----- Begin script -----" << std::endl;
 
-	// int toys[]= {1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100}; // all
-	int toys[]= {1 , 2 , 3 , 4 , 5 , 6 , 7 , 9 , 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 43, 45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79, 80, 82, 83, 84, 85, 86, 87, 90, 91, 92, 94, 95, 96, 97, 98, 99, 100,
-				 101, 102, 103, 104, 105, 106, 107, 108, 109, 111, 112, 113, 115, 116, 117, 118, 119, 120, 121, 122, 124, 125, 126, 127, 128, 129, 131, 134, 135, 136, 136, 137, 138, 139, 139, 140, 142, 143, 144, 145, 146, 147, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 161, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 182, 183, 184, 185, 186, 188, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 237, 238, 239, 241, 242, 243, 244, 245, 246, 248, 249, 250, 252, 253, 289, 295, 297, 298, 299, 300}; // removed the ones that didn't converge
+	//ALL int toys[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
+	// int toys_fit1[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
+	// int toys_fit3[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
 	
+	int toys_fit1[] = {10 , 100, 101, 102, 103, 104, 105, 106, 107, 11 , 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 12 , 120, 121, 122, 123, 124, 126, 127, 128, 129, 13 , 130, 131, 132, 134, 135, 136, 137, 138, 139, 14 , 140, 141, 142, 143, 145, 146, 147, 148, 149, 15 , 150, 151, 152, 153, 154, 156, 157, 158, 159, 16 , 161, 162, 164, 165, 166, 167, 168, 169, 17 , 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 18 , 180, 181, 183, 185, 187, 189, 19 , 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 2  , 20 , 200, 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 3  , 30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38 , 39 , 4  , 40 , 41 , 42 , 43 , 45 , 47 , 48 , 49 , 5  , 50 , 51 , 52 , 53 , 54 , 55 , 56 , 57 , 58 , 59 , 6  , 61 , 64 , 65 , 66 , 67 , 68 , 69 , 7  , 70 , 71 , 72 , 73 , 74 , 75 , 76 , 78 , 79 , 8  , 80 , 81 , 82 , 84 , 85 , 86 , 87 , 88 , 89 , 9  , 90 , 91 , 93 , 94 , 95 , 96 , 97 , 98 , 99 };
+	int toys_fit3[] = {1, 10, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 11, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 12, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 13, 131, 132, 133, 134, 136, 137, 138, 139, 14, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 15, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 16, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 17, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 18, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 19, 190, 191, 192, 193, 195, 196, 197, 198, 199, 2, 20, 200, 21, 22, 23, 24, 26, 27, 28, 29, 3, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 4, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 6, 60, 61, 62, 63, 64, 66, 67, 68, 69, 7, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 8, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 9, 90, 91, 92, 93, 94, 95, 97, 98, 99 };
 
+	int ntoys;
+	if(fit_type == "fit1_statFluc")      ntoys = (sizeof(toys_fit1)/sizeof(*toys_fit1));
+	else if(fit_type == "fit3_statFluc") ntoys = (sizeof(toys_fit3)/sizeof(*toys_fit3));
 
-	int ntoys = (sizeof(toys)/sizeof(*toys));
 	std::cout << "----- Number of toys used = "<<ntoys<<" -----" << std::endl;
 
 	int nbins = Nparam;
 
-	string GenFilename = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/fit3_statFluc_toy";
+	string GenFilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/%s_toy", fit_type.c_str());
 
 
 	// std::cout << "----- Plot the pull distribution of each toy -----" << std::endl;
@@ -55,20 +64,26 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 
 	//parameters_of_each_toy(ntoys, nbins, GenFilename);
 
+	int binMin, binMax;
+	if(fit_type == "fit1_statFluc")      { binMin = -5.0; binMax = 5.0; }
+	else if(fit_type == "fit3_statFluc") { binMin = -1.0; binMax = 1.0; }
 
 	std::vector< Double_t > pull_and_sigma_in_bin_j;
 	TH1D *h_pull_mean   = new TH1D("h_pull_mean", "Template parameter pull", nbins, 0, nbins);
 	TH1D *h_pull_sigma  = new TH1D("h_pull_sigma", "Pull width", nbins, 0, nbins);
-	TH1D *h_pull_O      = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 20, -1.0, 1.0);
-	TH1D *h_pull_C      = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 20, -1.0, 1.0);
-	TH1D *h_pull        = new TH1D("h_pull_C", "Pull distribution for parameters",        20, -1.0, 1.0);
+	TH1D *h_pull_O      = new TH1D("h_pull_O", "Pull distribution for oxygen parameters", 40, binMin, binMax);
+	TH1D *h_pull_C      = new TH1D("h_pull_C", "Pull distribution for carbon parameters", 40, binMin, binMax);
+	TH1D *h_pull        = new TH1D("h_pull",   "Pull distribution for parameters",        40, binMin, binMax);
 
 
 	std::cout << "----- Loop over the parameters to compute the mean among toys -----" << std::endl;
 
 	for(int j = 1; j <= nbins; j++)
 	{
-		pull_and_sigma_in_bin_j = pull_of_one_bin(par_name, j, toys, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
+		if(fit_type == "fit1_statFluc")
+			pull_and_sigma_in_bin_j = pull_of_one_bin(par_name, j, toys_fit1, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
+		else if(fit_type == "fit3_statFluc")
+			pull_and_sigma_in_bin_j = pull_of_one_bin(par_name, j, toys_fit3, ntoys, GenFilename, false); // function defined below, returns the pull+error and its sigma+error
 
 		h_pull_mean   -> SetBinContent(j, pull_and_sigma_in_bin_j[0]);
 		h_pull_mean   -> SetBinError(j, pull_and_sigma_in_bin_j[1]);
@@ -101,7 +116,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 	std::cout << "----- Plot results -----" << std::endl;
 
 	TCanvas *c_pull_mean = new TCanvas("c_pull_mean","Parameter pull",1000,600);
-	h_pull_mean -> SetTitle(Form(";%s number; ", par_title.c_str()));
+	h_pull_mean -> SetTitle(Form(";%s; ", par_title.c_str()));
 	c_pull_mean -> SetGrid();
 	h_pull_mean -> SetStats(kFALSE);
 	h_pull_mean -> GetYaxis() -> SetRangeUser(-4, 5);
@@ -132,7 +147,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 	legend->AddEntry(h_pull_sigma,"Pull sigma","p");
 	legend->Draw(); 
 
-	c_pull_mean -> Print(Form("plots/pullstudy/%s_pull_mean_and_sigma.pdf", par_name.c_str()));
+	c_pull_mean -> Print(Form("plots/pullstudy/%s_pull_mean_and_sigma_%s.pdf", par_name.c_str(), fit_type.c_str()));
 
 
 	if(par_name == "fit")
@@ -145,7 +160,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 
 		h_pull_O -> Draw();
 
-		c_pull_O -> Print(Form("plots/pullstudy/%s_pull_distribution_O.pdf", par_name.c_str()));
+		c_pull_O -> Print(Form("plots/pullstudy/%s_pull_distribution_O_%s.pdf", par_name.c_str(), fit_type.c_str()));
 
 
 		TCanvas *c_pull_C = new TCanvas("c_pull_C","Pull distribution for carbon parameters",900,700);
@@ -155,7 +170,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 
 		h_pull_C -> Draw();
 
-		c_pull_C -> Print(Form("plots/pullstudy/%s_pull_distribution_C.pdf", par_name.c_str()));
+		c_pull_C -> Print(Form("plots/pullstudy/%s_pull_distribution_C_%s.pdf", par_name.c_str(), fit_type.c_str()));
 	}
 	else
 	{
@@ -167,7 +182,7 @@ void pull_study(string par_name = "fit", string par_title = "Template parameters
 
 		h_pull -> Draw();
 
-		c_pull -> Print(Form("plots/pullstudy/%s_pull_distribution.pdf", par_name.c_str()));
+		c_pull -> Print(Form("plots/pullstudy/%s_pull_distribution_%s.pdf", par_name.c_str(), fit_type.c_str()));
 
 	}
 
@@ -192,7 +207,7 @@ std::vector< Double_t > pull_of_one_bin(string par_name, int bin, int Toys[], in
 	TH1D *h_parampriorhist_toyi;
 	TH1D *h_paramhist_toyi;
 	TH1D *h_paramerrhist_toyi;
-	TH1D *h_pull_values_in_bin = new TH1D("h_pull_values_in_bin", "Distribution of the pull in bin i", 30, -10, 10);
+	TH1D *h_pull_values_in_bin = new TH1D("h_pull_values_in_bin", "Distribution of the pull in bin i", 40, -10, 10);
 	TH1D *h_param_values_in_bin = new TH1D("h_param_values_in_bin", "Distribution of the c_i", 20, 0, 2);
 	TH1D *h_paramerr_values_in_bin = new TH1D("h_paramerr_values_in_bin", "Distribution of the error on c_i", 60, 0, 0.3);
 
@@ -214,6 +229,7 @@ std::vector< Double_t > pull_of_one_bin(string par_name, int bin, int Toys[], in
 		h_paramerr_values_in_bin -> Fill( h_paramerrhist_toyi -> GetBinContent(bin) );
 
 		fin->Close();
+		delete fin;
 	}
 
 	// Get the values of mean and RMS
@@ -221,6 +237,12 @@ std::vector< Double_t > pull_of_one_bin(string par_name, int bin, int Toys[], in
 	Double_t mean_err  = h_pull_values_in_bin -> GetMeanError();
 	Double_t sigma     = h_pull_values_in_bin -> GetRMS();
 	Double_t sigma_err = h_pull_values_in_bin -> GetRMSError();
+
+	std::vector< Double_t > pull_and_sigma;
+	pull_and_sigma.push_back(mean);
+	pull_and_sigma.push_back(mean_err);
+	pull_and_sigma.push_back(sigma);
+	pull_and_sigma.push_back(sigma_err);
 
 	if(draw_distr)
 	{ // Draw pull (optional)
@@ -244,12 +266,6 @@ std::vector< Double_t > pull_of_one_bin(string par_name, int bin, int Toys[], in
 
 		// sleep(1);
 	}
-
-	std::vector< Double_t > pull_and_sigma;
-	pull_and_sigma.push_back(mean);
-	pull_and_sigma.push_back(mean_err);
-	pull_and_sigma.push_back(sigma);
-	pull_and_sigma.push_back(sigma_err);
 
 	std::cout 	<< "Pull has been computed for bin " << bin
 				<< ", " << std::endl

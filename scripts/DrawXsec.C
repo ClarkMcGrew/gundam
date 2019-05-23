@@ -27,12 +27,12 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 	bool drawNEUT = true;
 	// if(inputname == "fit1_asimov" || inputname == "fit3_statFluc") drawNEUT = false;
-	if(inputname == "fit1_asimov") drawNEUT = false;
+	// if(inputname == "fit1_asimov") drawNEUT = false;
 
 	const int Ntarget = 2;
 	string targetlist[Ntarget] = {"Carbon", "Oxygen"};
 
-	string infilename      = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_%s.root", inputname.c_str());
+	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_%s.root", inputname.c_str());
 
 	//======================================================================================================  
 	//=== Set common style
@@ -46,7 +46,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	BinningTools bin; 
 	bin.SetBinning(fbinning.c_str());
 
-	//  int Nbins = bin.GetNbins();//Total number of bins
+	int Nbins = bin.GetNbins();//Total number of bins
 	int Nbins_costh = bin.GetNbins_costh();//Number of costheta bins
 
 	int* Nmombins = new int[Nbins_costh];//Number of mom bin in each slice of costheta
@@ -76,7 +76,7 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Store final output in a TFile =====" << std::endl;
 
-	TFile* fin      = new TFile(infilename.c_str());
+	TFile* fin = new TFile(infilename.c_str());
 	//======================================================================================================
 
 
@@ -85,29 +85,33 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Get histos with cross-section result and truth =====" << std::endl;
 	
-	vector< vector<TH1D*> > h_xsec_truth(Ntarget);
-	vector< vector<TH1D*> > h_xsec_truth_NEUT(Ntarget);
+	vector< vector<TH1D*> > h_xsec_truth_data(Ntarget);
+	vector< vector<TH1D*> > h_xsec_truth_nominal(Ntarget);
 	vector< vector<TH1D*> > h_xsec_postfit(Ntarget);
 	vector< vector<TH1D*> > h_xsec_postfit_err(Ntarget);
 
 	for(int itar = 0; itar < Ntarget; itar++)
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec_truth[itar].push_back(       (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_fakedata", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_truth_NEUT[itar].push_back(  (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_truth",    targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_postfit[itar].push_back(     (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d",          targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_truth_data[itar].push_back(    (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_data",    targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_truth_nominal[itar].push_back( (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_nominal", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_postfit[itar].push_back(       (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
 			
-			h_xsec_postfit_err[itar].push_back( (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d",          targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_postfit_err[itar].push_back(   (TH1D*)(fin -> Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) -> Clone(Form("CC0pi%s_cos_bin%d_postfit_err", targetlist[itar].c_str(), nbcth)) );
+			
 		}
 
-	vector< TH1D* > h_ratio_truth;
+	vector< TH1D* > h_ratio_truth_data;
+	vector< TH1D* > h_ratio_truth_nominal;
 	vector< TH1D* > h_ratio_postfit;
 	vector< TH1D* > h_ratio_postfit_err;
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio_truth.push_back(       (TH1D*)(fin -> Get( Form("CC0piOCRatio_cos_bin%d_fakedata", nbcth) )) );
-		h_ratio_postfit.push_back(     (TH1D*)(fin -> Get( Form("CC0piOCRatio_cos_bin%d",       nbcth) )) );
-		h_ratio_postfit_err.push_back( (TH1D*)(fin -> Get( Form("CC0piOCRatio_cos_bin%d",       nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_errs", nbcth)) );
+		h_ratio_truth_data.push_back(    (TH1D*)(fin -> Get( Form("CC0piCarbon_cos_bin%d_ratio_data",    nbcth) )) );
+		h_ratio_truth_nominal.push_back( (TH1D*)(fin -> Get( Form("CC0piCarbon_cos_bin%d_ratio_nominal", nbcth) )) );
+		h_ratio_postfit.push_back(       (TH1D*)(fin -> Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+
+		h_ratio_postfit_err.push_back(   (TH1D*)(fin -> Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) -> Clone(Form("CC0piOCRatio_cos_bin%d_errs", nbcth)) );
 	}
 	//======================================================================================================
 
@@ -156,22 +160,78 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 	std::cout << "===== Get covariance matrix and compute chi2 =====" << std::endl;
 	
 	TMatrixDSym *cov_mat = (TMatrixDSym*)(fin -> Get("xsec_cov"));
-	TH1D* h_sel_best_fit      = (TH1D*)(fin -> Get("sel_best_fit"));
-	TH1D* h_tru_best_fit_DATA = (TH1D*)(fin -> Get("dat_best_fit"));
-	TH1D* h_tru_best_fit_NEUT = (TH1D*)(fin -> Get("tru_best_fit"));
+	TH1D* h_sel_postfit = (TH1D*)(fin -> Get("sel_best_fit"));
+	TH1D* h_tru_nominal = (TH1D*)(fin -> Get("tru_best_fit"));
+	TH1D* h_tru_data    = (TH1D*)(fin -> Get("fake_data_concat"));
 
-	h_sel_best_fit->Draw();
-	h_tru_best_fit_DATA->Draw("same");
-	h_tru_best_fit_NEUT->Draw("same");
+	double chi2      = -999;
+	double chi2_NEUT = -999;
 
-	double chi2      = calcChi2_M(h_sel_best_fit, h_tru_best_fit_DATA, *cov_mat);
-	double chi2_NEUT = calcChi2_M(h_sel_best_fit, h_tru_best_fit_NEUT, *cov_mat);
+	chi2      = calcChi2_M(h_sel_postfit, h_tru_data,    *cov_mat);
+	chi2_NEUT = calcChi2_M(h_sel_postfit, h_tru_nominal, *cov_mat);
 
-	std::cout << "===== Chi2 = " << chi2 << std::endl;
-	std::cout << "===== Chi2 NEUT truth = " << chi2_NEUT << std::endl;
+	std::cout << "===== Chi2 data = " << chi2      << " with probability (for nbins="<<2*Nbins<<") = " << TMath::Prob(chi2,      2*Nbins) << std::endl;
+	std::cout << "===== Chi2 NEUT = " << chi2_NEUT << " with probability (for nbins="<<2*Nbins<<") = " << TMath::Prob(chi2_NEUT, 2*Nbins) << std::endl;
 
 	//======================================================================================================
 
+
+
+	//======================================================================================================
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Draw cross-section in analysis binning =====" << std::endl;
+	
+	TCanvas* c_xsec_allBins = new TCanvas("c_xsec_allBins", "c_xsec_allBins",1800,800);
+	h_tru_data -> SetTitle("Cross-section in analysis bins");
+	h_tru_data -> GetXaxis() -> SetTitle("Analysis bins");
+	h_tru_data -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^{2}}{nucleon MeV/c}]");
+	
+	double max;
+	max = MAX(h_tru_data->GetMaximum(), h_sel_postfit->GetMaximum());
+	h_tru_data -> GetYaxis() -> SetRangeUser(0, 1.3*max);
+
+	TLine *verline[2*Nbins_costh];
+	int binSide = 0;
+	for(int il = 0; il < Nbins_costh; il++)
+	{
+		binSide += Nmombins[il];
+		verline[il]               = new TLine(binSide,         0, binSide,         1.3*max );
+		verline[il + Nbins_costh] = new TLine(binSide + Nbins, 0, binSide + Nbins, 1.3*max );
+	}
+
+	h_tru_data        -> Draw();
+
+	for(int il = 0; il < 2*Nbins_costh-1; il++)
+	{
+		verline[il] -> SetLineWidth(1);
+		verline[il] -> SetLineStyle(1);
+		verline[il] -> SetLineColor(kGray);
+		verline[il] -> Draw();
+	}
+	TLine *verlineTargets = new TLine(Nbins, 0, Nbins, 1.3*max );
+	verlineTargets -> Draw();
+
+	h_tru_data        -> SetLineColor(kGreen+2);
+	if(drawNEUT)
+		h_tru_nominal -> SetLineColor(kBlue+1);
+	h_sel_postfit     -> SetLineColor(kRed+1);
+
+	h_tru_data        -> Draw("same");
+	if(drawNEUT)
+		h_tru_nominal -> Draw("same");
+	h_sel_postfit     -> Draw("same E");
+
+
+	TLegend* legendAllBins = new TLegend(0.65,0.75,0.92,0.9);
+	legendAllBins -> SetFillColor(0);
+	legendAllBins -> SetBorderSize(1);
+	legendAllBins -> AddEntry(h_sel_postfit,    "post-fit", "lep");
+	if(drawNEUT)
+		legendAllBins -> AddEntry(h_tru_nominal, Form("NEUT truth, #chi^{2} = %d",      (int)chi2_NEUT), "l");
+	legendAllBins ->     AddEntry(h_tru_data,    Form("Fake data truth, #chi^{2} = %d", (int)chi2),      "l");
+	legendAllBins->Draw();
+
+	c_xsec_allBins -> Print(Form("plots/xsecResults/%s/xsec_%s_allBins.pdf", dir_name.c_str(), inputname.c_str()));
 
 
 
@@ -181,13 +241,12 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 	//======================================================================================================
 	std::cout << "================================================" << std::endl;
-	std::cout << "===== Make final plots =====" << std::endl;                                                                                                                      
+	std::cout << "===== Make final plots of cross-section =====" << std::endl;                                                                                                                      
 
 	TCanvas* c_xsec[Ntarget];
 	TCanvas* c_xsec_err[Ntarget];
 	vector<TLegend*> leg(Ntarget+1);
-	double max;
-
+	
 	for(int itar = 0; itar < Ntarget; itar++)
 	{
 		c_xsec[itar] = new TCanvas(Form("Xsec_on_%s", targetlist[itar].c_str()),Form("Xsec_on_%s", targetlist[itar].c_str()),1700,1000);
@@ -195,26 +254,26 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec_truth[itar][nbcth] -> SetTitle(h_title[nbcth]);
-			h_xsec_truth[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [MeV/c]");
-			h_xsec_truth[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon MeV/c}]");
+			h_xsec_truth_data[itar][nbcth] -> SetTitle(h_title[nbcth]);
+			h_xsec_truth_data[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [MeV/c]");
+			h_xsec_truth_data[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^{2}}{nucleon MeV/c}]");
 
-			max = MAX(h_xsec_truth[itar][nbcth]->GetMaximum(), h_xsec_postfit[itar][nbcth]->GetMaximum());
-			h_xsec_truth[itar][nbcth] -> GetYaxis() -> SetRangeUser(0, 1.3*max);
+			max = MAX(h_xsec_truth_data[itar][nbcth]->GetMaximum(), h_xsec_postfit[itar][nbcth]->GetMaximum());
+			h_xsec_truth_data[itar][nbcth] -> GetYaxis() -> SetRangeUser(0, 1.3*max);
 
-			h_xsec_truth[itar][nbcth]          -> SetLineColor(kGreen+2);
+			h_xsec_truth_data[itar][nbcth]        -> SetLineColor(kGreen+2);
 			if(drawNEUT)
-				h_xsec_truth_NEUT[itar][nbcth] -> SetLineColor(kRed+2);
-			h_xsec_postfit[itar][nbcth]        -> SetLineColor(kBlue+1);
+				h_xsec_truth_nominal[itar][nbcth] -> SetLineColor(kBlue+1);
+			h_xsec_postfit[itar][nbcth]           -> SetLineColor(kRed+1);
 
 			c_xsec[itar] -> cd(nbcth+1);
 
 			// if(nbcth!=0) gPad->SetLogx();
 
-			h_xsec_truth[itar][nbcth]          -> Draw("hist");
+			h_xsec_truth_data[itar][nbcth]        -> Draw("hist");
 			if(drawNEUT) 
-				h_xsec_truth_NEUT[itar][nbcth] -> Draw("same hist"); // with error bars
-			h_xsec_postfit[itar][nbcth]        -> Draw("same E"); // with error bars
+				h_xsec_truth_nominal[itar][nbcth] -> Draw("same hist");
+			h_xsec_postfit[itar][nbcth]           -> Draw("same E");
 
 			if(nbcth==0)
 			{
@@ -222,14 +281,10 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 				leg[itar] -> SetFillColor(0);
 				leg[itar] -> SetBorderSize(1);
 				leg[itar] -> SetFillStyle(0);
-				//leg[itar]->SetTextSize(0.075);
-				// leg[itar] -> SetHeader(Form("#chi^{2}  = %d", (int)chi2));
 				leg[itar] ->     AddEntry(h_xsec_postfit[itar][0],    "post-fit", "lep");
 				if(drawNEUT)
-					leg[itar] -> AddEntry(h_xsec_truth_NEUT[itar][0], Form("NEUT truth, #chi^{2} = %d",      (int)chi2_NEUT), "l");
-				leg[itar] ->     AddEntry(h_xsec_truth[itar][0],      Form("Fake data truth, #chi^{2} = %d", (int)chi2),      "l");
-				// leg[itar] -> AddEntry(h_xsec_truth_NEUT[itar][0], Form("NEUT truth"),     "l");
-				// leg[itar] -> AddEntry(h_xsec_truth[itar][0],      Form("Fake data truth"),"l");
+					leg[itar] -> AddEntry(h_xsec_truth_nominal[itar][0], Form("NEUT truth, #chi^{2} = %d",      (int)chi2_NEUT), "l");
+				leg[itar] ->     AddEntry(h_xsec_truth_data[itar][0],      Form("Fake data truth, #chi^{2} = %d", (int)chi2),      "l");
 				c_xsec[itar]->cd(1);
 				leg[itar]->Draw();
 			}
@@ -238,91 +293,82 @@ void DrawXsec(string inputname = "fit3_statFluc", const std::string& dir_name = 
 		c_xsec[itar]->Print(Form("plots/xsecResults/%s/xsec_%s_%s.pdf", dir_name.c_str(), inputname.c_str(), targetlist[itar].c_str()));
 
 
-	// 	c_xsec_err[itar] = new TCanvas(Form("Xsec_error_on_%s", targetlist[itar].c_str()),Form("Xsec_error_on_%s", targetlist[itar].c_str()),1700,1000);
-	// 	c_xsec_err[itar] -> Divide(3,3);
+		c_xsec_err[itar] = new TCanvas(Form("Xsec_error_on_%s", targetlist[itar].c_str()),Form("Xsec_error_on_%s", targetlist[itar].c_str()),1700,1000);
+		c_xsec_err[itar] -> Divide(3,3);
 
-	// 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
-	// 	{
-	// 		h_xsec_postfit_err[itar][nbcth] -> SetTitle(h_title[nbcth]);
-	// 		h_xsec_postfit_err[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-	// 		h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^2}{nucleon GeV/c}]");
+		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+		{
+			h_xsec_postfit_err[itar][nbcth] -> SetTitle(h_title[nbcth]);
+			h_xsec_postfit_err[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+			h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetTitle("#frac{d#sigma}{dp_{#mu} dcos#theta_{#mu}} [#frac{cm^{2}}{nucleon GeV/c}]");
 
-	// 		h_xsec_postfit_err[itar][nbcth] -> SetLineColor(kBlue+1);
+			h_xsec_postfit_err[itar][nbcth] -> SetLineColor(kRed+1);
 
-	// 		c_xsec_err[itar] -> cd(nbcth+1);
+			c_xsec_err[itar] -> cd(nbcth+1);
 
-	// 		if(nbcth!=0) gPad->SetLogx();
+			if(nbcth!=0) gPad->SetLogx();
 
-	// 		h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
-	// 		h_xsec_postfit_err[itar][nbcth] -> Draw("hist");
+			h_xsec_postfit_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
+			h_xsec_postfit_err[itar][nbcth] -> Draw("hist");
 
-	// 	}
-	// 	c_xsec_err[itar]->Print(Form("plots/xsecResults/%s/xsec_error_%s_%s.pdf", dir_name.c_str(), inputname.c_str(), targetlist[itar].c_str()));
+		}
+		c_xsec_err[itar]->Print(Form("plots/xsecResults/%s/xsec_error_%s_%s.pdf", dir_name.c_str(), inputname.c_str(), targetlist[itar].c_str()));
 	}
 
 
-	// TCanvas* c_ratio = new TCanvas("Xsec_ratio", "Xsec_ratios",1700,1000);
-	// c_ratio -> Divide(3,3);
-	// for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
-	// {
-	// 	h_ratio_truth[nbcth] -> SetTitle(h_title[nbcth]);
-	// 	h_ratio_truth[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-	// 	h_ratio_truth[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
-	// 	h_ratio_truth[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 2.0);
+
+	//======================================================================================================
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Make final plots of O/C ratio =====" << std::endl;                                                                                                                      
+
+
+	TCanvas* c_ratio = new TCanvas("Xsec_ratio", "Xsec_ratios",1700,1000);
+	c_ratio -> Divide(3,3);
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	{
+		h_ratio_truth_data[nbcth] -> SetTitle(h_title[nbcth]);
+		h_ratio_truth_data[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+		h_ratio_truth_data[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
+		h_ratio_truth_data[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 2.0);
 		
-	// 	// h_ratio_truth[nbcth]          -> SetLineWidth(2);
-	// 	h_ratio_truth[nbcth]          -> SetLineColor(kGreen+2);
-	// 	if(drawNEUT)
-	// 		h_ratio_truth_NEUT[nbcth] -> SetLineColor(kRed+2);
-	// 	h_ratio_postfit[nbcth]        -> SetLineColor(kBlue+1);
+		h_ratio_truth_data[nbcth]        -> SetLineColor(kGreen+2);
+		if(drawNEUT)
+			h_ratio_truth_nominal[nbcth] -> SetLineColor(kBlue+1);
+		h_ratio_postfit[nbcth]           -> SetLineColor(kRed+1);
 
-	// 	c_ratio -> cd(nbcth+1);
+		c_ratio -> cd(nbcth+1);
 
-	// 	if(nbcth!=0) gPad->SetLogx();
+		if(nbcth!=0) gPad->SetLogx();
 
-	// 	h_ratio_truth[nbcth]          -> Draw("hist");
-	// 	if(drawNEUT)
-	// 		h_ratio_truth_NEUT[nbcth] -> Draw("same hist");
-	// 	h_ratio_postfit[nbcth]        -> Draw("same E"); // with error bars
-
-	// 	// if(nbcth==0)
-	// 	// {
-	// 	// 	leg[Ntarget] = new TLegend(0.2,0.24,0.8,0.64);
-	// 	// 	leg[Ntarget] -> SetFillColor(0);
-	// 	// 	leg[Ntarget] -> SetBorderSize(1);
-	// 	// 	leg[Ntarget] -> SetFillStyle(0);
-	// 	// 	//leg[Ntarget]->SetTextSize(0.075);
-	// 	// 	leg[Ntarget] -> SetHeader(Form("#chi^{2}  = %d", (int)chi2));
-	// 	// 	leg[Ntarget] -> AddEntry(h_ratio_postfit[0], "(fake) data", "lep");
-	// 	// 	leg[Ntarget] -> AddEntry(h_ratio_truth[0],   "truth",       "l");
-	// 	// 	c_ratio->cd(1);
-	// 	// 	leg[Ntarget]->Draw();
-	// 	// }
-	// }
-	// c_ratio->Print( Form("plots/xsecResults/%s/xsec_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
+		h_ratio_truth_data[nbcth]        -> Draw("hist");
+		if(drawNEUT) 
+			h_ratio_truth_nominal[nbcth] -> Draw("same hist");
+		h_ratio_postfit[nbcth]           -> Draw("same E");
+	}
+	c_ratio->Print( Form("plots/xsecResults/%s/xsec_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
 
 
 
-	// TCanvas* c_ratio_err = new TCanvas("Xsec_ratio", "Xsec_ratio",1700,1000);
-	// c_ratio_err -> Divide(3,3);
-	// for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
-	// {
-	// 	h_ratio_postfit_err[nbcth] -> SetTitle(h_title[nbcth]);
-	// 	h_ratio_postfit_err[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
-	// 	h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
+	TCanvas* c_ratio_err = new TCanvas("Xsec_ratio", "Xsec_ratio",1700,1000);
+	c_ratio_err -> Divide(3,3);
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+	{
+		h_ratio_postfit_err[nbcth] -> SetTitle(h_title[nbcth]);
+		h_ratio_postfit_err[nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetTitle("#frac{#sigma^{O}}{#sigma^{C}}");
 
-	// 	h_ratio_postfit_err[nbcth] -> SetLineColor(kBlue+1);
+		h_ratio_postfit_err[nbcth] -> SetLineColor(kBlue+1);
 
-	// 	c_ratio_err -> cd(nbcth+1);
+		c_ratio_err -> cd(nbcth+1);
 
-	// 	if(nbcth!=0) gPad->SetLogx();
+		if(nbcth!=0) gPad->SetLogx();
 
-	// 	h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
-	// 	h_ratio_postfit_err[nbcth] -> Draw("hist");
-	// }
-	// c_ratio_err->Print( Form("plots/xsecResults/%s/xsec_error_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
+		h_ratio_postfit_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
+		h_ratio_postfit_err[nbcth] -> Draw("hist");
+	}
+	c_ratio_err->Print( Form("plots/xsecResults/%s/xsec_error_%s_OCratio.pdf", dir_name.c_str(), inputname.c_str()) );
 
-	// //======================================================================================================
+	//======================================================================================================
 
 
 
@@ -402,12 +448,14 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 			for(int j=0; j<covar.GetNrows(); j++)
 			{
 				if(i==j && (test[i][j]>1.00001 || test[i][j]<0.99999))
+				// if(i==j && (test[i][j]>1.001 || test[i][j]<0.999)) //LM
 				{
 					if(!inversionError) cout 	<< "****** WARNING: Issue with matrix inversion in chi2 calculation."
 												<< " Element ("<<i<<","<<j<<") = " << test[i][j] << endl; 
 					inversionError=true;
 				}
 				else if(i!=j && (test[i][j]>0.0000001))
+				// else if(i!=j && (test[i][j]>0.00001)) //LM
 				{
 				if(!inversionError) cout 	<< "****** WARNING: Issue with matrix inversion in chi2 calculation."
 											<< " Element ("<<i<<","<<j<<") = " << test[i][j] << endl; 
@@ -420,9 +468,11 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 			cout << "DEBUG info after iteration " << count << endl;
 			cout << "  Input matrix: determinant is: " << covar.Determinant() <<  endl;
 			cout << "Will try adding 0.00000001pc to the diagonal ..." << endl;
+			// cout << "Will try adding 0.0000001pc to the diagonal ..." << endl; //LM
 			for(int i=0; i<covar.GetNrows(); i++)
 			{
 				covar[i][i]=covar[i][i]*1.00000001;
+				// covar[i][i]=covar[i][i]*1.00000001; //LM
 			}
 			count++;
 			//if(count>10)getchar();
@@ -442,10 +492,10 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 		for(int j=0; j<covar.GetNrows(); j++)
 		{
 			chi2+= ((h1->GetBinContent(i+1)) - (h2->GetBinContent(i+1)))*(*covar_inv)[i][j]*((h1->GetBinContent(j+1)) - (h2->GetBinContent(j+1)));
-			if(i==j)
-			{
-				cout << "calcChi2_M::bin " << i << ": " << h1->GetBinError(i+1) << " should be the same as " << sqrt(covar_origin[i][j]) << endl;
-			}
+			// if(i==j)
+			// {
+			// 	cout << "calcChi2_M::bin " << i << ": " << h1->GetBinError(i+1) << " should be the same as " << sqrt(covar_origin[i][j]) << endl;
+			// }
 		}
 	}
 	cout << "calcChi2_M::chi2 is: " << chi2 << endl;

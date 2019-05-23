@@ -58,6 +58,7 @@ public:
     void UsePrefitCov();
 
     void ReweightBestFit();
+    void ReweightBestFitRatio(); //LM
     void GenerateToys();
     void GenerateToys(const int ntoys);
 
@@ -80,9 +81,10 @@ public:
     // TH1D GetTruSignal(const int signal_id) { return true_events->GetSignalHist(signal_id); };
 
     void SaveOutput(bool save_toys = false);
-    void SaveSignalHist(TFile* file);
-    void SaveRatioHist(TFile* file); //LM
-    void SaveExtra(TFile* file);
+    void SaveSignalHist(TFile* file, std::vector<TH1D> v_hists, const std::string suffix = "");
+    void SaveSignalHist(TFile* file, TH1D v_hists, const std::string suffix = "");
+    void SaveExtra(TFile* output);
+    void SaveDataEvents(TFile* output);
     void SetOutputFile(const std::string& override_file) { output_file = override_file; };
 
     std::string GetOutputFileName() const { return output_file; };
@@ -97,7 +99,9 @@ private:
 
     FitObj* selected_events;
     FitObj* true_events;
-    FitObj* data_events;
+
+    FitObj* selected_events_ratio;
+    FitObj* true_events_ratio;
 
     ToyThrower* toy_thrower;
 
@@ -108,7 +112,9 @@ private:
     std::vector<double> prefit_param_decomp;
     std::vector<double> prefit_param_toy;
 
+    std::string protonfsi_name;
     TMatrixDSym* protonfsi_cov;
+    bool do_add_protonfsi_cov;
 
     TMatrixDSym xsec_cov;
     TMatrixDSym xsec_cor;
@@ -118,30 +124,30 @@ private:
 
     TH1D sel_best_fit;
     TH1D tru_best_fit;
-    TH1D dat_best_fit;
     TH1D eff_best_fit;
-    TH1D ratio_best_fit; //LM
-    TH1D ratio_truth; //LM
+    TH1D sel_best_fit_ratio; //LM
+    TH1D tru_best_fit_ratio; //LM
     std::vector<TH1D> signal_best_fit;
-    std::vector<TH1D> signal_truth;
-    std::vector<TH1D> signal_data;
+    std::vector<TH1D> truth_best_fit;
     std::vector<TH1D> toys_sel_events;
     std::vector<TH1D> toys_tru_events;
     std::vector<TH1D> toys_eff;
-    std::vector<TH1D> toys_ratio; //LM
+    std::vector<TH1D> toys_sel_ratio; //LM
+    std::vector<TH1D> toys_tru_ratio; //LM
     std::vector<SigNorm> v_normalization;
 
+    std::string config_file;
     std::string input_file;
     std::string output_file;
     std::string extra_hists;
 
     bool is_fit_type_throw;
-    bool is_real_data;
+    bool do_read_data_events;
     unsigned int num_toys;
     unsigned int rng_seed;
     unsigned int num_signals;
     unsigned int total_signal_bins;
-    unsigned int signal_bins;
+    unsigned int signal_bins; //LM
 
     bool do_incompl_chol;
     bool do_force_posdef;

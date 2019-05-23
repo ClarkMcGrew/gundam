@@ -1,6 +1,3 @@
-
-cd /sps/t2k/lmaret/softwares/xsLLhFitterLM/scripts
-
 # Script containing all commands to get fitter inputs ready.
 # 
 # To submit job:
@@ -9,7 +6,7 @@ cd /sps/t2k/lmaret/softwares/xsLLhFitterLM/scripts
 
 cd /sps/t2k/lmaret/softwares/xsLLhFitterLM/
 source setup.sh
-cd scripts/
+cd /sps/t2k/lmaret/softwares/xsLLhFitterLM/scripts/
 
 # Compute detector covariance matrix
 xsllhDetVar -j ../inputs/fgd1fgd2Fit/detvar.json
@@ -18,13 +15,13 @@ xsllhDetVar -j ../inputs/fgd1fgd2Fit/detvar.json
 root -b -q 'DrawDetCov.C+()'
 
 # Prepare flux covariance matrix in correct format
-xsllhFluxCov -j ../inputs/fgd1fgd2Fit/fluxcov.json
+# xsllhFluxCov -j ../inputs/fgd1fgd2Fit/fluxcov.json
 
 # Prepare flux tuning used to compute the flux integrated
-root -b -q 'weight_flux.C()'
+# root -b -q 'weight_flux.C()'
 
 # Prepare xsec covariance matrix in correct format
-xsllhXsecCov -i ../inputs/fgd1fgd2Fit/xsec_cov.txt -o ../inputs/fgd1fgd2Fit/xsllh_xseccovmat.root
+# xsllhXsecCov -i ../inputs/fgd1fgd2Fit/xsec_cov.txt -o ../inputs/fgd1fgd2Fit/xsllh_xseccovmat.root
 
 
 # DON'T FORGET : generate splines with T2KReWeight

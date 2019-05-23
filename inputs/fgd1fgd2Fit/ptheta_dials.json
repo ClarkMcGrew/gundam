@@ -7,7 +7,7 @@
             "nominal" : 1.20,
             "step" : 0.05,
             "limit_lo" : 0.01,
-            "limit_hi" : 2.46,
+            "limit_hi" : 3.23,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/maccqe_splines.root",
             "use" : true
@@ -16,8 +16,8 @@
             "name" : "PF_C",
             "nominal" : 217,
             "step" : 0.05,
-            "limit_lo" : 199.99,
-            "limit_hi" : 275.03,
+            "limit_lo" : 200.06,
+            "limit_hi" : 274.96,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/pf_c_splines.root",
             "use" : true
@@ -27,7 +27,7 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/mec_c_splines.root",
             "use" : true
@@ -36,8 +36,8 @@
             "name" : "EB_C",
             "nominal" : 25.0,
             "step" : 0.05,
-            "limit_lo" : 11.98,
-            "limit_hi" : 42.01,
+            "limit_lo" : 12.05,
+            "limit_hi" : 41.94,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/eb_c_splines.root",
             "use" : true
@@ -57,7 +57,7 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/mec_o_splines.root",
             "use" : true
@@ -77,7 +77,7 @@
             "nominal" : 1.0,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/mec_shape_o_splines.root",
             "use" : true
@@ -87,7 +87,7 @@
             "nominal" : 1.0,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/mec_shape_c_splines.root",
             "use" : true
@@ -96,8 +96,8 @@
             "name" : "CA5",
             "nominal" : 1.01,
             "step" : 0.05,
-            "limit_lo" : 0.52,
-            "limit_hi" : 1.5,
+            "limit_lo" : 0.24,
+            "limit_hi" : 1.78,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/ca5_splines.root",
             "use" : true
@@ -106,8 +106,8 @@
             "name" : "MANFFRES",
             "nominal" : 0.95,
             "step" : 0.05,
-            "limit_lo" : 0.53,
-            "limit_hi" : 1.37,
+            "limit_lo" : 0.25,
+            "limit_hi" : 1.65,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/manffres_splines.root",
             "use" : true
@@ -117,7 +117,7 @@
             "nominal" : 1.30,
             "step" : 0.05,
             "limit_lo" : 0.04,
-            "limit_hi" : 2.56,
+            "limit_hi" : 3.4,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/bgres_splines.root",
             "use" : true
@@ -126,8 +126,8 @@
             "name" : "CCNUE",
             "nominal" : 1.00,
             "step" : 0.05,
-            "limit_lo" : 0.93,
-            "limit_hi" : 1.07,
+            "limit_lo" : 0.86,
+            "limit_hi" : 1.14,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/ccnue_splines.root",
             "use" : true
@@ -137,7 +137,7 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 2.19,
+            "limit_hi" : 3.03,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/dis_splines.root",
             "use" : true
@@ -147,7 +147,7 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/cccoh_o_splines.root",
             "use" : true
@@ -157,9 +157,49 @@
             "nominal" : 1.00,
             "step" : 0.05,
             "limit_lo" : 0.02,
-            "limit_hi" : 4.01,
+            "limit_hi" : 5.97,
             "binning" : "binning/tn337_binning.txt",
             "splines" : "splines/ncother_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CC1PI_LO",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 3.52,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splines/cc1pi_lo_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CC1PI_HI",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 3.52,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splines/cc1pi_hi_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CCMULTIPI",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.02,
+            "limit_hi" : 3.52,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splines/ccmultipi_splines.root",
+            "use" : true
+        },
+        {
+            "name" : "CCDIS",
+            "nominal" : 1.00,
+            "step" : 0.05,
+            "limit_lo" : 0.79,
+            "limit_hi" : 1.21,
+            "binning" : "binning/tn337_binning.txt",
+            "splines" : "splines/ccdis_splines.root",
             "use" : true
         },
         {

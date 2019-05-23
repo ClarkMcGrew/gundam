@@ -5,7 +5,7 @@
 #include "CommonStyle.h"
 #include "BinningTools.cc"
 
-void DrawXsecCov(	int Nbins = 22,
+void DrawXsecCov(	int Nbins = 26,
 						string infile = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_xseccovmat.root",
 						string matrixname = "xsec_cov")
 {
@@ -17,7 +17,7 @@ void DrawXsecCov(	int Nbins = 22,
 	double boundary[Nboundary];
 
 	boundary[0] = 9;
-	boundary[1] = 16;
+	boundary[1] = 20;
 	
 
 	//=== Draw an horizontal line for each angular boundaries                                                                   
@@ -70,9 +70,16 @@ void DrawXsecCov(	int Nbins = 22,
 
 
 	//=== Draw covariance matrix
-	TCanvas *c2 = new TCanvas("c2","c2",1400,1000);
+	TCanvas *c2 = new TCanvas("c2","c2",1800,800);
 	c2 -> Draw();
-	cov_mat -> Draw("text colz");
+
+	gROOT->ForceStyle();
+
+	TH2D *cov_mat_th2= new TH2D(*cov_mat);
+	cov_mat_th2 -> SetMinimum(-1.0);
+	cov_mat_th2 -> SetMaximum(1.0);
+
+	cov_mat_th2 -> Draw("text colz");
 
 	for(int il=0; il<Nboundary; il++) orline[il]  -> Draw();
 	for(int il=0; il<Nboundary; il++) verline[il] -> Draw();
@@ -96,7 +103,6 @@ void DrawXsecCov(	int Nbins = 22,
 
 	// for(int il=0; il<Nboundary; il++) orline[il]  -> Draw();
 	// for(int il=0; il<Nboundary; il++) verline[il] -> Draw();
-
 
 	c2 -> Print("plots/covariancematrices/XsecCovMatrix.pdf");
 	// c3 -> Print("plots/covariancematrices/DetCorrMatrix.pdf");

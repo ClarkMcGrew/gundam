@@ -1,9 +1,9 @@
 {
     "output" : {
-        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_fakedata_m30Carbon.root",
+        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_fakedata_m30Res.root",
         "sel_tree" : "selectedEvents",
         "tru_tree" : "trueEvents",
-        "do_fakedata" : 2
+        "do_fakedata" : 6
     },
 
     "highland_files" : [
@@ -78,8 +78,7 @@
                 "D1True"   : "truelepton_mom",
                 "D2True"   : "truelepton_costheta"
             }
-        },
-        {
+        },{
             "fname" : "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6L/output_run8_mc_500toys.root",
             "file_id" : 2,
             "sel_tree" : "default",

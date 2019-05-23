@@ -16,7 +16,9 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc")
+double calculateChi2(TH1D* hist1, TH1D* hist2);
+
+void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& dir_name = "fakedata/statFluc", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
 {
 
 	string infilename = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/%s.root", inputname.c_str());
@@ -35,6 +37,27 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	TFile* fin = new TFile(infilename.c_str());
 	//======================================================================================================
 
+
+	//======================================================================================================  
+	std::cout << "================================================" << std::endl;
+	std::cout << "===== Set binning using BinningTools class =====" << std::endl;
+	
+	BinningTools bin; 
+	bin.SetBinning(fbinning.c_str());
+
+	int Nbins = bin.GetNbins();//Total number of bins
+	int Nbins_costh = bin.GetNbins_costh();//Number of costheta bins
+
+	int* Nmombins = new int[Nbins_costh];//Number of mom bin in each slice of costheta
+	Nmombins = bin.GetMomNBinsInEachCosthSlice();
+
+	double** mombins = new double*[Nbins_costh];//2-d array with momentum binning for each slice of cosine theta
+	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+		for(int nbm=0; nbm<Nmombins[nbcth]; nbm++)
+			mombins[nbcth] = new double[nbm];
+
+	mombins = bin.GetMomBins();
+	//======================================================================================================
 
 
 
@@ -85,7 +108,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			hSample_data[ifgd].push_back(htemp_data);
 		}
 
-	const int Nbins = hSample_prefit[0][0] -> GetNbinsX();
+	// const int Nbins = hSample_prefit[0][0] -> GetNbinsX();
 	string h_title[Nsample+1] = {"muTPC",
 	                           "muTPCpTPC",
 	                           "muTPCpFGD",
@@ -188,16 +211,33 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			hSample_prefit[ifgd][is] -> GetYaxis() -> SetTitle("# events");
 
 			hSample_data[ifgd][is]    -> SetLineColor(kBlack);
-			hSample_prefit[ifgd][is]  -> SetLineColor(kRed);
-			hSample_postfit[ifgd][is] -> SetLineColor(kBlue);
+			hSample_prefit[ifgd][is]  -> SetLineColor(kBlue+1);
+			hSample_postfit[ifgd][is] -> SetLineColor(kRed+1);
 
 			hSample_data[ifgd][is]    -> SetMarkerColor(kBlack);
-			hSample_prefit[ifgd][is]  -> SetMarkerColor(kRed);
-			hSample_postfit[ifgd][is] -> SetMarkerColor(kBlue);
+			hSample_prefit[ifgd][is]  -> SetMarkerColor(kBlue+1);
+			hSample_postfit[ifgd][is] -> SetMarkerColor(kRed+1);
 
 			c_events[ifgd] -> cd(ipad+1);
 
+			// TLine *verline[Nbins_costh];
+			// int binSide = 0;
+			// for(int il = 0; il < Nbins_costh; il++)
+			// {
+			// 	binSide += Nmombins[il];
+			// 	verline[il]               = new TLine(binSide,         0, binSide,         1.3*ymax );
+			// }
+
 			hSample_prefit[ifgd][is] ->Draw();
+
+			// for(int il = 0; il < Nbins_costh-1; il++)
+			// {
+			// 	verline[il] -> SetLineWidth(1);
+			// 	verline[il] -> SetLineStyle(1);
+			// 	verline[il] -> SetLineColor(kGray);
+			// 	verline[il] -> Draw();
+			// }
+
 			hSample_postfit[ifgd][is]->Draw("SAME");
 			hSample_data[ifgd][is]   ->Draw("E SAME"); // with error bars
 
@@ -247,16 +287,33 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		hSample_prefit_allSubDet[is] -> GetYaxis() -> SetTitle("# events");
 
 		hSample_data_allSubDet[is]    -> SetLineColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetLineColor(kRed);
-		hSample_postfit_allSubDet[is] -> SetLineColor(kBlue);
+		hSample_prefit_allSubDet[is]  -> SetLineColor(kBlue+1);
+		hSample_postfit_allSubDet[is] -> SetLineColor(kRed+1);
 
 		hSample_data_allSubDet[is]    -> SetMarkerColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kRed);
-		hSample_postfit_allSubDet[is] -> SetMarkerColor(kBlue);
+		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kBlue+1);
+		hSample_postfit_allSubDet[is] -> SetMarkerColor(kRed+1);
 
 		c_events_allSubDet -> cd(ipad+1);
 
+		// TLine *verline[Nbins_costh];
+		// int binSide = 0;
+		// for(int il = 0; il < Nbins_costh; il++)
+		// {
+		// 	binSide += Nmombins[il];
+		// 	verline[il]               = new TLine(binSide,         0, binSide,         1.3*ymax );
+		// }
+
 		hSample_prefit_allSubDet[is] ->Draw();
+
+		// for(int il = 0; il < Nbins_costh-1; il++)
+		// {
+		// 	verline[il] -> SetLineWidth(1);
+		// 	verline[il] -> SetLineStyle(1);
+		// 	verline[il] -> SetLineColor(kGray);
+		// 	verline[il] -> Draw();
+		// }
+		
 		hSample_postfit_allSubDet[is]->Draw("SAME");
 		hSample_data_allSubDet[is]   ->Draw("E SAME"); // with error bars
 
@@ -301,10 +358,11 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	
 	ipad = 0;
 
-	for(int IS=0; IS<Nsample; IS++)
+	int is=0;
+	for(int ISam=0; ISam<Nsample; ISam++)
 	{
-		if(IS==0) is = Nsample;
-		else      is = IS;
+		if(ISam==0) is = Nsample;
+		else        is = ISam;
 
 		ymax = TMath::Max(hSample_prefit_allSubDet[is]->GetMaximum(), hSample_postfit_allSubDet[is]->GetMaximum());
 		ymax = TMath::Max(hSample_data_allSubDet[is]->GetMaximum(), ymax);
@@ -317,16 +375,33 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		hSample_prefit_allSubDet[is] -> GetYaxis() -> SetTitle("# events");
 
 		hSample_data_allSubDet[is]    -> SetLineColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetLineColor(kRed);
-		hSample_postfit_allSubDet[is] -> SetLineColor(kBlue);
+		hSample_prefit_allSubDet[is]  -> SetLineColor(kBlue+1);
+		hSample_postfit_allSubDet[is] -> SetLineColor(kRed+1);
 
 		hSample_data_allSubDet[is]    -> SetMarkerColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kRed);
-		hSample_postfit_allSubDet[is] -> SetMarkerColor(kBlue);
+		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kBlue+1);
+		hSample_postfit_allSubDet[is] -> SetMarkerColor(kRed+1);
 
 		c_events_allSubDet_grouped -> cd(ipad+1);
 
+		// TLine *verline[Nbins_costh];
+		// int binSide = 0;
+		// for(int il = 0; il < Nbins_costh; il++)
+		// {
+		// 	binSide += Nmombins[il];
+		// 	verline[il]               = new TLine(binSide,         0, binSide,         1.3*ymax );
+		// }
+
 		hSample_prefit_allSubDet[is] ->Draw();
+
+		// for(int il = 0; il < Nbins_costh-1; il++)
+		// {
+		// 	verline[il] -> SetLineWidth(1);
+		// 	verline[il] -> SetLineStyle(1);
+		// 	verline[il] -> SetLineColor(kGray);
+		// 	verline[il] -> Draw();
+		// }
+
 		hSample_postfit_allSubDet[is]->Draw("SAME");
 		hSample_data_allSubDet[is]   ->Draw("E SAME"); // with error bars
 
@@ -336,7 +411,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		pave->Draw();
 		c_events_allSubDet_grouped->Update();
 
-		if(IS==0) IS = 2;
+		if(ISam==0) ISam = 2;
 		ipad++;
 	}
 

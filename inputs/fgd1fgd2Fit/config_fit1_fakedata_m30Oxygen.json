@@ -6,7 +6,7 @@
     "fit_type"  : 1,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "data_POT"  : 9.32945E20,
+    "data_POT"  : 159.6275E20,
     "mc_POT"    : 159.6275E20,
     "rng_seed"  : 12258,
     "num_threads" : 16,

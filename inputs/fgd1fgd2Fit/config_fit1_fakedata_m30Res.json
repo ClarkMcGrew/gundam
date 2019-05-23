@@ -1,7 +1,7 @@
 {
-    "data_file" : "xsllh_fakedata_p30Oxygen.root",
+    "data_file" : "xsllh_fakedata_m30Res.root",
     "mc_file"   : "xsllh_nominal.root",
-    "output_file" : "/outputs/fit1_fakedata_p30Oxygen.root",
+    "output_file" : "/outputs/fit1_fakedata_m30Res.root",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
     "stat_fluc" : false,

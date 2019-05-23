@@ -36,7 +36,7 @@
             "use" : true
         }
     ],
-    "fname_output" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_detcovmat.root",
+    "fname_output" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_detcovmat_NEW.root",
     "single_syst" : false,
     "syst_idx" : 0,
     "var_names" : ["selmu_costheta", "selmu_mom"],

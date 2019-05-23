@@ -30,7 +30,8 @@ using TMatrixDSym = TMatrixTSym<double>;
 class FitObj
 {
 public:
-    FitObj(const std::string& json_config, const std::string& event_tree, bool is_true_tree);
+    FitObj(const std::string& json_config, const std::string& event_tree, bool is_true_tree,
+           bool read_data_file = false);
     ~FitObj();
 
     void InitSignalHist(const std::vector<SignalDef>& v_signal);
@@ -68,8 +69,8 @@ private:
     std::vector<AnaSample*> samples;
 
     std::vector<TH1D> signal_hist;
+    TH1D              ratio_hist; //LM
     std::vector<BinManager> signal_bins;
-    TH1D ratio_hist; //LM
     std::vector<SignalDef> signal_def;
 
     int m_threads;

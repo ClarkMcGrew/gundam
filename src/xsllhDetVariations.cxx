@@ -219,6 +219,7 @@ int main(int argc, char** argv)
         // int accum_level[file.num_toys][file.num_samples];
         int sample[file.num_toys];
         float hist_variables[nvars][file.num_toys];
+        float selmu_mom_range_oarecon[file.num_toys];
         float weight_syst_total[file.num_toys];
         float weight_syst[file.num_toys][file.num_syst];
 
@@ -241,8 +242,9 @@ int main(int argc, char** argv)
 
         // tree_event->SetBranchAddress("accum_level", accum_level);
         tree_event->SetBranchAddress("sample_clst_fgd2layer_xsec", sample);
-        tree_event->SetBranchAddress("weight_syst", weight_syst);
-        tree_event->SetBranchAddress("weight_syst_total", weight_syst_total);
+        tree_event->SetBranchAddress("weight_syst",                weight_syst);
+        tree_event->SetBranchAddress("weight_syst_total",          weight_syst_total);
+        tree_event->SetBranchAddress("selmu_mom_range_oarecon",    selmu_mom_range_oarecon);
         for(unsigned int i = 0; i < nvars; ++i)
             tree_event->SetBranchAddress(var_names[i].c_str(), hist_variables[i]);
 
@@ -256,6 +258,14 @@ int main(int argc, char** argv)
             tree_event->GetEntry(i);
             if(i % 2000 == 0 || i == (num_events - 1))
                 pbar.Print(i, num_events - 1);
+
+            // If the sample is muFGD, then replace selmu_mom by selmu_mom_range_oarecon
+            for(unsigned int t = 0; t < file.num_toys; ++t)
+            {
+                    if(sample[t]== 3 || sample[t]== 4 || sample[t]== 11 || sample[t]== 12 || sample[t]== 19 || sample[t]== 20)
+                        hist_variables[1][t] = selmu_mom_range_oarecon[t];
+            }
+
 
             for(unsigned int t = 0; t < file.num_toys; ++t)
             {

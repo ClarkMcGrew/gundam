@@ -1,10 +1,10 @@
 {
-    "data_file" : "xsllh_fakedata_p30Oxygen.root",
+    "data_file" : "xsllh_nominal.root",
     "mc_file"   : "xsllh_nominal.root",
-    "output_file" : "/outputs/fit1_fakedata_p30Oxygen.root",
+    "output_file" : "/outputs/fit1_asimov_statFluc.root",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
-    "stat_fluc" : false,
+    "stat_fluc" : true,
     "zero_syst" : false,
     "data_POT"  : 159.6275E20,
     "mc_POT"    : 159.6275E20,

@@ -15,8 +15,8 @@
 #include "CommonHeader.h"
 #include "CommonStyle.h"
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+// #define MAX(x, y) (((x) > (y)) ? (x) : (y))
+// #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 
 void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/binning/tn337_binning_GeV_format.txt")
@@ -96,14 +96,14 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 	for(int itar = 0; itar < Ntarget; itar++)
 		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 		{
-			h_xsec_TempPar[itar].push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_FluxPar[itar].push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_XsecPar[itar].push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_DetePar[itar].push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_TempPar_err[itar].push_back( (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
-			h_xsec_FluxPar_err[itar].push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
-			h_xsec_XsecPar_err[itar].push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
-			h_xsec_DetePar_err[itar].push_back( (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_TempPar[itar].push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_FluxPar[itar].push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_XsecPar[itar].push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_DetePar[itar].push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
+			h_xsec_TempPar_err[itar].push_back( (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_FluxPar_err[itar].push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_XsecPar_err[itar].push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			h_xsec_DetePar_err[itar].push_back( (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
 		}
 
 
@@ -118,14 +118,14 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
-		h_ratio_TempPar.push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
-		h_ratio_FluxPar.push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
-		h_ratio_XsecPar.push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
-		h_ratio_DetePar.push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) )) );
-		h_ratio_TempPar_err.push_back( (TH1D*)(fin_TempPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
-		h_ratio_FluxPar_err.push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
-		h_ratio_XsecPar_err.push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
-		h_ratio_DetePar_err.push_back( (TH1D*)(fin_DetePar->Get( Form("CC0piOCRatio_cos_bin%d", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
+		h_ratio_TempPar.push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+		h_ratio_FluxPar.push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+		h_ratio_XsecPar.push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+		h_ratio_DetePar.push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+		h_ratio_TempPar_err.push_back( (TH1D*)(fin_TempPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
+		h_ratio_FluxPar_err.push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
+		h_ratio_XsecPar_err.push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
+		h_ratio_DetePar_err.push_back( (TH1D*)(fin_DetePar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
 	}
 
 	//======================================================================================================
@@ -194,10 +194,8 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Make final plots =====" << std::endl;                                                                                                                      
 
-	TCanvas* c_xsec[Ntarget];
 	TCanvas* c_xsec_err[Ntarget];
 	vector<TLegend*> leg(Ntarget);
-	double max;
 
 	for(int itar = 0; itar < Ntarget; itar++)
 	{
@@ -219,27 +217,27 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 			c_xsec_err[itar] -> cd(nbcth+1);
 
-			if(nbcth!=0) gPad->SetLogx();
+			// if(nbcth!=0) gPad->SetLogx();
 
 			h_xsec_DetePar_err[itar][nbcth] -> Draw("hist");
 			h_xsec_FluxPar_err[itar][nbcth] -> Draw("same hist");
 			h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
 			h_xsec_TempPar_err[itar][nbcth] -> Draw("same hist");
 
-			h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.2);
+			// h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.15);
 
 			if(nbcth==0)
 			{
-				leg[itar] = new TLegend(0.2,0.40,0.8,0.85);
+				leg[itar] = new TLegend(0.2,0.40,0.9,0.85);
 				leg[itar] -> SetFillColor(0);
 				leg[itar] -> SetBorderSize(1);
 				leg[itar] -> SetFillStyle(0);
 				//leg[itar]->SetTextSize(0.075);
-				leg[itar] -> SetHeader("Systematic contributions");
+				leg[itar] -> SetHeader("Total fit error");
 				leg[itar] -> AddEntry(h_xsec_TempPar_err[itar][0], "Statistics", "l");
-				leg[itar] -> AddEntry(h_xsec_FluxPar_err[itar][0], "Flux", "l");
-				leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Cross-section model", "l");
-				leg[itar] -> AddEntry(h_xsec_DetePar_err[itar][0], "Detector", "l");
+				leg[itar] -> AddEntry(h_xsec_FluxPar_err[itar][0], "Stat. + Flux", "l");
+				leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Stat. + Cross-section model", "l");
+				leg[itar] -> AddEntry(h_xsec_DetePar_err[itar][0], "Stat. + Detector", "l");
 				c_xsec_err[itar]->cd(1);
 				leg[itar]->Draw();
 			}
@@ -247,6 +245,96 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 		}
 		c_xsec_err[itar]->Print(Form("plots/%s/xsec_error_singleContrib_%s.pdf", dir_name.c_str(), targetlist[itar].c_str()));
 	}
+
+	double statErr = 0.0;
+	double fluxErr = 0.0;
+	double xsecErr = 0.0;
+	double deteErr = 0.0;
+
+	for(int itar = 0; itar < Ntarget; itar++)
+		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+			for(int nbm=1; nbm<=h_xsec_TempPar_err[itar][nbcth]->GetNbinsX(); nbm++)
+			{
+				statErr = ( h_xsec_TempPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_TempPar_err[itar][nbcth]->GetBinContent(nbm) );
+				fluxErr = ( h_xsec_FluxPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_FluxPar_err[itar][nbcth]->GetBinContent(nbm) );
+				xsecErr = ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) );
+				deteErr = ( h_xsec_DetePar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_DetePar_err[itar][nbcth]->GetBinContent(nbm) );
+
+				if(fluxErr - statErr > 0) h_xsec_FluxPar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( fluxErr - statErr ) );
+				else h_xsec_FluxPar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
+				if(xsecErr - statErr > 0) h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( xsecErr - statErr ) );
+				else h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
+				if(deteErr - statErr > 0) h_xsec_DetePar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( deteErr - statErr ) );
+				else h_xsec_DetePar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
+			}
+
+
+
+	TCanvas* c_xsec_errDiff[Ntarget];
+	vector<TLegend*> legDiff(Ntarget);
+
+	for(int itar = 0; itar < Ntarget; itar++)
+	{
+		c_xsec_errDiff[itar] = new TCanvas(Form("Xsec_error_on_%s", targetlist[itar].c_str()),Form("Xsec_error_on_%s", targetlist[itar].c_str()),1700,1000);
+		c_xsec_errDiff[itar] -> Divide(3,3);
+
+		for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
+		{
+			h_xsec_TempPar_err[itar][nbcth] -> SetTitle(h_title[nbcth]);
+			h_xsec_TempPar_err[itar][nbcth] -> GetXaxis() -> SetTitle("p^{#mu}_{true} [GeV/c]");
+			h_xsec_TempPar_err[itar][nbcth] -> GetYaxis() -> SetTitle("Relative fit error");
+
+			// h_xsec_TempPar_err[itar][nbcth] -> SetLineWidth(2);
+
+			h_xsec_TempPar_err[itar][nbcth] -> SetLineColor(kBlack);
+			h_xsec_FluxPar_err[itar][nbcth] -> SetLineColor(kBlue);
+			h_xsec_XsecPar_err[itar][nbcth] -> SetLineColor(kRed);
+			h_xsec_DetePar_err[itar][nbcth] -> SetLineColor(kGreen+1);
+
+			c_xsec_errDiff[itar] -> cd(nbcth+1);
+
+			// if(nbcth!=0) gPad->SetLogx();
+			// if(nbcth!=0) gPad->SetLogy();
+
+			h_xsec_TempPar_err[itar][nbcth] -> Draw("hist");
+			h_xsec_FluxPar_err[itar][nbcth] -> Draw("same hist");
+			h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
+			h_xsec_DetePar_err[itar][nbcth] -> Draw("same hist");
+
+			// if(nbcth!=0) h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.08);
+
+			if(nbcth==0)
+			{
+				// h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.15);
+
+				leg[itar] = new TLegend(0.2,0.40,0.9,0.85);
+				leg[itar] -> SetFillColor(0);
+				leg[itar] -> SetBorderSize(1);
+				leg[itar] -> SetFillStyle(0);
+				//leg[itar]->SetTextSize(0.075);
+				leg[itar] -> SetHeader("Estimated single contributions");
+				leg[itar] -> AddEntry(h_xsec_TempPar_err[itar][0], "Statistics", "l");
+				leg[itar] -> AddEntry(h_xsec_FluxPar_err[itar][0], "Flux", "l");
+				leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Cross-section model", "l");
+				leg[itar] -> AddEntry(h_xsec_DetePar_err[itar][0], "Detector", "l");
+				c_xsec_errDiff[itar]->cd(1);
+				leg[itar]->Draw();
+			}
+
+		}
+		c_xsec_errDiff[itar]->Print(Form("plots/%s/xsec_error_singleContrib_%s_diff.pdf", dir_name.c_str(), targetlist[itar].c_str()));
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
