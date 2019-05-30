@@ -310,8 +310,14 @@ int main(int argc, char** argv)
 
     for(int i = 0; i < nbins_reco; ++i)
     {
-        if(cov_reco(i,i) == 0 || std::isnan(cov_reco(i,i)))
-            cov_reco(i,i) = 0.005;
+        for(int j = 0; j < nbins_reco; ++j)
+        {
+            if(cov_reco(i,i) == 0 || std::isnan(cov_reco(i,i)))
+                cov_reco(i,i) = 0.005;
+
+            if(std::isnan(cov_reco(i,j)))
+                cov_reco(i,j) = 0;
+        }
     }
 
     for(int i = 0; i < nbins_reco; ++i)

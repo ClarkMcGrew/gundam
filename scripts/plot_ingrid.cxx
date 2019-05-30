@@ -26,7 +26,7 @@ void plot_ingrid_topology(const std::string fname)
     TTree* ing_tree = (TTree*)input_file -> Get("wtree");
 
     gStyle->SetPadTopMargin(0.10);
-    gStyle->SetPadRightMargin(0.10);
+    gStyle->SetPadRightMargin(0.12);
     gStyle->SetPadLeftMargin(0.14);
     gStyle->SetPadBottomMargin(0.14);
     gStyle->SetLabelSize(0.050, "xyzt");
@@ -191,6 +191,8 @@ void plot_ingrid_topology(const std::string fname)
                 break;
         }
 
+        //event_weight *= 1.16;
+
         if(selected_sample == 0 && track_sample < 4)
         //if(selected_sample == 1 && track_sample < 4)
             sel += event_weight;
@@ -348,7 +350,7 @@ void plot_ingrid_reaction(const std::string fname)
     TTree* ing_tree = (TTree*)input_file -> Get("wtree");
 
     gStyle->SetPadTopMargin(0.10);
-    gStyle->SetPadRightMargin(0.10);
+    gStyle->SetPadRightMargin(0.12);
     gStyle->SetPadLeftMargin(0.14);
     gStyle->SetPadBottomMargin(0.14);
     gStyle->SetLabelSize(0.050, "xyzt");
@@ -411,6 +413,13 @@ void plot_ingrid_reaction(const std::string fname)
     TH2D* h2d_angle = new TH2D("h2d_angle", "", 30, 0, 90, 30, 0, 90);
     TH2D* h2d_dist = new TH2D("h2d_dist", "", 50, 0, 100, 30, 0, 1.5);
     //TH2D* h2d_dist = new TH2D("h2d_dist", "", 15, 0, 1.5, 15, 0, 1.5);
+
+    TH1D* h1d_sel_mom = new TH1D("h1d_sel_mom", "", 40, 0, 5);
+    TH1D* h1d_sel_cos = new TH1D("h1d_sel_cos", "", 30, 0, 90);
+    TH1D* h1d_gen_mom = new TH1D("h1d_gen_mom", "", 40, 0, 5);
+    TH1D* h1d_gen_cos = new TH1D("h1d_gen_cos", "", 30, 0, 90);
+    TH1D* h1d_eff_mom = new TH1D("h1d_eff_mom", "", 40, 0, 5);
+    TH1D* h1d_eff_cos = new TH1D("h1d_eff_cos", "", 30, 0, 90);
 
     TH1D* h1d_angle_reac0 = new TH1D("angle_reac0", "", 30, 0, 90);
     h1d_angle_reac0 -> SetFillColor(2); //kOrange+10
@@ -515,22 +524,30 @@ void plot_ingrid_reaction(const std::string fname)
                 break;
         }
 
-        event_weight *= 1.16;
+        //event_weight *= 1.16;
 
-        //if(selected_sample == 0 && track_sample < 4)
-        if(selected_sample == 1 && track_sample < 4)
+        if(selected_sample == 0 && track_sample < 6)
+        //if(selected_sample == 1 && track_sample < 4)
+        {
             sel += event_weight;
+            h1d_sel_mom->Fill(pmu_true, event_weight);
+            h1d_sel_cos->Fill(angle_true, event_weight);
+        }
 
-        //if(is_fv && !is_anti && !is_nue && fsi_int < 3 && new_event == 1)
-        if(is_fv && !is_anti && !is_nue && fsi_int == 3 && new_event == 1)
+        if(is_fv && !is_anti && !is_nue && fsi_int < 3 && new_event == 1)
+        //if(is_fv && !is_anti && !is_nue && fsi_int == 3 && new_event == 1)
+        {
             gen += event_weight;
+            h1d_gen_mom->Fill(pmu_true, event_weight);
+            h1d_gen_cos->Fill(angle_true, event_weight);
+        }
 
-        //if(selected_sample == 0 && fsi_int < 3 && !is_anti && !is_nue && track_sample < 4)
-        if(selected_sample == 1 && fsi_int == 3 && !is_anti && !is_nue && track_sample < 4)
+        if(selected_sample == 0 && fsi_int < 3 && !is_anti && !is_nue && track_sample < 6)
+        //if(selected_sample == 1 && fsi_int == 3 && !is_anti && !is_nue && track_sample < 4)
             sig += event_weight;
 
-        //if(selected_sample == 0 && track_sample < 4)
-        if(selected_sample == 1 && track_sample < 4)
+        if(selected_sample == 0 && track_sample < 6)
+        //if(selected_sample == 1 && track_sample < 4)
         {
             h1d_angle->Fill(angle_reco, event_weight);
             h1d_dist->Fill(pmu_reco, event_weight);
@@ -666,5 +683,31 @@ void plot_ingrid_reaction(const std::string fname)
     h2d_dist->GetYaxis()->SetTitle("p^{true}_{#mu} (GeV/c)");
     h2d_dist->Draw("colz");
     g->Print("ingrid_dist_resolution.pdf");
+
+    TCanvas* eff_mom = new TCanvas("eff_mom","eff_mom",1200,900);
+    h1d_eff_mom->Divide(h1d_sel_mom, h1d_gen_mom);
+    h1d_eff_mom->SetLineColor(kBlack);
+    h1d_eff_mom->SetLineWidth(2);
+    h1d_eff_mom->SetMarkerColor(kBlack);
+    h1d_eff_mom->SetMarkerSize(1.5);
+    h1d_eff_mom->SetMarkerStyle(kFullCircle);
+    h1d_eff_mom->Draw();
+    h1d_eff_mom->GetXaxis()->SetTitle("p^{true}_{#mu} (GeV/c)");
+    h1d_eff_mom->GetYaxis()->SetTitle("Efficiency");
+    h1d_eff_mom->GetYaxis()->SetRangeUser(0.0, 1.0);
+    eff_mom->Print("ingrid_eff_mom.pdf");
+
+    TCanvas* eff_cos = new TCanvas("eff_cos","eff_cos",1200,900);
+    h1d_eff_cos->Divide(h1d_sel_cos, h1d_gen_cos);
+    h1d_eff_cos->SetLineColor(kBlack);
+    h1d_eff_cos->SetLineWidth(2);
+    h1d_eff_cos->SetMarkerColor(kBlack);
+    h1d_eff_cos->SetMarkerSize(1.5);
+    h1d_eff_cos->SetMarkerStyle(kFullCircle);
+    h1d_eff_cos->Draw();
+    h1d_eff_cos->GetXaxis()->SetTitle("#theta^{true}_{#mu} (degrees)");
+    h1d_eff_cos->GetYaxis()->SetTitle("Efficiency");
+    h1d_eff_cos->GetYaxis()->SetRangeUser(0.0, 1.0);
+    eff_cos->Print("ingrid_eff_cos.pdf");
 }
 

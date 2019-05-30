@@ -1,15 +1,15 @@
 {
-    "data_file" : "xsllh_nominal_v3.root",
-    "mc_file"   : "xsllh_nominal_v3.root",
+    "data_file" : "xsllh_nominal_full.root",
+    "mc_file"   : "xsllh_nominal_full.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
     "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "data_POT"  : 5.76E20,
-    "mc_POT"    : 1.32E21,
+    "data_POT"  : 11.529E20,
+    "mc_POT"    : 172.409E20,
     "rng_seed"  : 12257,
-    "num_threads" : 8,
+    "num_threads" : 16,
     "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
     "min_settings" : {
         "minimizer" : "Minuit2",
@@ -30,12 +30,12 @@
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "combined_detcov_v2.root",
+        "file" : "detcov/combined_detcov.root",
         "matrix" : "det_cov",
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "xsec_cov" : {
         "file" : "xsec_cov_normalized.root",
@@ -59,7 +59,7 @@
                 {
                     "name" : "nd280_CC0pi",
                     "binning" : "binning/analysis_binning.txt",
-                    "signal" : {"sample" : [-1,0,1,2,3,4,5,6], "topology" : [0,1,2]},
+                    "signal" : {"sample" : [-1,0,1,2,3,4,5,6,7], "topology" : [0,1,2]},
                     "use" : true
                 },
                 {
@@ -141,6 +141,13 @@
             "name" : "CCDIS",
             "detector" : "ND280",
             "binning" : "binning/sample6_bins.txt",
+            "use_sample" : true
+        },
+        {
+            "cut_branch" : 7,
+            "name" : "CCMichel",
+            "detector" : "ND280",
+            "binning" : "binning/sample7_bins.txt",
             "use_sample" : true
         },
         {

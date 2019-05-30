@@ -1,26 +1,26 @@
 {
     "files" : [
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/hl_files/fgd1/highland_systematics.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run2-4.root",
             "tree_name" : "all_syst",
             "detector": "FGD1",
             "num_toys" : 500,
-            "num_syst" : 15,
-            "num_samples" : 10,
-            "samples" : {"0": [0], "1": [1], "2": [2], "3": [3], "4": [4], "5": [5], "6": [6]},
-            "cuts" : [7,8,9,8,7,5,4,7,8,7],
+            "num_syst" : 11,
+            "num_samples" : 12,
+            "samples" : {"0": [0], "1": [1], "2": [2,9], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7]},
+            "cuts" : [7,8,9,10,9,5,4,6,6,7,10,9],
             "use" : true
         },
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/hl_files/fgd1/highland_systematics.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run8.root",
             "tree_name" : "all_syst",
-            "detector": "FGD2",
+            "detector": "FGD1",
             "num_toys" : 500,
-            "num_syst" : 15,
-            "num_samples" : 10,
-            "samples" : {"7": [0], "8": [1], "9": [2], "10": [3], "11": [4], "12": [5], "13": [6]},
-            "cuts" : [7,8,9,8,7,5,4,7,8,7],
-            "use" : false
+            "num_syst" : 11,
+            "num_samples" : 12,
+            "samples" : {"0": [0], "1": [1], "2": [2,9], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7]},
+            "cuts" : [7,8,9,10,9,5,4,6,6,7,10,9],
+            "use" : true
         }
     ],
 
@@ -31,7 +31,8 @@
          "3" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample3_bins.txt",
          "4" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample4_bins.txt",
          "5" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample5_bins.txt",
-         "6" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample6_bins.txt"
+         "6" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample6_bins.txt",
+         "7" : "/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter/inputs/ingridFit/binning/sample7_bins.txt"
     },
     "fname_output" : "cov.root",
     "single_syst" : false,

@@ -20,7 +20,7 @@ void make_flux_plots(const std::string& input_filename)
     gStyle->SetOptStat(0);
     gStyle->SetOptFit(0);
 
-    double flux_scaling = 1.0 / 0.58;
+    double flux_scaling = 1.0 / 1.1529;
     TH1D* flux_numu = (TH1D*)file->Get("flux_fine_numu");
     flux_numu->Scale(flux_scaling);
     TH1D* flux_numubar = (TH1D*)file->Get("flux_fine_numubar");

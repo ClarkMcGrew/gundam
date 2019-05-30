@@ -229,9 +229,12 @@ int main(int argc, char** argv)
         tree_event->SetBranchAddress("NTOYS", &NTOYS);
         tree_event->SetBranchAddress("accum_level", accum_level);
         tree_event->SetBranchAddress("weight_syst", weight_syst);
-        tree_event->SetBranchAddress("weight_syst_total_noflux", weight_syst_total_noflux);
+        tree_event->SetBranchAddress("weight_syst_total", weight_syst_total_noflux);
         for(unsigned int i = 0; i < nvars; ++i)
             tree_event->SetBranchAddress(var_names[i].c_str(), hist_variables[i]);
+
+        float selmu_mom_range;
+        tree_event->SetBranchAddress("selmu_mom_range_oarecon", &selmu_mom_range);
 
         unsigned int rejected_weights = 0;
         unsigned int total_weights    = 0;
@@ -256,6 +259,10 @@ int main(int argc, char** argv)
                     {
                         if(accum_level[t][branch] > file.cuts[branch])
                         {
+
+                            if(branch == 3 || branch == 4)
+                                hist_variables[1][t] = selmu_mom_range;
+
                             int idx = -1;
                             if(do_projection)
                                 idx = hist_variables[var_plot][t];

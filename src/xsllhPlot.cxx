@@ -239,12 +239,16 @@ int main(int argc, char** argv)
                 {
                     temp_file->GetObject(cov_name.c_str(), cov_mat);
 
-                    calc_chisq.SetCovariance(*cov_mat);
-                    chisq = calc_chisq.CalcChisqCov(*h1, *h2);
+                    if(cov_mat != nullptr)
+                    {
+                        calc_chisq.SetCovariance(*cov_mat);
+                        chisq = calc_chisq.CalcChisqCov(*h1, *h2);
+                    }
                 }
                 else
                 {
-                    chisq = calc_chisq.CalcChisqStat(*h1, *h2);
+                    if(cov_mat != nullptr)
+                        chisq = calc_chisq.CalcChisqStat(*h1, *h2);
                 }
 
                 //label = label + std::to_string(chisq);

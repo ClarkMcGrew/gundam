@@ -81,7 +81,7 @@ int main(int argc, char** argv)
               << TAG << "Welcome to the Super-xsLLh Tree Converter.\n"
               << TAG << "Initializing the tree machinery..." << std::endl;
 
-    const double POT_norm = 0.4363;
+    const double POT_norm = 0.0669;
     bool do_apply_weights = false;
     std::string json_file;
 
@@ -257,6 +257,12 @@ int main(int argc, char** argv)
                 }
             }
 
+            if(reaction < 0 || topology < 0)
+            {
+                npassed--;
+                continue;
+            }
+
             if(cut_branch == 3 || cut_branch == 4)
                 D1Reco = selmu_mom_range;
 
@@ -300,6 +306,9 @@ int main(int argc, char** argv)
         {
             hl2_trutree -> GetEntry(i);
             cut_branch = -1;
+
+            if(reaction_true < 0 || topology_true < 0)
+                continue;
 
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;

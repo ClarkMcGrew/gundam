@@ -27,7 +27,7 @@ void GlobalStyle::SetDefault()
     pad_top_margin = 0.14;
     pad_right_margin = 0.14;
     pad_bottom_margin = 0.14;
-    pad_left_margin = 0.14;
+    pad_left_margin = 0.16;
 
     global_font = 42;
     text_font = global_font;

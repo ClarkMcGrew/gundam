@@ -4,13 +4,15 @@ void weight_flux(const std::string& flux_path)
     const double run3b_pot = 0.021727;
     const double run3c_pot = 0.136447;
     const double run4_pot = 0.342548;
-    const double total = run2_pot + run3b_pot + run3c_pot + run4_pot;
+    const double run8_pot = 0.573;
+    const double total = run2_pot + run3b_pot + run3c_pot + run4_pot + run8_pot;
 
     std::cout << "POT Info (10^21)" << std::endl;
     std::cout << "Run2 : " << run2_pot << std::endl;
     std::cout << "Run3b: " << run3b_pot << std::endl;
     std::cout << "Run3c: " << run3c_pot << std::endl;
     std::cout << "Run4 : " << run4_pot << std::endl;
+    std::cout << "Run8 : " << run8_pot << std::endl;
     std::cout << "Total: " << total << std::endl;
 
     std::string run2_file = flux_path + "/run2/nd5_tuned13av2_13anom_run2_numode_fine.root";
@@ -33,10 +35,16 @@ void weight_flux(const std::string& flux_path)
     TH1D* h_flux_run4 = (TH1D*)flux_run4 -> Get("enu_nd5_tuned13a_numu");
     h_flux_run4 -> Scale(run4_pot);
 
+    std::string run8_file = flux_path + "/run8/nd5_tuned13av2_13anom_run8_numode_fine.root";
+    TFile* flux_run8 = TFile::Open(run8_file.c_str(), "READ");
+    TH1D* h_flux_run8 = (TH1D*)flux_run8 -> Get("enu_nd5_tuned13a_numu");
+    h_flux_run8 -> Scale(run8_pot);
+
     TH1D* h_flux_total_numu = (TH1D*)h_flux_run2 -> Clone("h_flux_total_numu");
     h_flux_total_numu -> Add(h_flux_run3b);
     h_flux_total_numu -> Add(h_flux_run3c);
     h_flux_total_numu -> Add(h_flux_run4);
+    h_flux_total_numu -> Add(h_flux_run8);
 
     TH1D* h_flux_nom_numu = nullptr;
 
@@ -47,8 +55,8 @@ void weight_flux(const std::string& flux_path)
                             1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
     h_flux_nom_numu = (TH1D*)h_flux_total_numu -> Rebin(nbins, "h_flux_nom_numu", flux_bins);
 
-    TFile* output = TFile::Open("./weighted_flux13av2_run2-4.root", "RECREATE");
+    TFile* output = TFile::Open("./weighted_flux13av2_run248.root", "UPDATE");
     output -> cd();
-    h_flux_total_numu -> Write("flux_fine");
-    h_flux_nom_numu -> Write("flux_rebin");
+    h_flux_total_numu -> Write("flux_fine_numu");
+    h_flux_nom_numu -> Write("flux_rebin_numu");
 }

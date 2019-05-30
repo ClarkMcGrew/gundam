@@ -7,13 +7,46 @@
 
     "highland_files" : [
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/v12r15/highland2/numuCCZeroPiAnalysis/v2r2/Linux-x86_64/hl_files/fgd1/highland_systematics.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run2-4.root",
             "file_id" : 0,
             "sel_tree" : "default",
             "tru_tree" : "truth",
-            "num_branches" : 10,
-            "cut_level" : [7,8,9,8,7,5,4,7,8,7],
-            "samples" : {"0": [0], "1": [1], "2": [2], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7], "8": [8], "9": [9]},
+            "num_branches" : 12,
+            "cut_level" : [7,8,9,10,9,5,4,6,6,7,10,9],
+            "samples" : {"0": [0], "1": [1], "2": [2,9], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7]},
+            "use" : true,
+            "sel_var" : {
+                "reaction" : "reaction",
+                "topology" : "mectopology",
+                "target"   : "target",
+                "nutype"   : "nutype",
+                "enu_true" : "nu_trueE",
+                "enu_reco" : "selmu_nuErecQE",
+                "weight"   : "weight_syst_total",
+                "D1True"   : "truelepton_mom",
+                "D1Reco"   : "selmu_mom",
+                "D2True"   : "truelepton_costheta",
+                "D2Reco"   : "selmu_costheta"
+            },
+            "tru_var" : {
+                "reaction" : "reaction",
+                "topology" : "mectopology",
+                "target"   : "target",
+                "nutype"   : "nutype",
+                "enu_true" : "nu_trueE",
+                "weight"   : "weight",
+                "D1True"   : "truelepton_mom",
+                "D2True"   : "truelepton_costheta"
+            }
+        },
+        {
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run8.root",
+            "file_id" : 1,
+            "sel_tree" : "default",
+            "tru_tree" : "truth",
+            "num_branches" : 12,
+            "cut_level" : [7,8,9,10,9,5,4,6,6,7,10,9],
+            "samples" : {"0": [0], "1": [1], "2": [2,9], "3": [3], "4": [4], "5": [5], "6": [6], "7": [7]},
             "use" : true,
             "sel_var" : {
                 "reaction" : "reaction",
