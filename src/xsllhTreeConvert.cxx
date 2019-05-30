@@ -324,7 +324,7 @@ int main(int argc, char** argv)
             if(do_apply_weights)
                 weight_true = weight_true * GetTestEnuWeight(enu_true);
 
-            weight *= file.pot_norm;
+            weight_true *= file.pot_norm;
             out_trutree -> Fill();
 
             if(i % 2000 == 0 || i == (nevents-1))

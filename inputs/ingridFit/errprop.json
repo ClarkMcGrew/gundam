@@ -16,7 +16,7 @@
     },
     "sig_norm" : {
         "nd280_CC0pi" : {
-            "pot_norm" : 0.0669,
+            "pot_norm" : 1.0,
             "flux_file" : "weighted_flux13av2_run248.root",
             "flux_hist" : "flux_rebin_numu",
             "flux_int"  : 2.19E13,
