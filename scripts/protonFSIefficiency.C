@@ -1,4 +1,4 @@
-//  Usage: root 'protonFSIefficiency.C+()'
+//  Usage: root -b -q 'protonFSIefficiency.C+()'
 
 #include "BinningTools.cc"
 #include "CommonHeader.h"
@@ -288,7 +288,7 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 		c_error -> cd(nbcth+1);
 		if(nbcth!=0) gPad->SetLogx();
 
-		h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.15);
+		h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.4);
 		// h_eff_error[nbcth] -> GetYaxis() -> SetRangeUser(-0.15, 0.15);
 		h_eff_error[nbcth] -> Draw("hist"); 
 	}
@@ -313,9 +313,9 @@ void GetTrueEvents(TTree* tree, std::vector< TH1D* > h_events, double* CosthBins
 	float mom, costh;
 	int costhbin;
 
-	tree -> SetBranchAddress("fgdtargetCCZeroPi",          &fgdtarget);
-	tree -> SetBranchAddress("truelepton_mom",             &mom);
-	tree -> SetBranchAddress("truelepton_costheta",        &costh);
+	tree -> SetBranchAddress("fgdtargetCCZeroPi",   &fgdtarget);
+	tree -> SetBranchAddress("truelepton_mom",      &mom);
+	tree -> SetBranchAddress("truelepton_costheta", &costh);
 
 	int Nevents = 0;
 	for(int i=0; i<tree->GetEntries(); i++)
@@ -353,7 +353,8 @@ void GetSelectedEvents(TTree* tree, std::vector< TH1D* > h_events, double* Costh
 
 		int costhbin = FindCosthBin(costh, CosthBins, Nbins_costh);
 
-		if(sample>0 && sample<=8 && fgdtarget==3 && weight>0.0 && weight<10.0) // if selected event
+		if( (sample==1 || sample==2 || sample==3 || sample==4 || sample==5 || sample==9 || sample==10 || sample==11 ) // if selected event
+		    && fgdtarget==3 && weight>0.0 && weight<10.0 ) // if signal
 		{
 			h_events[costhbin] -> Fill(mom, weight);
 			Nevents++;

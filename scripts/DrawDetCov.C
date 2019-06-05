@@ -1,5 +1,6 @@
 // Usage:
 // root 'DrawDetCov.C+()'
+// root -b -q 'DrawDetCov.C+()'
 
 #include "CommonHeader.h"
 #include "CommonStyle.h"
@@ -20,9 +21,9 @@ void DrawDetCov(	int NsamplesTot = 24,
 	//=== Set binning using BinningTools class                                                                                
 	// BinningTools bin;
 	// bin.SetBinning(fbinning.c_str());
-	int Nbins[] = {58, 58, 58, 15, 25, 58, 58, 58,
-		           58, 58, 58, 15, 25, 58, 58, 58,
-		           58, 58, 58, 15, 25, 58, 58, 58 };
+	int Nbins[] = {58, 58, 58, 10, 16, 58, 58, 58,
+		           58, 58, 58, 10, 16, 58, 58, 58,
+		           58, 58, 58, 10, 16, 58, 58, 58 };
 
 	int Nsamples = NsamplesTot - 1;
 	int Nfgds = 3;

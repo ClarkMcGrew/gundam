@@ -54,7 +54,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
     std::cout << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
-    std::cout << "-------- Drawing result and errors --------" << std::endl;
+    std::cout << "-------- Drawing parameter results --------" << std::endl;
     std::cout << "-------------------------------------------" << std::endl;
     std::cout << std::endl;
     
@@ -66,7 +66,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
         std::cout << "----- for " << title << " (" << name << ") -----" << std::endl;
 
-        std::cout << "----- get histograms -----" << std::endl;
+        // std::cout << "----- get histograms -----" << std::endl;
 
         ss.str("");
         ss << "hist_" << name << "_prior";
@@ -74,7 +74,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
         ss.str("");
         ss << "hist_" << name << "_iter0";
-        TH1D* h_iter0;
+        TH1D* h_iter0 = new TH1D();
         if(drawParThrow) h_iter0 = (TH1D*)file -> Get(ss.str().c_str());
 
         ss.str("");
@@ -114,7 +114,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
         }
 
 
-        std::cout << "----- Draw parameters and errors -----" << std::endl;
+        // std::cout << "----- Draw parameters and errors -----" << std::endl;
 
         TCanvas *c = new TCanvas("c", "c", 1400, 900);
         // gStyle -> SetOptTitle(0);
@@ -188,7 +188,7 @@ void DrawParameters(const std::string& file_name = "fit3_statFluc", const std::s
 
 
 
-        std::cout << "----- Draw errors only -----" << std::endl;
+        // std::cout << "----- Draw errors only -----" << std::endl;
 
         // Divide by parameter value to have the relative error
         if(name == "par_xsec") // for xsec parameters

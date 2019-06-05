@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set cmake and gcc version required for xsec llh fitter
-# ccenv cmake 3.11.0
+ccenv cmake 3.11.0
 ccenv gcc 4.8.5
 export CC=/pbs/software/scientific-6-x86_64/gcc/4.8.5/bin/gcc
 export CXX=/pbs/software/scientific-6-x86_64/gcc/4.8.5/bin/g++
@@ -21,10 +21,9 @@ BUILDSETUP="${XSLLHFITTER}/build/$(uname)/setup.sh"
 
 echo "[INFO]: XSLLHFITTER root expected at: ${XSLLHFITTER}"
 
-source ${XSLLHFITTER}/cmake/CMakeSetup.sh
+#source /usr/local/root/pro/bin/thisroot.sh
 
-echo "[INFO]: ROOT Version `root-config --version` from: ${ROOTSYS}"
-echo "[INFO]: gcc Version `gcc --version` from: ${CXX}"
+source ${XSLLHFITTER}/cmake/CMakeSetup.sh
 
 if [ ! -e ${BUILDSETUP} ]; then
   echo "[INFO]: Cannot find build setup script where expected: ${BUILDSETUP}"
@@ -33,6 +32,11 @@ else
   source ${BUILDSETUP}
   echo "[INFO]: \$ which xsllhFit: $(which xsllhFit)"
 fi
+
+echo "[INFO]: gcc Version `gcc --version` from: ${CXX}"
+echo "[INFO]: ROOT Version `root-config --version` from: ${ROOTSYS}"
+
+
 
 unset SETUPDIR
 unset BUILDSETUP
