@@ -814,7 +814,8 @@ void XsecCalc::SaveSignalHist(TFile* file, std::vector<TH1D> v_hists, const std:
                 temp.SetBinError(l, v_hists.at(id).GetBinError(l+offset));
             }
             offset += temp.GetNbinsX();
-            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            // temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+            temp.GetXaxis()->SetRange(1,temp.GetNbinsX()); //LM
             temp.Write();
         }
     }
@@ -866,7 +867,8 @@ void XsecCalc::SaveSignalHist(TFile* file, TH1D v_hists, const std::string suffi
             temp.SetBinError(l, v_hists.GetBinError(l+offset));
         }
         offset += temp.GetNbinsX();
-        temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+        // temp.GetXaxis()->SetRange(1,temp.GetNbinsX()-1);
+        temp.GetXaxis()->SetRange(1,temp.GetNbinsX()); //LM
         temp.Write();
     }
 }

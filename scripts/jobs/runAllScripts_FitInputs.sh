@@ -27,10 +27,10 @@ root -b -q 'DrawDetCov.C+()'
 # DON'T FORGET : generate splines with T2KReWeight
 
 # Get event selection from Highland2 outputs
-xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree.json
+xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_nominal_normalised.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_genie.json
-xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_nuwro.json
+# xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_nuwro.json
 
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_p30Carbon.json
 xsllhTreeConvert -j ../inputs/fgd1fgd2Fit/tree_fakedata_m30Carbon.json

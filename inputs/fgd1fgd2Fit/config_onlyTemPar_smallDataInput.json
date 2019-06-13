@@ -1,15 +1,15 @@
 {
-    "data_file" : "xsllh_fakedata_p30Res.root",
-    "mc_file"   : "xsllh_nominal.root",
-    "output_file" : "/outputs/fit1_fakedata_p30Res.root",
+    "data_file" : "xsllh_fakedata.root",
+    "mc_file"   : "xsllh_fakedata.root",
+    "output_file" : "/outputs/fit1_asimov_onlyTemPar.root",
     "input_dir" : "/inputs/fgd1fgd2Fit/",
     "fit_type"  : 1,
-    "stat_fluc" : false,
+    "stat_fluc" : true,
     "zero_syst" : false,
     "data_POT"  : 1.0,
     "mc_POT"    : 1.0,
     "rng_seed"  : 12258,
-    "num_threads" : 16,
+    "num_threads" : 1,
     "sample_topology" : ["cc0pi", "cc1pi", "ccother", "bkg", "oofv"],
     "min_settings" : {
         "minimizer" : "Minuit2",
@@ -17,7 +17,7 @@
         "print_level" : 2,
         "tolerance" : 1E-1,
         "strategy" : 1,
-        "max_iter" : 1E6,
+        "max_iter" : 2E3,
         "max_fcn" : 1E9
     },
     "flux_cov" : {
@@ -27,7 +27,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "det_cov" : {
         "file" : "xsllh_detcovmat.root",
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsllh_xseccovmat.root",
@@ -43,11 +43,11 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
-        "enable" : false,
-        "strength" : 0.011,
+        "enable" : true,
+        "strength" : 1.0,
         "method" : "kL2Reg"
     },
     "detectors" : [

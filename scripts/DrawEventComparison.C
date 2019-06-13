@@ -173,9 +173,12 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	std::cout << "================================================" << std::endl;
 	std::cout << "===== Get pre-fit and post-fit chi2 =====" << std::endl;
 	
-	TH1D* chi2_tot = (TH1D*)(fin->Get("chi2_tot_periter"));
-	Double_t chi2_tot_prefit  = chi2_tot -> GetBinContent(1);
-	Double_t chi2_tot_postfit = chi2_tot -> GetBinContent(chi2_tot->GetNbinsX()-1);
+	TH1D* chi2_tot  = (TH1D*)(fin->Get("chi2_tot_periter"));
+	TH1D* chi2_stat = (TH1D*)(fin->Get("chi2_stat_periter"));
+	Double_t chi2_tot_prefit   = chi2_tot  -> GetBinContent(1);
+	Double_t chi2_tot_postfit  = chi2_tot  -> GetBinContent(chi2_tot->GetNbinsX()-1);
+	Double_t chi2_stat_prefit  = chi2_stat -> GetBinContent(1);
+	Double_t chi2_stat_postfit = chi2_stat -> GetBinContent(chi2_tot->GetNbinsX()-1);
 	//======================================================================================================
 
 
@@ -249,8 +252,8 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 				leg[ifgd] -> SetFillStyle(0);
 				//leg[ifgd]->SetTextSize(0.075);
 				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],        "(Fake) data",    "lep");
-				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
-				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
+				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
+				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 				c_events[ifgd]->cd(6);
 				leg[ifgd]->Draw();
 			}
@@ -331,8 +334,8 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			leg_allSubDet -> SetFillStyle(0);
 			//leg_allSubDet->SetTextSize(0.075);
 			leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
-			leg_allSubDet -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
-			leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
+			leg_allSubDet -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
+			leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 			c_events_allSubDet->cd(6);
 			leg_allSubDet->Draw();
 		}
@@ -421,8 +424,8 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	leg_allSubDet_grouped -> SetFillStyle(0);
 	//leg_allSubDet_grouped->SetTextSize(0.075);
 	leg_allSubDet_grouped -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
-	leg_allSubDet_grouped -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit, #chi^{2}  = %d", (int)chi2_tot_prefit), "l");
-	leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2} = %d", (int)chi2_tot_postfit),"l");
+	leg_allSubDet_grouped -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
+	leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 	c_events_allSubDet_grouped->cd(7);
 	leg_allSubDet_grouped->Draw();
 

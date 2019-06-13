@@ -44,6 +44,7 @@ struct HL2FileOpt
     std::string tru_tree;
     unsigned int file_id;
     unsigned int num_branches;
+    double pot_norm;
     std::vector<int> cuts;
     std::map<int, std::vector<int>> samples;
     std::map<int, int> topologymap;
@@ -189,6 +190,10 @@ int main(int argc, char** argv)
             f.file_id = file["file_id"];
             f.num_branches = file["num_branches"];
             // f.cuts = file["cut_level"].get<std::vector<int>>();
+            f.pot_norm = file["pot_norm"];
+            // double DT_POT = file["pot_dt"];
+            // double MC_POT = file["pot_mc"];
+            // f.pot_norm = DT_POT/MC_POT;
 
             std::map<std::string, std::vector<int>> temp_json_samp = file["samples"];
             for(const auto& kv : temp_json_samp)
@@ -216,6 +221,7 @@ int main(int argc, char** argv)
                   << TAG << "File ID: " << file.file_id << std::endl
                   << TAG << "Selected tree: " << file.sel_tree << std::endl
                   << TAG << "Truth tree: " << file.tru_tree << std::endl
+                  << TAG << "POT Norm: " << file.pot_norm << std::endl
                   << TAG << "Num. Branches: " << file.num_branches << std::endl;
 
         std::cout << TAG << "Branch to Sample mapping:" << std::endl;
@@ -320,6 +326,8 @@ int main(int argc, char** argv)
 
             double emu_reco = std::sqrt(selmu_mom * selmu_mom + mu_mass * mu_mass);
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos) - mu_mass * mu_mass;
+
+            weight *= file.pot_norm;
 
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
 
@@ -441,6 +449,8 @@ int main(int argc, char** argv)
                 if(reaction_true==2) weight_true = 0.7*weight_true;
             }
             ////////////////// FOR FAKE DATA STUDIES !!!!! //////////////////
+
+            weight_true *= file.pot_norm;
 
             out_trutree -> Fill();
 

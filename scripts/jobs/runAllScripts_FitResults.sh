@@ -27,7 +27,7 @@ root -b -q 'DrawParameters.C+("fit1_asimov_statFluc", "fakedata/statFluc")'
 root -b -q 'DrawParameters.C+("fit3_statFluc",        "fakedata/statFluc")'
 
 root -b -q 'DrawParameters.C+("fit1_fakedata_genie", "fakedata/genie")'
-root -b -q 'DrawParameters.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
+# root -b -q 'DrawParameters.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
 
 # root -b -q 'DrawParameters.C+("fit1_fakedata_m30Carbon", "fakedata/varyOC")'
 # root -b -q 'DrawParameters.C+("fit1_fakedata_p30Carbon", "fakedata/varyOC")'
@@ -48,7 +48,7 @@ root -b -q 'DrawEventComparison.C+("fit1_asimov_statFluc", "fakedata/statFluc")'
 root -b -q 'DrawEventComparison.C+("fit3_statFluc",        "fakedata/statFluc")'
 
 root -b -q 'DrawEventComparison.C+("fit1_fakedata_genie", "fakedata/genie")'
-root -b -q 'DrawEventComparison.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
+# root -b -q 'DrawEventComparison.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
 
 # root -b -q 'DrawEventComparison.C+("fit1_fakedata_m30Carbon", "fakedata/varyOC")'
 # root -b -q 'DrawEventComparison.C+("fit1_fakedata_p30Carbon", "fakedata/varyOC")'
@@ -69,7 +69,7 @@ root -b -q 'DrawCovariancePostfit.C+("fit1_asimov_statFluc", "fakedata/statFluc"
 root -b -q 'DrawCovariancePostfit.C+("fit3_statFluc",        "fakedata/statFluc")'
 
 root -b -q 'DrawCovariancePostfit.C+("fit1_fakedata_genie", "fakedata/genie")'
-root -b -q 'DrawCovariancePostfit.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
+# root -b -q 'DrawCovariancePostfit.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
 
 # root -b -q 'DrawCovariancePostfit.C+("fit1_fakedata_m30Carbon", "fakedata/varyOC")'
 # root -b -q 'DrawCovariancePostfit.C+("fit1_fakedata_p30Carbon", "fakedata/varyOC")'
@@ -94,7 +94,7 @@ root -b -q 'DrawCovarianceFinal.C+("fit1_asimov_statFluc", "fakedata/statFluc")'
 root -b -q 'DrawCovarianceFinal.C+("fit3_statFluc",        "fakedata/statFluc")'
 
 root -b -q 'DrawCovarianceFinal.C+("fit1_fakedata_genie", "fakedata/genie")'
-root -b -q 'DrawCovarianceFinal.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
+# root -b -q 'DrawCovarianceFinal.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
 
 # root -b -q 'DrawCovarianceFinal.C+("fit1_fakedata_m30Carbon", "fakedata/varyOC")'
 # root -b -q 'DrawCovarianceFinal.C+("fit1_fakedata_p30Carbon", "fakedata/varyOC")'
@@ -120,7 +120,7 @@ root -b -q 'DrawXsec.C+("fit1_asimov_statFluc", "fakedata/statFluc")'
 root -b -q 'DrawXsec.C+("fit3_statFluc",        "fakedata/statFluc")'
 
 root -b -q 'DrawXsec.C+("fit1_fakedata_genie", "fakedata/genie")'
-root -b -q 'DrawXsec.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
+# root -b -q 'DrawXsec.C+("fit1_fakedata_nuwro", "fakedata/nuwro")'
 
 # root -b -q 'DrawXsec.C+("fit1_fakedata_m30Carbon", "fakedata/varyOC")'
 # root -b -q 'DrawXsec.C+("fit1_fakedata_p30Carbon", "fakedata/varyOC")'

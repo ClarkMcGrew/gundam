@@ -1,9 +1,9 @@
 {
     "output" : {
-        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_fakedata_m30Carbon.root",
+        "fname" : "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/fgd1fgd2Fit/xsllh_nominal.root",
         "sel_tree" : "selectedEvents",
         "tru_tree" : "trueEvents",
-        "do_fakedata" : 2
+        "do_fakedata" : 0
     },
 
     "highland_files" : [

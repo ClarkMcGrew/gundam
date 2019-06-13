@@ -11,8 +11,8 @@ cd $WORKDIR/scripts/jobs/toSubmit
 echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit1_asimov.json" > job_xsllh_errprop_fit1_asimov.sh
 
 # Fake data with parameter thrown and statistical fluctuations
-echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit1_statFluc.json" > job_xsllh_errprop_fit1_statFluc.sh
-echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit3_statFluc.json" > job_xsllh_errprop_fit3_statFluc.sh
+echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit1_asimov_statFluc.json" > job_xsllh_errprop_fit1_asimov_statFluc.sh
+echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit3_statFluc.json" >        job_xsllh_errprop_fit3_statFluc.sh
 
 # Fake data with altered carbon or oxygen content
 echo -e "cd $WORKDIR; source setup.sh; xsllhCalcXsec -j $WORKDIR/inputs/fgd1fgd2Fit/errprop_fit1_fakedata_m30Carbon.json" > job_xsllh_errprop_fit1_fakedata_m30Carbon.sh
@@ -35,13 +35,13 @@ source /usr/local/shared/bin/openmpi_env.sh
 
 # Submit jobs
 
-qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_asimov.sh
+# qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_asimov.sh
 
-qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_statFluc.sh
+# qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_asimov_statFluc.sh
 qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit3_statFluc.sh
 
-qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_genie.sh
-qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_nuwro.sh
+# qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_genie.sh
+#qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_nuwro.sh
 
 # qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_m30Carbon.sh
 # qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_errprop_fit1_fakedata_p30Carbon.sh

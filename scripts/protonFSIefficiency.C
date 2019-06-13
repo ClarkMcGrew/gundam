@@ -232,8 +232,14 @@ void protonFSIefficiency(string fbinning = "/sps/t2k/lmaret/softwares/xsLLhFitte
 	std::cout << "===== Make final plots =====" << std::endl;                                                                                                                      
 
 	TCanvas *c_matrix = new TCanvas("c_matrix","c_matrix",1000,900);
+
 	cor_mat -> Draw("colz");
+	gPad->SetRightMargin(0.2);
+	gPad->Update();
+
 	c_matrix -> Print("plots/protonFSI/protonFSI_correlation.pdf");
+
+
 
 
 	TCanvas* c_eff = new TCanvas("nuwro_efficiency", "nuwro_efficiency",1700,1000);

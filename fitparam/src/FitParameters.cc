@@ -256,16 +256,37 @@ double FitParameters::CalcRegularisation(const std::vector<double>& params) cons
 double FitParameters::CalcRegularisation(const std::vector<double>& params, double strength,
                                          RegMethod flag) const
 {
+    std::vector<FitBin> temp_bins = m_signal_bins.at(0); //LM this is only going to work if different signals have the same binning
+    std::vector<FitBin> temp_bins_O = m_signal_bins.at(1); //LM this is only going to work if different signals have the same binning
+    temp_bins.insert(temp_bins.end(), temp_bins_O.begin(), temp_bins_O.end());
+
     double L_reg = 0;
     if(flag == kL1Reg)
     {
         for(int i = 0; i < Npar-1; ++i)
-            L_reg += std::abs(params[i] - params[i+1]);
+        {
+            if(temp_bins[i].D1low < temp_bins[i+1].D1low) //LM Only regularise to momentum bins
+                L_reg += std::abs(params[i] - params[i+1]);
+        }
     }
     else if(flag == kL2Reg)
     {
         for(int i = 0; i < Npar-1; ++i)
-            L_reg += (params[i] - params[i+1]) * (params[i] - params[i+1]);
+        {
+            // std::cout << "REGULARISATION --- parameter "<<i<<" : " << std::endl
+            //           <<", mom1="  <<temp_bins[i].D1low
+            //           <<", theta1="<<temp_bins[i].D2low << std::endl
+            //           <<", mom2="  << temp_bins[i+1].D1low
+            //           <<", theta2="<< temp_bins[i+1].D2low
+            //           << std::endl;
+            if(temp_bins[i].D1low < temp_bins[i+1].D1low) //LM Only regularise to momentum bins
+            {
+                L_reg += (params[i] - params[i+1]) * (params[i] - params[i+1]);
+                // std::cout << "DO regularise." << std::endl;
+            }
+            // else
+            //     std::cout << "DON'T regularise." << std::endl;
+        }
     }
     else
     {
