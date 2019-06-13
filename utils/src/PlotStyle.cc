@@ -187,3 +187,12 @@ void HistStyle::SetMarkerAtt(int m_color, int m_style, float m_size)
     marker_style = m_style;
     marker_size = m_size;
 }
+
+void HistStyle::FixAlphaLabels(TH1D& hist)
+{
+    for(unsigned int i = 1; i <= hist.GetNbinsX(); ++i)
+    {
+        std::string label = std::to_string(i-1);
+        hist.GetXaxis()->SetBinLabel(i, label.c_str());
+    }
+}

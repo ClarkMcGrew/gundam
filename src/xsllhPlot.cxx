@@ -13,6 +13,7 @@
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TLine.h"
 #include "TMatrixT.h"
 #include "TMatrixTSym.h"
 #include "TStyle.h"
@@ -190,6 +191,10 @@ int main(int argc, char** argv)
             if(x_scale > 0.0)
                 temp_style.ScaleXbins(*temp_hist, x_scale);
 
+            bool fix_labels = pj.value("fix_labels", false);
+            if(fix_labels)
+                temp_style.FixAlphaLabels(*temp_hist);
+
             std::string error_name = hj.value("errors", "");
             TH1D* temp_errors = nullptr;
 
@@ -211,6 +216,15 @@ int main(int argc, char** argv)
 
             output_file->cd();
             temp_hist->Write();
+        }
+
+        std::vector<double> draw_line = pj.value("draw_line", std::vector<double>{});
+        if(!draw_line.empty())
+        {
+            TLine line;
+            line.SetLineStyle(7);
+            line.SetLineWidth(2);
+            line.DrawLine(draw_line[0],draw_line[1],draw_line[2],draw_line[3]);
         }
 
         json empty_json;
@@ -247,8 +261,7 @@ int main(int argc, char** argv)
                 }
                 else
                 {
-                    if(cov_mat != nullptr)
-                        chisq = calc_chisq.CalcChisqStat(*h1, *h2);
+                    chisq = calc_chisq.CalcChisqStat(*h1, *h2);
                 }
 
                 //label = label + std::to_string(chisq);

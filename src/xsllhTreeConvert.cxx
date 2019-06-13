@@ -67,6 +67,7 @@ int GetIngridReaction(int code);
 int GetIngridTopology(int code);
 
 double GetTestEnuWeight(double enu);
+double GetTestQ2Weight(double q2);
 
 int main(int argc, char** argv)
 {
@@ -282,7 +283,13 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             if(do_apply_weights)
-                weight = weight * GetTestEnuWeight(enu_true);
+            {
+                //if(reaction == 1)
+                //    weight = weight * GetTestQ2Weight(q2_true / 1.0E6);
+                //weight = weight * GetTestEnuWeight(enu_true);
+                //if(topology == 0 || topology == 1 || topology == 2)
+                //    weight *= 0.80;
+            }
 
             weight *= file.pot_norm;
 
@@ -322,7 +329,13 @@ int main(int argc, char** argv)
                 - mu_mass * mu_mass;
 
             if(do_apply_weights)
-                weight_true = weight_true * GetTestEnuWeight(enu_true);
+            {
+                //if(reaction_true == 1)
+                //    weight_true = weight_true * GetTestQ2Weight(q2_true / 1.0E6);
+                //weight_true = weight_true * GetTestEnuWeight(enu_true);
+                //if(topology_true == 0 || topology_true == 1 || topology_true == 2)
+                //    weight_true *= 0.80;
+            }
 
             weight_true *= file.pot_norm;
             out_trutree -> Fill();
@@ -444,6 +457,7 @@ int main(int argc, char** argv)
             D2Reco = angle_reco;
             //D2Reco = TMath::Cos(angle_reco * deg_to_rad);
             D2True = TMath::Cos(angle_true * deg_to_rad);
+            //D2True = angle_true;
 
             nutype = GetIngridNutype(is_anti, is_nue);
             topology = GetIngridTopology(fsi_int);
@@ -465,7 +479,18 @@ int main(int argc, char** argv)
             weight = event_weight;
 
             if(do_apply_weights)
-                weight = weight * GetTestEnuWeight(enu_true);
+            {
+                //if(reaction == 1)
+                //    weight = weight * GetTestQ2Weight(q2_true / 1.0E6);
+                //weight = weight * GetTestEnuWeight(enu_true);
+                //if(topology == 0 || topology == 1 || topology == 2)
+                //    weight *= 1.20;
+                if(topology == 0 || topology == 1 || topology == 2)
+                {
+                    if(D1True > 350 && D1True < 500 && D2True > 0.94)
+                        weight = 0;
+                }
+            }
 
             if(selected_sample == 1)
                 weight *= 1.16;
@@ -602,6 +627,16 @@ double GetTestEnuWeight(double enu)
         weight = (0.5 * enu) / 500.0 - 1;
     else
         weight = 1.0;
+
+    return weight;
+}
+
+double GetTestQ2Weight(double q2)
+{
+    double weight = 1.0;
+
+    if(q2 < 0.7)
+        weight = 1.01 / (1 + std::exp(1 - (std::sqrt(q2) / 0.156)));
 
     return weight;
 }

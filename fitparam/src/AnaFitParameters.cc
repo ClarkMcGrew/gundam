@@ -44,7 +44,7 @@ void AnaFitParameters::SetCovarianceMatrix(const TMatrixDSym& covmat, bool decom
     if(decompose)
     {
         m_decompose  = true;
-        eigen_decomp = new EigenDecomp(covmat);
+        eigen_decomp = new EigenDecomp(covmat, kSVD);
         original_cov = new TMatrixDSym(covmat);
         covariance   = new TMatrixDSym(eigen_decomp->GetEigenCovMat());
         covarianceI  = new TMatrixDSym(eigen_decomp->GetEigenCovMat());

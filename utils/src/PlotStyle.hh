@@ -86,6 +86,7 @@ class HistStyle
         void SetFillAtt(int f_color, int f_style);
         void SetLineAtt(int l_color, int l_style, int l_width);
         void SetMarkerAtt(int m_color, int m_style, float m_size);
+        void FixAlphaLabels(TH1D& hist);
 
     private:
         std::string x_axis_title;
