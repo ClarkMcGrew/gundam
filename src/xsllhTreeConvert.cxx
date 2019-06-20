@@ -576,10 +576,12 @@ int GetIngridReaction(int code)
         reaction = 2;
     else if(code == 16)
         reaction = 3;
-    else if(code > 30 || code < 53)
+    else if(code > 30 && code < 53)
         reaction = 4;
     else if(code < 0)
         reaction = 5;
+    else if(code == 17 || code == 22 || code == 23)
+        reaction = 8;
 
     return reaction;
 }

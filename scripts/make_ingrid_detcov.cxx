@@ -1,4 +1,4 @@
-void make_ingrid_detcov(const std::string& nd280_cov_name, const std::string& ingrid_cov_name = "")
+void make_ingrid_detcov(const std::string& nd280_cov_name, const std::string& ingrid_cov_name = "", const std::string& output_name = "")
 {
     TFile* nd280_file = TFile::Open(nd280_cov_name.c_str(), "READ");
     TMatrixTSym<double>* nd280_cov = (TMatrixTSym<double>*)nd280_file -> Get("cov_mat");
@@ -63,7 +63,9 @@ void make_ingrid_detcov(const std::string& nd280_cov_name, const std::string& in
         }
     }
 
-    TFile* output_file = TFile::Open("combined_detcov.root", "RECREATE");
+    std::string output_filename = output_name.empty() ? "combined_detcov.root" : output_name;
+
+    TFile* output_file = TFile::Open(output_filename.c_str(), "RECREATE");
     output_file -> cd();
 
     combined_cov.Write("det_cov");

@@ -65,8 +65,14 @@ double calc_chisq(std::string filename, bool is_txt_file = false)
         const unsigned int nbins = cov.GetNrows();
         for(int i = 0; i < nbins; ++i)
         {
+            //if(i == 58 || i == 62 || i == 66)
+            //    continue;
+
             for(int j = 0; j < nbins; ++j)
             {
+                //if(j == 58 || j == 62 || j == 66)
+                //    continue;
+
                 double x = h1->GetBinContent(i+1) - h2->GetBinContent(i+1);
                 double y = h1->GetBinContent(j+1) - h2->GetBinContent(j+1);
                 chisq += x * y * inv[i][j];
@@ -75,7 +81,7 @@ double calc_chisq(std::string filename, bool is_txt_file = false)
 
         if(is_txt_file)
         {
-            dof = nbins - 1;
+            dof = nbins;
             h_chisq->Fill(chisq);
             std::cout << "Chisq = " << chisq << std::endl;
         }
@@ -90,7 +96,7 @@ double calc_chisq(std::string filename, bool is_txt_file = false)
     f_chisq->SetParameter(0, dof);
 
     TCanvas* c = new TCanvas("c","c",1200,900);
-    h_chisq->Scale(1.0 / h_chisq->Integral());
+    h_chisq->Scale(1.0 / h_chisq->Integral(), "width");
     h_chisq->Draw("hist");
     f_chisq->Draw("same");
 
