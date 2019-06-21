@@ -41,6 +41,7 @@ struct CovOpt
     bool do_throw;
     bool decompose;
     bool do_fit;
+    bool rng_start;
     double info_frac;
 };
 
@@ -89,8 +90,12 @@ class OptParser
         bool stat_fluc;
         bool zero_syst;
         bool regularise;
+        bool rng_template;
         double reg_strength;
         std::string reg_method;
+
+        unsigned int par_scan_steps;
+        std::vector<int> par_scan_list;
 
         std::vector<std::string> sample_topology;
         std::vector<SignalDef> signal_definition;

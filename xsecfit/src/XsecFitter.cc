@@ -88,6 +88,7 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     std::vector<double> par_step, par_low, par_high;
     std::vector<bool> par_fixed;
 
+    TRandom3 rng(0);
     for(std::size_t i = 0; i < m_fitpara.size(); i++)
     {
         m_npar += m_fitpara[i]->GetNpar();
@@ -98,6 +99,12 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
 
         std::vector<double> vec1, vec2;
         m_fitpara[i]->GetParPriors(vec1);
+        if(m_fitpara[i]->DoRNGstart())
+        {
+            std::cout << TAG << "Randomizing start point for " << m_fitpara[i]->GetName() << std::endl;
+            for(auto& p : vec1)
+                p += (p * rng.Gaus(0.0, 0.1));
+        }
         par_prefit.insert(par_prefit.end(), vec1.begin(), vec1.end());
 
         m_fitpara[i]->GetParSteps(vec1);
@@ -158,6 +165,7 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     TH1D h_prefit("hist_prefit_par_all", "hist_prefit_par_all", m_npar, 0, m_npar);
     TVectorD v_prefit_original(m_npar);
     TVectorD v_prefit_decomp(m_npar);
+    TVectorD v_prefit_start(m_npar, par_prefit.data());
 
     int num_par = 1;
     for(int i = 0; i < m_fitpara.size(); ++i)
@@ -181,6 +189,7 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     h_prefit.Write();
     v_prefit_original.Write("vec_prefit_original");
     v_prefit_decomp.Write("vec_prefit_decomp");
+    v_prefit_start.Write("vec_prefit_start");
 }
 
 bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool stat_fluc)
@@ -290,6 +299,10 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         }
     }
 
+    TVectorD postfit_globalcc(ndim);
+    for(int i = 0; i < ndim; ++i)
+        postfit_globalcc[i] = m_fitter->GlobalCC(i);
+
     TVectorD postfit_param(ndim, &par_val_vec[0]);
     std::vector<std::vector<double>> res_pars;
     std::vector<std::vector<double>> err_pars;
@@ -321,6 +334,7 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     cov_matrix.Write("res_cov_matrix");
     cor_matrix.Write("res_cor_matrix");
     postfit_param.Write("res_vector");
+    postfit_globalcc.Write("res_globalcc");
 
     SaveResults(res_pars, err_pars);
     SaveFinalEvents(m_calls, res_pars);
@@ -633,5 +647,31 @@ void XsecFitter::SaveResults(const std::vector<std::vector<double>>& par_results
         h_par_prior.Write();
         h_err_final.Write();
         h_err_prior.Write();
+    }
+}
+
+void XsecFitter::ParameterScans(const std::vector<int>& param_list, unsigned int nsteps)
+{
+    std::cout << TAG << "Performing parameter scans..." << std::endl;
+
+    //Internally Scan performs steps-1, so add one to actually get the number of steps
+    //we ask for.
+    unsigned int adj_steps = nsteps+1;
+    double x[adj_steps] = {};
+    double y[adj_steps] = {};
+
+    for(const auto& p : param_list)
+    {
+        std::cout << TAG << "Scanning parameter " << p
+                  << " (" << m_fitter->VariableName(p) << ")." << std::endl;
+
+        bool success = m_fitter->Scan(p, adj_steps, x, y);
+
+        TGraph scan_graph(nsteps, x, y);
+        m_dir->cd();
+
+        std::stringstream ss;
+        ss << "par_scan_" << std::to_string(p);
+        scan_graph.Write(ss.str().c_str());
     }
 }

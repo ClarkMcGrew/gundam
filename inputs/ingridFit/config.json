@@ -6,8 +6,7 @@
     "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "data_POT"  : 1.0,
-    "mc_POT"    : 1.0,
+    "rng_template" : false,
     "rng_seed"  : 12257,
     "num_threads" : 16,
     "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
@@ -25,7 +24,7 @@
         "matrix" : "flux_numu_cov",
         "binning" : "hist_bins",
         "throw"  : false,
-        "decomp" : true,
+        "decomp" : false,
         "variance" : 1.00,
         "fit_par" : true
     },
