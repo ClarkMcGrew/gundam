@@ -6,7 +6,7 @@
     "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "rng_template" : false,
+    "rng_template" : true,
     "rng_seed"  : 12257,
     "num_threads" : 16,
     "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
@@ -14,8 +14,8 @@
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
         "print_level" : 2,
-        "tolerance" : 1E-0,
-        "strategy" : 1,
+        "tolerance" : 5E-2,
+        "strategy" : 2,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
     },
@@ -24,7 +24,7 @@
         "matrix" : "flux_numu_cov",
         "binning" : "hist_bins",
         "throw"  : false,
-        "decomp" : false,
+        "decomp" : true,
         "variance" : 1.00,
         "fit_par" : true
     },

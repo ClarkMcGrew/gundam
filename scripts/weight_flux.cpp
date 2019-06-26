@@ -45,8 +45,14 @@ void weight_flux(const std::string& flux_path)
     h_flux_total_numu -> Add(h_flux_run3c);
     h_flux_total_numu -> Add(h_flux_run4);
     h_flux_total_numu -> Add(h_flux_run8);
-
     TH1D* h_flux_nom_numu = nullptr;
+
+    /*
+    const double pot_ingrid = 5.9E20 / 1E21;
+    TFile* ingrid_flux = TFile::Open(flux_path.c_str(), "READ");
+    TH1D* h_flux_total_numu = (TH1D*)ingrid_flux -> Get("nd2_tune_numub");
+    h_flux_total_numu->Scale(pot_ingrid);
+    */
 
     //const unsigned int nbins = 11;
     //double flux_bins[nbins+1] = {0.0, 0.4, 0.5, 0.6, 0.7, 1.0, 1.5, 2.5, 3.5, 5.0, 7.0, 30.0};
@@ -56,6 +62,7 @@ void weight_flux(const std::string& flux_path)
     h_flux_nom_numu = (TH1D*)h_flux_total_numu -> Rebin(nbins, "h_flux_nom_numu", flux_bins);
 
     TFile* output = TFile::Open("./weighted_flux13av2_run248.root", "UPDATE");
+    //TFile* output = TFile::Open("./ingrid_weighted_flux.root", "UPDATE");
     output -> cd();
     h_flux_total_numu -> Write("flux_fine_numu");
     h_flux_nom_numu -> Write("flux_rebin_numu");

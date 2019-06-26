@@ -10,6 +10,8 @@
 #include <vector>
 
 #include <TFile.h>
+#include <TH1.h>
+#include <TH2.h>
 #include <TMath.h>
 #include <TRandom3.h>
 #include <TTree.h>
@@ -59,6 +61,31 @@ struct INGFileOpt
     unsigned int branch;
 };
 
+class TemplateWeights
+{
+    public:
+        TemplateWeights() {};
+        TemplateWeights(const std::string& filename, int num_templates)
+        {
+            TFile* temp_file = TFile::Open(filename.c_str(), "READ");
+            for(unsigned int i = 0; i < num_templates; ++i)
+            {
+                std::string name = "ratio_template_" + std::to_string(i);
+                TH2D* temp_hist = (TH2D*)temp_file->Get(name.c_str());
+                v_templates.emplace_back(*temp_hist);
+            }
+            temp_file->Close();
+        };
+
+        double operator()(double q0, double q3, int reaction)
+        {
+            return v_templates.at(reaction).Interpolate(q0, q3);
+        };
+
+    private:
+        std::vector<TH2D> v_templates;
+};
+
 template <typename T>
 HL2TreeVar ParseHL2Var(T json_obj, bool flag);
 
@@ -84,6 +111,7 @@ int main(int argc, char** argv)
               << TAG << "Initializing the tree machinery..." << std::endl;
 
     bool do_apply_weights = false;
+    bool do_apply_templates = false;
     std::string json_file;
 
     char option;
@@ -96,6 +124,9 @@ int main(int argc, char** argv)
                 break;
             case 'W':
                 do_apply_weights = true;
+                break;
+            case 'T':
+                do_apply_templates = true;
                 break;
             case 'h':
                 std::cout << "USAGE: "
@@ -127,6 +158,11 @@ int main(int argc, char** argv)
     std::cout << TAG << "Out File: " << out_fname << std::endl
               << TAG << "Out Selection Tree: " << out_seltree_name << std::endl
               << TAG << "Out Truth Tree    : " << out_trutree_name << std::endl;
+
+    //TemplateWeights nd280_templates("nd280_templates_nuwro.root", 10);
+    //TemplateWeights ingrid_templates("ingrid_templates_nuwro.root", 10);
+    TemplateWeights nd280_templates;
+    TemplateWeights ingrid_templates;
 
     TFile* out_file = TFile::Open(out_fname.c_str(), "RECREATE");
     TTree* out_seltree = new TTree(out_seltree_name.c_str(), out_seltree_name.c_str());
@@ -282,6 +318,9 @@ int main(int argc, char** argv)
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
                 - mu_mass * mu_mass;
 
+            double q0_true = enu_true - emu_true;
+            double q3_true = std::sqrt(q2_true + q0_true*q0_true);
+
             if(do_apply_weights)
             {
                 //if(reaction == 1)
@@ -290,6 +329,9 @@ int main(int argc, char** argv)
                 //if(topology == 0 || topology == 1 || topology == 2)
                 //    weight *= 0.80;
             }
+
+            if(do_apply_templates)
+                weight *= nd280_templates(q0_true, q3_true, reaction);
 
             weight *= file.pot_norm;
 
@@ -328,6 +370,9 @@ int main(int argc, char** argv)
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
 
+            double q0_true = enu_true - emu_true;
+            double q3_true = std::sqrt(q2_true + q0_true*q0_true);
+
             if(do_apply_weights)
             {
                 //if(reaction_true == 1)
@@ -336,6 +381,9 @@ int main(int argc, char** argv)
                 //if(topology_true == 0 || topology_true == 1 || topology_true == 2)
                 //    weight_true *= 0.80;
             }
+
+            if(do_apply_templates)
+                weight_true *= nd280_templates(q0_true, q3_true, reaction_true);
 
             weight_true *= file.pot_norm;
             out_trutree -> Fill();
@@ -459,6 +507,12 @@ int main(int argc, char** argv)
             D2True = TMath::Cos(angle_true * deg_to_rad);
             //D2True = angle_true;
 
+            if(pmu_true == 0 && angle_true == 0)
+            {
+                D1True = 0;
+                D2True = 0;
+            }
+
             nutype = GetIngridNutype(is_anti, is_nue);
             topology = GetIngridTopology(fsi_int);
             reaction = GetIngridReaction(interaction_type);
@@ -474,6 +528,9 @@ int main(int argc, char** argv)
             double emu_reco = std::sqrt(pmu_reco * pmu_reco + mu_mass * mu_mass);
             q2_reco = 2.0 * enu_reco * (emu_reco - pmu_reco * TMath::Cos(angle_reco * deg_to_rad))
                 - mu_mass * mu_mass;
+
+            double q0_true = enu_true - emu_true;
+            double q3_true = std::sqrt(q2_true + q0_true*q0_true);
 
             cut_branch = file.branch;
             weight = event_weight;
@@ -491,6 +548,9 @@ int main(int argc, char** argv)
                         weight = 0;
                 }
             }
+
+            if(do_apply_templates)
+                weight *= ingrid_templates(q0_true, q3_true, reaction);
 
             if(selected_sample == 1)
                 weight *= 1.16;
