@@ -70,6 +70,14 @@ bool OptParser::ParseJSON(std::string json_file)
     xsec_cov.do_fit = j["xsec_cov"]["fit_par"];
     xsec_cov.rng_start = j["xsec_cov"].value("rng_start", false);
 
+    extra_cov.fname = input_dir + j["extra_cov"]["file"].get<std::string>();
+    extra_cov.matrix = j["extra_cov"]["matrix"];
+    extra_cov.do_throw = j["extra_cov"]["throw"];
+    extra_cov.decompose = false;
+    extra_cov.info_frac = 1.0;
+    extra_cov.do_fit = j["extra_cov"]["fit_par"];
+    extra_cov.rng_start = j["extra_cov"].value("rng_start", false);
+
     regularise = j["regularisation"]["enable"];
     reg_strength = j["regularisation"]["strength"];
     reg_method = j["regularisation"]["method"];

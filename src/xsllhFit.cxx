@@ -10,6 +10,7 @@
 #include "AnaTreeMC.hh"
 #include "ColorOutput.hh"
 #include "DetParameters.hh"
+#include "ExtraParameters.hh"
 #include "FitParameters.hh"
 #include "FluxParameters.hh"
 #include "OptParser.hh"
@@ -267,6 +268,36 @@ int main(int argc, char** argv)
         }
         detpara.InitEventMap(samples, 0);
         fitpara.push_back(&detpara);
+    }
+
+    ExtraParameters extrapara("par_extra");
+    if(parser.extra_cov.do_fit)
+    {
+        std::cout << TAG << "Using extra parameters for some kind of proton sample 'migration'."
+                  << std::endl;
+
+        std::cout << TAG << "Setup Extra Covariance." << std::endl
+                  << TAG << "Opening " << parser.extra_cov.fname << " for extra covaraince."
+                  << std::endl;
+
+        TFile* file_extra_cov = TFile::Open(parser.extra_cov.fname.c_str(), "READ");
+        if(file_extra_cov == nullptr)
+        {
+            std::cout << ERR << "Could not open file! Exiting." << std::endl;
+            return 1;
+        }
+        TMatrixDSym* cov_extra = (TMatrixDSym*)file_extra_cov -> Get(parser.extra_cov.matrix.c_str());
+        file_extra_cov -> Close();
+
+        if(parser.extra_cov.rng_start)
+            extrapara.SetRNGstart();
+
+        extrapara.SetCovarianceMatrix(*cov_extra, parser.extra_cov.decompose);
+        extrapara.SetThrow(parser.extra_cov.do_throw);
+        extrapara.SetInfoFrac(parser.extra_cov.info_frac);
+        extrapara.AddSample(samples);
+        extrapara.InitEventMap(samples, 0);
+        fitpara.push_back(&extrapara);
     }
 
     //Instantiate fitter obj

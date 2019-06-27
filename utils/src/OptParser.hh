@@ -103,6 +103,7 @@ class OptParser
         CovOpt flux_cov;
         CovOpt det_cov;
         CovOpt xsec_cov;
+        CovOpt extra_cov;
         MinSettings min_settings;
         std::vector<SampleOpt> samples;
         std::vector<DetOpt> detectors;
