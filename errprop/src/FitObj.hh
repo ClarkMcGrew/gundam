@@ -22,6 +22,7 @@ using TMatrixDSym = TMatrixTSym<double>;
 #include "BinManager.hh"
 #include "ColorOutput.hh"
 #include "DetParameters.hh"
+#include "ExtraParameters.hh"
 #include "FitParameters.hh"
 #include "FluxParameters.hh"
 #include "OptParser.hh"

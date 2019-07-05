@@ -67,7 +67,26 @@ class TemplateWeights
         TemplateWeights() {};
         TemplateWeights(const std::string& filename, int num_templates)
         {
+            ReadFile(filename, num_templates);
+        };
+
+        double operator()(double q0, double q3, int reaction)
+        {
+            if(q0 < 0 || q0 > 5000 || q3 < 0 || q3 > 5000)
+                return 1.0;
+            else if(reaction == 6 || reaction == 7 || reaction == 8)
+                return 1.0;
+            else
+                return v_templates.at(reaction).Interpolate(q0, q3);
+        };
+
+        bool ReadFile(const std::string& filename, int num_templates)
+        {
+            std::cout << "Reading " << filename << " for templates." << std::endl;
             TFile* temp_file = TFile::Open(filename.c_str(), "READ");
+            if(temp_file == nullptr)
+                return false;
+
             for(unsigned int i = 0; i < num_templates; ++i)
             {
                 std::string name = "ratio_template_" + std::to_string(i);
@@ -75,12 +94,9 @@ class TemplateWeights
                 v_templates.emplace_back(*temp_hist);
             }
             temp_file->Close();
-        };
 
-        double operator()(double q0, double q3, int reaction)
-        {
-            return v_templates.at(reaction).Interpolate(q0, q3);
-        };
+            return true;
+        }
 
     private:
         std::vector<TH2D> v_templates;
@@ -115,7 +131,7 @@ int main(int argc, char** argv)
     std::string json_file;
 
     char option;
-    while((option = getopt(argc, argv, "j:Wh")) != -1)
+    while((option = getopt(argc, argv, "j:TWh")) != -1)
     {
         switch(option)
         {
@@ -159,10 +175,15 @@ int main(int argc, char** argv)
               << TAG << "Out Selection Tree: " << out_seltree_name << std::endl
               << TAG << "Out Truth Tree    : " << out_trutree_name << std::endl;
 
-    //TemplateWeights nd280_templates("nd280_templates_nuwro.root", 10);
-    //TemplateWeights ingrid_templates("ingrid_templates_nuwro.root", 10);
     TemplateWeights nd280_templates;
     TemplateWeights ingrid_templates;
+
+    if(do_apply_templates)
+    {
+        std::cout << "Applying template weights to events." << std::endl;
+        nd280_templates.ReadFile("nd280_templates_nuwro.root", 10);
+        ingrid_templates.ReadFile("ingrid_templates_nuwro.root", 10);
+    }
 
     TFile* out_file = TFile::Open(out_fname.c_str(), "RECREATE");
     TTree* out_seltree = new TTree(out_seltree_name.c_str(), out_seltree_name.c_str());
@@ -181,6 +202,7 @@ int main(int argc, char** argv)
     float weight, weight_true;
 
     float selmu_mom_range;
+    int pdg_true;
 
     out_seltree -> Branch("nutype", &nutype, "nutype/I");
     out_seltree -> Branch("reaction", &reaction, "reaction/I");
@@ -271,6 +293,8 @@ int main(int argc, char** argv)
         hl2_seltree -> SetBranchAddress(file.sel_var.weight.c_str(), &weight);
 
         hl2_seltree -> SetBranchAddress("selmu_mom_range_oarecon", &selmu_mom_range);
+        hl2_seltree -> SetBranchAddress("true_Q2", &q2_true);
+        hl2_seltree -> SetBranchAddress("truelepton_pdg", &pdg_true);
 
         long int npassed = 0;
         long int nevents = hl2_seltree -> GetEntries();
@@ -310,6 +334,7 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
+            /*
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
@@ -317,9 +342,17 @@ int main(int argc, char** argv)
             double emu_reco = std::sqrt(selmu_mom * selmu_mom + mu_mass * mu_mass);
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
                 - mu_mass * mu_mass;
+            */
 
-            double q0_true = enu_true - emu_true;
-            double q3_true = std::sqrt(q2_true + q0_true*q0_true);
+            q2_reco = q2_true;
+            double q0_true = 0;
+            double q3_true = 0;
+            if(std::abs(pdg_true) == 14)
+                q0_true = enu_true - selmu_mom_true;
+            else
+                q0_true = enu_true - std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
+
+            q3_true = std::sqrt(q2_true + q0_true*q0_true);
 
             if(do_apply_weights)
             {
@@ -332,6 +365,16 @@ int main(int argc, char** argv)
 
             if(do_apply_templates)
                 weight *= nd280_templates(q0_true, q3_true, reaction);
+
+            /*
+            if(weight == 0)
+            {
+                std::cout << "w : " << weight << std::endl;
+                std::cout << "r : " << reaction << std::endl;
+                std::cout << "q0: " << q0_true << std::endl;
+                std::cout << "q3: " << q3_true << std::endl;
+            }
+            */
 
             weight *= file.pot_norm;
 
@@ -352,6 +395,7 @@ int main(int argc, char** argv)
         hl2_trutree -> SetBranchAddress(file.tru_var.enu_true.c_str(), &enu_true);
         hl2_trutree -> SetBranchAddress(file.tru_var.weight.c_str(), &weight_true);
 
+        hl2_trutree -> SetBranchAddress("true_Q2", &q2_true);
         nevents = hl2_trutree -> GetEntries();
         std::cout << TAG << "Reading truth events tree." << std::endl
                   << TAG << "Num. events: " << nevents << std::endl;
@@ -366,12 +410,23 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
+            /*
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
 
             double q0_true = enu_true - emu_true;
             double q3_true = std::sqrt(q2_true + q0_true*q0_true);
+            */
+
+            double q0_true = 0;
+            double q3_true = 0;
+            if(std::abs(pdg_true) == 14)
+                q0_true = enu_true - selmu_mom_true;
+            else
+                q0_true = enu_true - std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
+
+            q3_true = std::sqrt(q2_true + q0_true*q0_true);
 
             if(do_apply_weights)
             {
@@ -549,8 +604,21 @@ int main(int argc, char** argv)
                 }
             }
 
-            if(do_apply_templates)
+            if(do_apply_templates && reaction >= 0)
                 weight *= ingrid_templates(q0_true, q3_true, reaction);
+
+            if(weight == 0)
+                weight = event_weight;
+
+            /*
+            if(weight == 0)
+            {
+                std::cout << "w : " << weight << std::endl;
+                std::cout << "r : " << reaction << std::endl;
+                std::cout << "q0: " << q0_true << std::endl;
+                std::cout << "q3: " << q3_true << std::endl;
+            }
+            */
 
             if(selected_sample == 1)
                 weight *= 1.16;

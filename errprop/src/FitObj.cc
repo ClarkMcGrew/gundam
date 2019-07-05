@@ -175,6 +175,38 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         npar += detpara->GetNpar();
     }
 
+    //ExtraParameters extrapara("par_extra");
+    ExtraParameters* extrapara = new ExtraParameters("par_extra");
+    if(parser.extra_cov.do_fit)
+    {
+        std::cout << TAG << "Using extra parameters for some kind of proton sample 'migration'."
+                  << std::endl;
+
+        std::cout << TAG << "Setup Extra Covariance." << std::endl
+                  << TAG << "Opening " << parser.extra_cov.fname << " for extra covaraince."
+                  << std::endl;
+
+        TFile* file_extra_cov = TFile::Open(parser.extra_cov.fname.c_str(), "READ");
+        if(file_extra_cov == nullptr)
+        {
+            std::cout << ERR << "Could not open file! Exiting." << std::endl;
+            std::exit(1);
+        }
+        TMatrixDSym* cov_extra = (TMatrixDSym*)file_extra_cov -> Get(parser.extra_cov.matrix.c_str());
+        file_extra_cov -> Close();
+
+        extrapara->SetCovarianceMatrix(*cov_extra, parser.extra_cov.decompose);
+        extrapara->SetThrow(parser.extra_cov.do_throw);
+        extrapara->SetInfoFrac(parser.extra_cov.info_frac);
+        extrapara->AddSample(samples);
+        if(is_true_tree)
+            extrapara->InitEventMap(samples, 2);
+        else
+            extrapara->InitEventMap(samples, 0);
+        fit_par.push_back(extrapara);
+        npar += extrapara->GetNpar();
+    }
+
     InitSignalHist(parser.signal_definition);
     std::cout << TAG << "Finished initialization." << std::endl;
 }
