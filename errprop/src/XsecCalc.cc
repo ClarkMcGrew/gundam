@@ -302,11 +302,11 @@ void XsecCalc::GenerateToys(const int ntoys)
 
         std::transform(toy.begin(), toy.end(), postfit_param.begin(), toy.begin(),
                        std::plus<double>());
-        for(int i = 0; i < npar; ++i)
-        {
-            if(toy[i] < 0.0)
-                toy[i] = 0.01;
-        }
+        //for(int i = 0; i < npar; ++i)
+        //{
+        //    if(toy[i] < 0.0)
+        //        toy[i] = 0.001;
+        //}
 
         selected_events->ReweightEvents(toy);
         true_events->ReweightEvents(toy);

@@ -157,15 +157,19 @@ void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsampl
         event -> AddEvWght(params[bin + m_sig_offset.at(event->GetSignalType())]);
 
         /*
+        if(event -> GetSampleType() >= 10)
+        {
         std::cout << "-----------------" << std::endl;
         std::cout << "Ev D1: " << event -> GetTrueD1() << std::endl
                   << "Ev D2: " << event -> GetTrueD2() << std::endl;
         std::cout << "Ev ST: " << event -> GetSignalType() << std::endl;
+        std::cout << "Ev ST: " << std::boolalpha << event -> isSignalEvent() << std::endl;
         std::cout << "Ev TP: " << event -> GetTopology() << std::endl;
         std::cout << "Ev TG: " << event -> GetTarget() << std::endl;
         std::cout << "Ev CB: " << event -> GetSampleType() << std::endl;
         std::cout << "Bin  : " << bin << std::endl;
         std::cout << "Off  : " << m_sig_offset.at(event->GetSignalType()) << std::endl;
+        }
         */
     }
 }
@@ -182,7 +186,7 @@ void FitParameters::InitParameters()
             pars_name.push_back(Form("%s_sig%d_%d", m_name.c_str(), sig, i));
             pars_prior.push_back(1.0); //all weights are 1.0 a priori
             pars_step.push_back(0.05);
-            pars_limlow.push_back(0.0);
+            pars_limlow.push_back(-10.0);
             pars_limhigh.push_back(10.0);
             pars_fixed.push_back(false);
         }

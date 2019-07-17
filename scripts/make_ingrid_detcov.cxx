@@ -70,7 +70,7 @@ void make_ingrid_detcov(const std::string& nd280_cov_name, const std::string& in
 
     combined_cov.Write("det_cov");
     combined_cor.Write("det_cor");
-    ingrid_cov->Write("ingrid_cov");
+    ingrid_cov_full.Write("ingrid_cov");
     nd280_cov->Write("nd280_cov");
 
     output_file -> Close();

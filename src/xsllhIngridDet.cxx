@@ -197,9 +197,19 @@ int main(int argc, char** argv)
             e.dist_reco = pmu_reco;
             e.angle_reco = angle_reco;
             e.weight = event_weight;
-            e.true_bin = true_bm.GetBinIndex(std::vector<double>{angle_true, pmu_true});
-            e.reco_bin = reco_bm.GetBinIndex(std::vector<double>{angle_reco, pmu_reco});
+            e.true_bin = true_bm.GetBinIndex(std::vector<double>{e.angle_true, e.pmu_true});
+            e.reco_bin = reco_bm.GetBinIndex(std::vector<double>{e.angle_reco, e.dist_reco});
             v_events.push_back(e);
+
+            /*
+            std::cout << "-----------" << std::endl;
+            std::cout << "pmu_true : " << e.pmu_true << std::endl;
+            std::cout << "pmu_reco : " << e.dist_reco << std::endl;
+            std::cout << "angle_true : " << e.angle_true << std::endl;
+            std::cout << "angle_reco : " << e.angle_reco << std::endl;
+            std::cout << "true bin : " << e.true_bin << std::endl;
+            std::cout << "reco bin : " << e.reco_bin << std::endl;
+            */
         }
 
         if(i % 2000 == 0 || i == (nevents-1))
@@ -270,6 +280,10 @@ int main(int argc, char** argv)
         std::vector<double> toy(nbins_true, 0.0);
         toy_thrower.Throw(toy);
 
+        //std::cout << "-------------" << std::endl;
+        //for(const auto& val : toy)
+        //    std::cout << val << std::endl;
+
         std::string temp = "toy" + std::to_string(i);
         TH1D temp_toy(temp.c_str(), temp.c_str(), nbins_reco, 0, nbins_reco);
 
@@ -317,6 +331,8 @@ int main(int argc, char** argv)
 
             if(std::isnan(cov_reco(i,j)))
                 cov_reco(i,j) = 0;
+
+            cov_reco(i,i) += 1E-6;
         }
     }
 

@@ -10,6 +10,7 @@ double calc_chisq(std::string filename, bool is_txt_file = false)
     std::vector<std::string> v_files;
     std::string h1_name("sel_best_fit");
     std::string h2_name("tru_best_fit");
+    //std::string h2_name("fake_data_concat");
     std::string cov_name("xsec_cov");
 
     if(is_txt_file)

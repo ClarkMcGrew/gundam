@@ -599,8 +599,8 @@ int main(int argc, char** argv)
                 //    weight *= 1.20;
                 if(topology == 0 || topology == 1 || topology == 2)
                 {
-                    if(D1True > 350 && D1True < 500 && D2True > 0.94)
-                        weight = 0;
+                    if(D1True > 350 && D1True < 500)
+                        weight *= 10;
                 }
             }
 

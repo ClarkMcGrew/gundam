@@ -454,7 +454,7 @@ double XsecFitter::CalcLikelihood(const double* par)
         {
             //if(output_chi2)
             //    std::cout << "Parameter " << j << " for " << m_fitpara[i]->GetName()
-            //              << " has value " << par[k] << std::endl;
+            //              << " has value " << std::setprecision(9) << par[k] << std::endl;
             vec.push_back(par[k++]);
         }
 
