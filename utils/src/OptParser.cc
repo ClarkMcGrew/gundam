@@ -39,6 +39,7 @@ bool OptParser::ParseJSON(std::string json_file)
     rng_template = j.value("rng_template", false);
     rng_seed = j.value("rng_seed", 0);
     num_threads = j.value("num_threads", 1);
+    save_events = j.value("save_events", true);
 
     par_scan_steps = j.value("par_scan_steps", 20);
     par_scan_list = j.value("par_scan_list", std::vector<int>{});
@@ -185,6 +186,7 @@ void OptParser::PrintOptions(bool short_list) const
     << std::endl << TAG << "MC   POT : " << mc_POT
     << std::endl << TAG << "RNG Seed : " << rng_seed
     << std::endl << TAG << "N Threads: " << num_threads
+    << std::endl << TAG << "Saving Events: " << std::boolalpha << save_events
     << std::endl << TAG << "Enable Stat flucutations : " << std::boolalpha << stat_fluc
     << std::endl << TAG << "Enable Zero syst penalty : " << std::boolalpha << zero_syst
     << std::endl << TAG << "Enable Fit regularisation: " << std::boolalpha << regularise

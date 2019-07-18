@@ -7,8 +7,9 @@
     "stat_fluc" : false,
     "zero_syst" : false,
     "rng_template" : false,
+    "save_events" : false,
     "rng_seed"  : 12257,
-    "num_threads" : 16,
+    "num_threads" : 12,
     "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
     "min_settings" : {
         "minimizer" : "Minuit2",
