@@ -7,7 +7,8 @@ ExtraParameters::ExtraParameters(const std::string& name)
 
 void ExtraParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 {
-    InitParameters();
+    InitFixed();
+    //InitParameters();
     m_evmap.clear();
 
     if(mode == 2)
@@ -20,7 +21,7 @@ void ExtraParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
         {
             AnaEvent* ev = sample[s]->GetEvent(i);
 
-            int bin = 0;
+            int bin = s;
 
             if(mode == 1 && ev->isSignalEvent())
                 bin = PASSEVENT;
@@ -42,6 +43,11 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
     }
 
     const int bin = m_evmap[nsample][nevent];
+    std::vector<double> params_constrained = CalcConstraint(params);
+
+    //std::cout << "---------------" << std::endl;
+    //for(const auto& v : params_constrained)
+    //    std::cout << "Par Extra: " << v << std::endl;
 
     if(bin == PASSEVENT)
         return;
@@ -49,6 +55,7 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
         event->AddEvWght(0.0);
     else
     {
+        /*
         if(bin > params.size())
         {
             std::cout << WAR << "In ExtraParameters::ReWeight()\n"
@@ -56,8 +63,10 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
                       << WAR << "Setting event weight to zero." << std::endl;
             event->AddEvWght(0.0);
         }
+        */
 
-        event->AddEvWght(params[bin + nsample]);
+        //event->AddEvWght(params[bin]);
+        event->AddEvWght(params_constrained[bin]);
     }
 }
 
@@ -80,14 +89,77 @@ void ExtraParameters::InitParameters()
     pars_original = pars_prior;
 }
 
+void ExtraParameters::InitFixed()
+{
+    const int num_samples = 8;
+    for(int i = 0; i < num_samples; ++i)
+    {
+        pars_name.push_back(Form("%s_%d", m_name.c_str(), i));
+        pars_prior.push_back(1.0);
+        pars_step.push_back(0.05);
+        pars_limlow.push_back(0.0);
+        pars_limhigh.push_back(4.0);
+        pars_fixed.push_back(false);
+
+        std::cout << TAG << "Adding extra parameter " << i << std::endl;
+    }
+
+    Npar = pars_name.size();
+    pars_original = pars_prior;
+}
+
 void ExtraParameters::AddSample(std::vector<AnaSample*>& v_sample)
 {
     for(const auto& sample : v_sample)
     {
         const int sample_id = sample->GetSampleID();
         v_samples.emplace_back(sample_id);
+        v_nevents.emplace_back(sample->GetN());
 
         std::cout << TAG << "Adding sample " << sample->GetName()
                   << " with ID " << sample_id << " to " << m_name << std::endl;
     }
+}
+
+std::vector<double> ExtraParameters::CalcConstraint(std::vector<double>& v_pars)
+{
+    //I hate this function so much.
+    double Ntotal_nd280 = v_nevents[0]
+                        + v_nevents[1]
+                        + v_nevents[2]
+                        + v_nevents[3]
+                        + v_nevents[4]
+                        + v_nevents[5]
+                        + v_nevents[6]
+                        + v_nevents[7];
+
+    double constraint_nd280 = Ntotal_nd280
+                            - v_pars[0] * v_nevents[0]
+                            - v_pars[1] * v_nevents[1]
+                            - v_pars[2] * v_nevents[2]
+                            - v_pars[3] * v_nevents[3]
+                            - v_pars[4] * v_nevents[4]
+                            - v_pars[5] * v_nevents[5]
+                            - v_pars[6] * v_nevents[6];
+                            /* - v_pars[7] * v_nevents[7]; */
+    constraint_nd280 = constraint_nd280 / v_nevents[7];
+
+    double Ntotal_ingrid = v_nevents[8] + v_nevents[9];
+    double constraint_ingrid = Ntotal_ingrid
+                             - v_pars[7] * v_nevents[8];
+                             /* - v_pars[9] * v_nevents[9]; */
+    constraint_ingrid = constraint_ingrid / v_nevents[9];
+
+    std::vector<double> new_pars = {v_pars[0],
+                                    v_pars[1],
+                                    v_pars[2],
+                                    v_pars[3],
+                                    v_pars[4],
+                                    v_pars[5],
+                                    v_pars[6],
+                                    constraint_nd280,
+                                    v_pars[7],
+                                    constraint_ingrid};
+
+    return new_pars;
 }

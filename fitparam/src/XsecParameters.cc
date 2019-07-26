@@ -66,11 +66,11 @@ void XsecParameters::InitParameters()
     unsigned int offset = 0;
     for(const auto& det : v_detectors)
     {
-        if(det == "INGRID")
-        {
-            m_offset.insert(std::make_pair(det, 0));
-            break;
-        }
+        //if(det == "INGRID")
+        //{
+        //    m_offset.insert(std::make_pair(det, 0));
+        //    break;
+        //}
         m_offset.insert(std::make_pair(det, offset));
         for(const auto& d : m_dials.at(det))
         {
@@ -131,7 +131,7 @@ void XsecParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
         weight *= dial_weight;
 
         /*
-        if(dial_weight > 3.0)
+        if(dial_weight != 1.0)
         {
             std::cout << "--------------" << std::endl;
             std::cout << "Ev T: " << event -> GetTopology() << std::endl
