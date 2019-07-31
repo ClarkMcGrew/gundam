@@ -161,5 +161,11 @@ std::vector<double> ExtraParameters::CalcConstraint(std::vector<double>& v_pars)
                                     v_pars[7],
                                     constraint_ingrid};
 
+    for(int i = 0; i < v_nevents.size(); ++i)
+    {
+        std::cout << "N" << i << " : " << v_nevents[i] << std::endl;
+        std::cout << "P" << i << " : " << new_pars[i] << std::endl;
+    }
+
     return new_pars;
 }

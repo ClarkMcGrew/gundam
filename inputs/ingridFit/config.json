@@ -1,9 +1,9 @@
 {
-    "data_file" : "xsllh_nuwro.root",
+    "data_file" : "xsllh_nominal_full.root",
     "mc_file"   : "xsllh_nominal_full.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
-    "fit_type"  : 1,
+    "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
     "rng_template" : false,
@@ -35,7 +35,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
         "file" : "xsec_cov_normalized.root",
@@ -43,7 +43,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "extra_cov" : {
         "file" : "extra_proton_cov.root",
