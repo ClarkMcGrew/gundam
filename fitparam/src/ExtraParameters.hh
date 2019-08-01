@@ -19,11 +19,11 @@ class ExtraParameters : public AnaFitParameters
         void InitEventMap(std::vector<AnaSample*>& sample, int mode);
         void ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent, std::vector<double>& params);
         void AddSample(std::vector<AnaSample*>& v_sample);
-        std::vector<double> CalcConstraint(std::vector<double>& v_pars);
+        std::vector<double> CalcConstraint(const std::vector<AnaSample*>& samples, std::vector<double>& v_pars);
 
     private:
         std::vector<int> v_samples;
-        std::vector<int> v_nevents;
+        //std::vector<int> v_nevents;
 
         const std::string TAG = color::GREEN_STR + "[ExtraParameters]: " + color::RESET_STR;
 };

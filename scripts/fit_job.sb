@@ -1,6 +1,6 @@
 #!/bin/bash -login
-#SBATCH --time=12:00:00
-#SBATCH --cpus-per-task=16
+#SBATCH --time=10:00:00
+#SBATCH --cpus-per-task=12
 #SBATCH --mem=12G
 #SBATCH --constraint=[lac|skl]
 #SBATCH --job-name=xsllhFit
@@ -8,14 +8,14 @@
 #SBATCH --array=0-2
 
 FITROOT="/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter"
-RUNPATH="/mnt/scratch/cuddandr/xsllhFit/asimov"
+RUNPATH="/mnt/scratch/cuddandr/xsllhFit/extrapar_throw"
 
 source ${HOME}/ROOT/root-6.10.08/bin/thisroot.sh
 source ${FITROOT}/setup.sh
 
 cd $RUNPATH
 
-OFFSET=957
+OFFSET=996
 SEED=$(($SLURM_ARRAY_TASK_ID+$OFFSET))
 FITCONFIG="config.json"
 ERRCONFIG="errprop.json"

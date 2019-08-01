@@ -44,6 +44,10 @@ public:
                                       RegMethod flag) const
     { return 0.0; }
 
+    virtual std::vector<double> CalcConstraint(const std::vector<AnaSample*>& samples,
+                                               std::vector<double>& v_par)
+    { return v_par; }
+
     void ThrowPar(std::vector<double>& param, const int seed = 0) const;
     double GetChi2(const std::vector<double>& params) const;
     void SetCovarianceMatrix(const TMatrixDSym& covmat, bool decompose = false);

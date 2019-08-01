@@ -43,7 +43,7 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
     }
 
     const int bin = m_evmap[nsample][nevent];
-    std::vector<double> params_constrained = CalcConstraint(params);
+    //std::vector<double> params_constrained = CalcConstraint(params);
 
     //std::cout << "---------------" << std::endl;
     //for(const auto& v : params_constrained)
@@ -65,8 +65,18 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
         }
         */
 
-        //event->AddEvWght(params[bin]);
-        event->AddEvWght(params_constrained[bin]);
+        //if(params[nsample] - 1.0 > 1E-6)
+        //{
+        //    std::cout << std::setprecision(9);
+        //    std::cout << "-------------" << std::endl;
+        //    std::cout << "Sample: " << nsample << std::endl;
+        //    std::cout << "Bin   : " << bin << std::endl;
+        //    std::cout << "Param : " << params[nsample] << std::endl;
+        //    std::cout << "Param : " << params[bin] << std::endl;
+        //}
+
+        event->AddEvWght(params[bin]);
+        //event->AddEvWght(params_constrained[bin]);
     }
 }
 
@@ -114,16 +124,20 @@ void ExtraParameters::AddSample(std::vector<AnaSample*>& v_sample)
     {
         const int sample_id = sample->GetSampleID();
         v_samples.emplace_back(sample_id);
-        v_nevents.emplace_back(sample->GetN());
+        //v_nevents.emplace_back(sample->GetN());
 
         std::cout << TAG << "Adding sample " << sample->GetName()
                   << " with ID " << sample_id << " to " << m_name << std::endl;
     }
 }
 
-std::vector<double> ExtraParameters::CalcConstraint(std::vector<double>& v_pars)
+std::vector<double> ExtraParameters::CalcConstraint(const std::vector<AnaSample*>& samples, std::vector<double>& v_pars)
 {
     //I hate this function so much.
+    std::vector<double> v_nevents(samples.size(), 0);
+    for(int i = 0; i < samples.size(); ++i)
+        v_nevents[i] = samples[i]->GetIntegral();
+
     double Ntotal_nd280 = v_nevents[0]
                         + v_nevents[1]
                         + v_nevents[2]
@@ -161,11 +175,13 @@ std::vector<double> ExtraParameters::CalcConstraint(std::vector<double>& v_pars)
                                     v_pars[7],
                                     constraint_ingrid};
 
-    for(int i = 0; i < v_nevents.size(); ++i)
-    {
-        std::cout << "N" << i << " : " << v_nevents[i] << std::endl;
-        std::cout << "P" << i << " : " << new_pars[i] << std::endl;
-    }
+    //std::cout << "Ntotal: " << Ntotal_nd280 << std::endl;
+    //std::cout << "Itotal: " << Ntotal_ingrid << std::endl;
+    //for(int i = 0; i < v_nevents.size(); ++i)
+    //{
+    //    std::cout << "N" << i << " : " << v_nevents[i] << std::endl;
+    //    std::cout << "P" << i << " : " << new_pars[i] << std::endl;
+    //}
 
     return new_pars;
 }

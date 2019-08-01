@@ -1,6 +1,6 @@
 {
-    "data_file" : "xsllh_nominal_full.root",
-    "mc_file"   : "xsllh_nominal_full.root",
+    "data_file" : "xsllh_nominal_reduced.root",
+    "mc_file"   : "xsllh_nominal_reduced.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
     "fit_type"  : 0,
@@ -16,7 +16,7 @@
         "algorithm" : "Migrad",
         "print_level" : 2,
         "tolerance" : 1E-2,
-        "strategy" : 2,
+        "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
     },
@@ -27,7 +27,7 @@
         "throw"  : false,
         "decomp" : true,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "det_cov" : {
         "file" : "detcov/combined_detcov.root",
@@ -46,7 +46,7 @@
         "fit_par" : false
     },
     "extra_cov" : {
-        "file" : "extra_proton_cov.root",
+        "file" : "extra_constrained_cov.root",
         "matrix" : "extra_cov",
         "throw" : false,
         "fit_par" : true
