@@ -92,6 +92,7 @@ int main(int argc, char** argv)
     std::string true_binning = js["true_binning"];
     std::string reco_binning = js["reco_binning"];
 
+    bool do_mc_stat = js["mc_stat_error"];
     unsigned int ntoys = js["num_toys"];
     double cov_offset = js["cov_offset"];
 
@@ -99,7 +100,8 @@ int main(int argc, char** argv)
               << TAG << "Covariance file : " << cov_file_name << std::endl
               << TAG << "Covariance name : " << cov_mat_name << std::endl
               << TAG << "True binning file: " << true_binning << std::endl
-              << TAG << "Reco binning file: " << reco_binning << std::endl;
+              << TAG << "Reco binning file: " << reco_binning << std::endl
+              << TAG << "Apply MC stat error: " << std::boolalpha << do_mc_stat << std::endl;
     std::cout << TAG << "Output ROOT file: " << fname_output << std::endl;
 
     TFile* ing_file = TFile::Open(fname_input.c_str(), "READ");
@@ -299,6 +301,21 @@ int main(int argc, char** argv)
             pbar_toys.Print(i, ntoys-1);
     }
 
+    TH1D mc_stat("mc_stat", "mc_stat", nbins_reco, 0, nbins_reco);
+    for(auto& event : v_events)
+        mc_stat.Fill(event.reco_bin + 0.5, event.weight);
+
+    TH1D mc_stat_error("mc_stat_error", "mc_stat_error", nbins_reco, 0, nbins_reco);
+    double* w = mc_stat.GetArray();
+    double* w2 = mc_stat.GetSumw2()->GetArray();
+    for(unsigned int i = 0; i < nbins_reco; ++i)
+    {
+        double rel_error = w2[i+1] / (w[i+1] * w[i+1]);
+        if(std::isnan(rel_error))
+            rel_error = 0;
+        mc_stat_error.SetBinContent(i+1, rel_error);
+    }
+
     std::cout << TAG << "Calculating mean and covariance." << std::endl;
 
     TH1D h_mean("", "", nbins_reco, 0, nbins_reco);
@@ -336,6 +353,12 @@ int main(int argc, char** argv)
         }
     }
 
+    if(do_mc_stat)
+    {
+        for(int i = 0; i < nbins_reco; ++i)
+            cov_reco(i,i) += mc_stat_error.GetBinContent(i+1);
+    }
+
     for(int i = 0; i < nbins_reco; ++i)
     {
         for(int j = 0; j < nbins_reco; ++j)
@@ -358,6 +381,9 @@ int main(int argc, char** argv)
     cov_true.Write("cov_true");
     cov_reco.Write("cov_reco");
     cor_reco.Write("cor_reco");
+
+    if(do_mc_stat)
+        mc_stat_error.Write("mc_stat_error");
 
     foutput->Close();
 

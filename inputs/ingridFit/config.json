@@ -1,12 +1,12 @@
 {
-    "data_file" : "xsllh_nuwro.root",
+    "data_file" : "xsllh_nominal_full.root",
     "mc_file"   : "xsllh_nominal_full.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
-    "fit_type"  : 1,
+    "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "rng_template" : false,
+    "rng_template" : true,
     "save_events" : false,
     "rng_seed"  : 12257,
     "num_threads" : 12,
@@ -16,7 +16,7 @@
         "algorithm" : "Migrad",
         "print_level" : 2,
         "tolerance" : 1E-2,
-        "strategy" : 2,
+        "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
     },
@@ -30,11 +30,11 @@
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "detcov/combined_detcov.root",
+        "file" : "detcov/combined_detcov_mc_stat.root",
         "matrix" : "det_cov",
         "throw"  : false,
         "decomp" : true,
-        "variance" : 0.99,
+        "variance" : 0.98,
         "fit_par" : true
     },
     "xsec_cov" : {
@@ -49,7 +49,7 @@
         "file" : "extra_proton_cov.root",
         "matrix" : "extra_cov",
         "throw" : false,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
         "enable" : false,
