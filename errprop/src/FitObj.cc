@@ -208,6 +208,10 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     }
 
     InitSignalHist(parser.signal_definition);
+
+    for(auto& sam : samples)
+        sam->FillEventHist(0);
+
     std::cout << TAG << "Finished initialization." << std::endl;
 }
 
@@ -261,6 +265,9 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
         new_par.emplace_back(std::vector<double>(start, end));
     }
 
+    for(int i = 0; i < new_par.size(); ++i)
+        new_par[i] = fit_par[i]->CalcConstraint(samples, new_par[i]);
+
     for(int s = 0; s < samples.size(); ++s)
     {
         const unsigned int num_events = samples[s]->GetN();
@@ -273,6 +280,8 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
             for(int f = 0; f < fit_par.size(); ++f)
                 fit_par[f]->ReWeight(ev, det, s, i, new_par.at(f));
         }
+
+        samples[s]->FillEventHist(0);
     }
 
     for(int s = 0; s < samples.size(); ++s)
@@ -313,6 +322,8 @@ void FitObj::ReweightNominal()
                 signal_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWghtMC());
             }
         }
+
+        samples[s]->FillEventHist(0);
     }
 
     //for(auto& hist : signal_hist)

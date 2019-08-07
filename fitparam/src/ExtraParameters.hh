@@ -22,6 +22,7 @@ class ExtraParameters : public AnaFitParameters
         std::vector<double> CalcConstraint(const std::vector<AnaSample*>& samples, std::vector<double>& v_pars);
 
     private:
+        bool m_calc_constraint;
         std::vector<int> v_samples;
         //std::vector<int> v_nevents;
 

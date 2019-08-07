@@ -3,6 +3,7 @@
 ExtraParameters::ExtraParameters(const std::string& name)
 {
     m_name = name;
+    m_calc_constraint = true;
 }
 
 void ExtraParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
@@ -12,7 +13,10 @@ void ExtraParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
     m_evmap.clear();
 
     if(mode == 2)
+    {
         std::cout << TAG << "Not using reweighting for " << m_name << "." << std::endl;
+        m_calc_constraint = false;
+    }
 
     for(std::size_t s = 0; s < sample.size(); ++s)
     {
@@ -134,6 +138,9 @@ void ExtraParameters::AddSample(std::vector<AnaSample*>& v_sample)
 std::vector<double> ExtraParameters::CalcConstraint(const std::vector<AnaSample*>& samples, std::vector<double>& v_pars)
 {
     //I hate this function so much.
+    if(m_calc_constraint == false)
+        return v_pars;
+
     std::vector<double> v_nevents(samples.size(), 0);
     for(int i = 0; i < samples.size(); ++i)
         v_nevents[i] = samples[i]->GetIntegral();
