@@ -46,7 +46,7 @@
         "fit_par" : true
     },
     "extra_cov" : {
-        "file" : "extra_proton_cov.root",
+        "file" : "extra_constrained_cov.root",
         "matrix" : "extra_cov",
         "throw" : false,
         "fit_par" : false

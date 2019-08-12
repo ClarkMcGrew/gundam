@@ -37,6 +37,7 @@ public:
     ~AnaSample();
 
     int GetN() const;
+    double GetIntegral() const;
     AnaEvent* GetEvent(int evnum);
     void ClearEvents();
     void AddEvent(const AnaEvent& event);

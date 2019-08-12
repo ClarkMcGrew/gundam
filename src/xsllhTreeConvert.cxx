@@ -361,6 +361,10 @@ int main(int argc, char** argv)
                 //weight = weight * GetTestEnuWeight(enu_true);
                 //if(topology == 0 || topology == 1 || topology == 2)
                 //    weight *= 0.80;
+                //if(cut_branch == 0)
+                //    weight *= 1.02;
+                //if(cut_branch == 1)
+                //    weight *= 0.9068;
             }
 
             if(do_apply_templates)
@@ -597,11 +601,11 @@ int main(int argc, char** argv)
                 //weight = weight * GetTestEnuWeight(enu_true);
                 //if(topology == 0 || topology == 1 || topology == 2)
                 //    weight *= 1.20;
-                if(topology == 0 || topology == 1 || topology == 2)
-                {
-                    if(D1True > 350 && D1True < 500)
-                        weight *= 10;
-                }
+                //if(topology == 0 || topology == 1 || topology == 2)
+                //{
+                //    if(D1True > 350 && D1True < 500)
+                //        weight *= 10;
+                //}
             }
 
             if(do_apply_templates && reaction >= 0)

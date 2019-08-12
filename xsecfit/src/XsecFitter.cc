@@ -405,6 +405,7 @@ double XsecFitter::FillSamples(std::vector<std::vector<double>>& new_pars, int d
         {
             new_pars[i] = m_fitpara[i]->GetOriginalParameters(new_pars[i]);
         }
+        new_pars[i] = m_fitpara[i]->CalcConstraint(m_samples, new_pars[i]);
         par_offset += m_fitpara[i]->GetNpar();
     }
 

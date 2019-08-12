@@ -84,6 +84,8 @@ void AnaSample::ClearEvents() { m_events.clear(); }
 // GetN -- get number of events stored
 int AnaSample::GetN() const { return (int)m_events.size(); }
 
+double AnaSample::GetIntegral() const { return m_hpred->Integral(); }
+
 AnaEvent* AnaSample::GetEvent(int evnum)
 {
     if(m_events.empty())
