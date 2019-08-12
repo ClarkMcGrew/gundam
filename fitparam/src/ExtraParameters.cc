@@ -69,7 +69,7 @@ void ExtraParameters::ReWeight(AnaEvent* event, const std::string& det, int nsam
         }
         */
 
-        //if(params[nsample] - 1.0 > 1E-6)
+        //if(std::abs(params[nsample] - 1.0) > 1E-6)
         //{
         //    std::cout << std::setprecision(9);
         //    std::cout << "-------------" << std::endl;
