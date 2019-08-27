@@ -131,6 +131,7 @@ int main(int argc, char** argv)
                       << TAG << "Use Sample: " << std::boolalpha << opt.use_sample << std::endl;
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
+            s -> SetLLHFunction(parser.min_settings.likelihood);
             if(opt.use_pot)
                 s -> SetNorm(potD/potMC);
             samples.push_back(s);
