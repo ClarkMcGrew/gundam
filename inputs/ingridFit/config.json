@@ -14,6 +14,7 @@
     "min_settings" : {
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
+        "likelihood" : "Poisson",
         "print_level" : 2,
         "tolerance" : 1E-2,
         "strategy" : 1,
@@ -30,11 +31,11 @@
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "detcov/combined_detcov_mc_stat.root",
+        "file" : "detcov/combined_detcov.root",
         "matrix" : "det_cov",
         "throw"  : false,
         "decomp" : true,
-        "variance" : 0.98,
+        "variance" : 0.99,
         "fit_par" : true
     },
     "xsec_cov" : {

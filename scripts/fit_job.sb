@@ -1,21 +1,21 @@
 #!/bin/bash -login
 #SBATCH --time=12:00:00
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=16
 #SBATCH --mem=12G
 #SBATCH --constraint=[lac|skl]
 #SBATCH --job-name=xsllhFit
 #SBATCH --output=fit_slurm.log
-#SBATCH --array=0-2
+#SBATCH --array=0-25
 
 FITROOT="/mnt/home/cuddandr/work/nd280Software/v12r15/xsLLhFitter"
-RUNPATH="/mnt/scratch/cuddandr/xsllhFit/extrapar"
+RUNPATH="/mnt/scratch/cuddandr/xsllhFit/effective_test"
 
 source ${HOME}/ROOT/root-6.10.08/bin/thisroot.sh
 source ${FITROOT}/setup.sh
 
 cd $RUNPATH
 
-OFFSET=3301
+OFFSET=1414
 SEED=$(($SLURM_ARRAY_TASK_ID+$OFFSET))
 FITCONFIG="config.json"
 ERRCONFIG="errprop.json"
