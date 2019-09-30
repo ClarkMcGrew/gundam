@@ -27,7 +27,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 	string infilename_TempPar = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyTemPar.root";
 	string infilename_FluxPar = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyFluxPar.root";
-	string infilename_XsecPar = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyXsecPar.root";
+	// string infilename_XsecPar = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyXsecPar.root";
 	string infilename_DetePar = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/xsec_fit1_asimov_onlyDetPar.root";
 
 	//======================================================================================================  
@@ -74,7 +74,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 	TFile* fin_TempPar = new TFile(infilename_TempPar.c_str());
 	TFile* fin_FluxPar = new TFile(infilename_FluxPar.c_str());
-	TFile* fin_XsecPar = new TFile(infilename_XsecPar.c_str());
+	// TFile* fin_XsecPar = new TFile(infilename_XsecPar.c_str());
 	TFile* fin_DetePar = new TFile(infilename_DetePar.c_str());
 	//======================================================================================================
 
@@ -86,11 +86,11 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 	
 	vector< vector<TH1D*> > h_xsec_TempPar(Ntarget);
 	vector< vector<TH1D*> > h_xsec_FluxPar(Ntarget);
-	vector< vector<TH1D*> > h_xsec_XsecPar(Ntarget);
+	// vector< vector<TH1D*> > h_xsec_XsecPar(Ntarget);
 	vector< vector<TH1D*> > h_xsec_DetePar(Ntarget);
 	vector< vector<TH1D*> > h_xsec_TempPar_err(Ntarget);
 	vector< vector<TH1D*> > h_xsec_FluxPar_err(Ntarget);
-	vector< vector<TH1D*> > h_xsec_XsecPar_err(Ntarget);
+	// vector< vector<TH1D*> > h_xsec_XsecPar_err(Ntarget);
 	vector< vector<TH1D*> > h_xsec_DetePar_err(Ntarget);
 
 	for(int itar = 0; itar < Ntarget; itar++)
@@ -98,33 +98,33 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 		{
 			h_xsec_TempPar[itar].push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
 			h_xsec_FluxPar[itar].push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
-			h_xsec_XsecPar[itar].push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
+			// h_xsec_XsecPar[itar].push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
 			h_xsec_DetePar[itar].push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) )) );
 			h_xsec_TempPar_err[itar].push_back( (TH1D*)(fin_TempPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
 			h_xsec_FluxPar_err[itar].push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
-			h_xsec_XsecPar_err[itar].push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
+			// h_xsec_XsecPar_err[itar].push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
 			h_xsec_DetePar_err[itar].push_back( (TH1D*)(fin_DetePar->Get( Form("CC0pi%s_cos_bin%d_postfit", targetlist[itar].c_str(), nbcth) ))->Clone(Form("CC0pi%s_cos_bin%d_err", targetlist[itar].c_str(), nbcth)) );
 		}
 
 
 	vector<TH1D*> h_ratio_TempPar;
 	vector<TH1D*> h_ratio_FluxPar;
-	vector<TH1D*> h_ratio_XsecPar;
+	// vector<TH1D*> h_ratio_XsecPar;
 	vector<TH1D*> h_ratio_DetePar;
 	vector<TH1D*> h_ratio_TempPar_err;
 	vector<TH1D*> h_ratio_FluxPar_err;
-	vector<TH1D*> h_ratio_XsecPar_err;
+	// vector<TH1D*> h_ratio_XsecPar_err;
 	vector<TH1D*> h_ratio_DetePar_err;
 
 	for(int nbcth=0; nbcth<Nbins_costh; nbcth++)
 	{
 		h_ratio_TempPar.push_back(     (TH1D*)(fin_TempPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
 		h_ratio_FluxPar.push_back(     (TH1D*)(fin_FluxPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
-		h_ratio_XsecPar.push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
+		// h_ratio_XsecPar.push_back(     (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
 		h_ratio_DetePar.push_back(     (TH1D*)(fin_DetePar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) )) );
 		h_ratio_TempPar_err.push_back( (TH1D*)(fin_TempPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
 		h_ratio_FluxPar_err.push_back( (TH1D*)(fin_FluxPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
-		h_ratio_XsecPar_err.push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
+		// h_ratio_XsecPar_err.push_back( (TH1D*)(fin_XsecPar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
 		h_ratio_DetePar_err.push_back( (TH1D*)(fin_DetePar->Get( Form("CC0piCarbon_cos_bin%d_ratio_postfit", nbcth) ))->Clone(Form("CC0piOCRatio_cos_bin%d_err", nbcth)) );
 	}
 
@@ -139,24 +139,24 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 		{
 			h_xsec_TempPar_err[itar][nbcth] -> Reset();
 			h_xsec_FluxPar_err[itar][nbcth] -> Reset();
-			h_xsec_XsecPar_err[itar][nbcth] -> Reset();
+			// h_xsec_XsecPar_err[itar][nbcth] -> Reset();
 			h_xsec_DetePar_err[itar][nbcth] -> Reset();
 
 			for(int i=1; i<=h_xsec_TempPar_err[itar][nbcth]->GetNbinsX(); i++)
 			{
 				double err_TempPar  = h_xsec_TempPar[itar][nbcth] -> GetBinError(i);
 				double err_FluxPar  = h_xsec_FluxPar[itar][nbcth] -> GetBinError(i);
-				double err_XsecPar  = h_xsec_XsecPar[itar][nbcth] -> GetBinError(i);
+				// double err_XsecPar  = h_xsec_XsecPar[itar][nbcth] -> GetBinError(i);
 				double err_DetePar  = h_xsec_DetePar[itar][nbcth] -> GetBinError(i);
 
 				double mean_TempPar = h_xsec_TempPar[itar][nbcth] -> GetBinContent(i);
 				double mean_FluxPar = h_xsec_FluxPar[itar][nbcth] -> GetBinContent(i);
-				double mean_XsecPar = h_xsec_XsecPar[itar][nbcth] -> GetBinContent(i);
+				// double mean_XsecPar = h_xsec_XsecPar[itar][nbcth] -> GetBinContent(i);
 				double mean_DetePar = h_xsec_DetePar[itar][nbcth] -> GetBinContent(i);
 				
 				h_xsec_TempPar_err[itar][nbcth] -> SetBinContent(i, err_TempPar/mean_TempPar);
 				h_xsec_FluxPar_err[itar][nbcth] -> SetBinContent(i, err_FluxPar/mean_FluxPar);
-				h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(i, err_XsecPar/mean_XsecPar);
+				// h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(i, err_XsecPar/mean_XsecPar);
 				h_xsec_DetePar_err[itar][nbcth] -> SetBinContent(i, err_DetePar/mean_DetePar);
 			}
 		}
@@ -165,24 +165,24 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 	{
 		h_ratio_TempPar_err[nbcth] -> Reset();
 		h_ratio_FluxPar_err[nbcth] -> Reset();
-		h_ratio_XsecPar_err[nbcth] -> Reset();
+		// h_ratio_XsecPar_err[nbcth] -> Reset();
 		h_ratio_DetePar_err[nbcth] -> Reset();
 
 		for(int i=1; i<=h_ratio_TempPar_err[nbcth]->GetNbinsX(); i++)
 		{
 			double err_TempPar  = h_ratio_TempPar[nbcth] -> GetBinError(i);
 			double err_FluxPar  = h_ratio_FluxPar[nbcth] -> GetBinError(i);
-			double err_XsecPar  = h_ratio_XsecPar[nbcth] -> GetBinError(i);
+			// double err_XsecPar  = h_ratio_XsecPar[nbcth] -> GetBinError(i);
 			double err_DetePar  = h_ratio_DetePar[nbcth] -> GetBinError(i);
 
 			double mean_TempPar = h_ratio_TempPar[nbcth] -> GetBinContent(i);
 			double mean_FluxPar = h_ratio_FluxPar[nbcth] -> GetBinContent(i);
-			double mean_XsecPar = h_ratio_XsecPar[nbcth] -> GetBinContent(i);
+			// double mean_XsecPar = h_ratio_XsecPar[nbcth] -> GetBinContent(i);
 			double mean_DetePar = h_ratio_DetePar[nbcth] -> GetBinContent(i);
 			
 			h_ratio_TempPar_err[nbcth] -> SetBinContent(i, err_TempPar/mean_TempPar);
 			h_ratio_FluxPar_err[nbcth] -> SetBinContent(i, err_FluxPar/mean_FluxPar);
-			h_ratio_XsecPar_err[nbcth] -> SetBinContent(i, err_XsecPar/mean_XsecPar);
+			// h_ratio_XsecPar_err[nbcth] -> SetBinContent(i, err_XsecPar/mean_XsecPar);
 			h_ratio_DetePar_err[nbcth] -> SetBinContent(i, err_DetePar/mean_DetePar);
 		}
 	}
@@ -212,19 +212,19 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 			h_xsec_TempPar_err[itar][nbcth] -> SetLineColor(kBlack);
 			h_xsec_FluxPar_err[itar][nbcth] -> SetLineColor(kBlue);
-			h_xsec_XsecPar_err[itar][nbcth] -> SetLineColor(kRed);
+			// h_xsec_XsecPar_err[itar][nbcth] -> SetLineColor(kRed);
 			h_xsec_DetePar_err[itar][nbcth] -> SetLineColor(kGreen+1);
 
 			c_xsec_err[itar] -> cd(nbcth+1);
 
-			// if(nbcth!=0) gPad->SetLogx();
+			if(nbcth!=0) gPad->SetLogx();
 
 			h_xsec_DetePar_err[itar][nbcth] -> Draw("hist");
 			h_xsec_FluxPar_err[itar][nbcth] -> Draw("same hist");
-			h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
+			// h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
 			h_xsec_TempPar_err[itar][nbcth] -> Draw("same hist");
 
-			// h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.15);
+			h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
 
 			if(nbcth==0)
 			{
@@ -236,7 +236,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 				leg[itar] -> SetHeader("Total fit error");
 				leg[itar] -> AddEntry(h_xsec_TempPar_err[itar][0], "Statistics", "l");
 				leg[itar] -> AddEntry(h_xsec_FluxPar_err[itar][0], "Stat. + Flux", "l");
-				leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Stat. + Cross-section model", "l");
+				// leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Stat. + Cross-section model", "l");
 				leg[itar] -> AddEntry(h_xsec_DetePar_err[itar][0], "Stat. + Detector", "l");
 				c_xsec_err[itar]->cd(1);
 				leg[itar]->Draw();
@@ -257,13 +257,13 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 			{
 				statErr = ( h_xsec_TempPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_TempPar_err[itar][nbcth]->GetBinContent(nbm) );
 				fluxErr = ( h_xsec_FluxPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_FluxPar_err[itar][nbcth]->GetBinContent(nbm) );
-				xsecErr = ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) );
+				// xsecErr = ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_XsecPar_err[itar][nbcth]->GetBinContent(nbm) );
 				deteErr = ( h_xsec_DetePar_err[itar][nbcth]->GetBinContent(nbm) ) * ( h_xsec_DetePar_err[itar][nbcth]->GetBinContent(nbm) );
 
 				if(fluxErr - statErr > 0) h_xsec_FluxPar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( fluxErr - statErr ) );
 				else h_xsec_FluxPar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
-				if(xsecErr - statErr > 0) h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( xsecErr - statErr ) );
-				else h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
+				// if(xsecErr - statErr > 0) h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( xsecErr - statErr ) );
+				// else h_xsec_XsecPar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
 				if(deteErr - statErr > 0) h_xsec_DetePar_err[itar][nbcth] -> SetBinContent(nbm, sqrt( deteErr - statErr ) );
 				else h_xsec_DetePar_err[itar][nbcth] -> SetBinContent(nbm, 0.0);
 			}
@@ -288,17 +288,17 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 			h_xsec_TempPar_err[itar][nbcth] -> SetLineColor(kBlack);
 			h_xsec_FluxPar_err[itar][nbcth] -> SetLineColor(kBlue);
-			h_xsec_XsecPar_err[itar][nbcth] -> SetLineColor(kRed);
+			// h_xsec_XsecPar_err[itar][nbcth] -> SetLineColor(kRed);
 			h_xsec_DetePar_err[itar][nbcth] -> SetLineColor(kGreen+1);
 
 			c_xsec_errDiff[itar] -> cd(nbcth+1);
 
-			// if(nbcth!=0) gPad->SetLogx();
+			if(nbcth!=0) gPad->SetLogx();
 			// if(nbcth!=0) gPad->SetLogy();
 
 			h_xsec_TempPar_err[itar][nbcth] -> Draw("hist");
 			h_xsec_FluxPar_err[itar][nbcth] -> Draw("same hist");
-			h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
+			// h_xsec_XsecPar_err[itar][nbcth] -> Draw("same hist");
 			h_xsec_DetePar_err[itar][nbcth] -> Draw("same hist");
 
 			// if(nbcth!=0) h_xsec_DetePar_err[itar][nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.08);
@@ -315,7 +315,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 				leg[itar] -> SetHeader("Estimated single contributions");
 				leg[itar] -> AddEntry(h_xsec_TempPar_err[itar][0], "Statistics", "l");
 				leg[itar] -> AddEntry(h_xsec_FluxPar_err[itar][0], "Flux", "l");
-				leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Cross-section model", "l");
+				// leg[itar] -> AddEntry(h_xsec_XsecPar_err[itar][0], "Cross-section model", "l");
 				leg[itar] -> AddEntry(h_xsec_DetePar_err[itar][0], "Detector", "l");
 				c_xsec_errDiff[itar]->cd(1);
 				leg[itar]->Draw();
@@ -353,7 +353,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 		h_ratio_TempPar_err[nbcth] -> SetLineColor(kBlack);
 		h_ratio_FluxPar_err[nbcth] -> SetLineColor(kBlue);
-		h_ratio_XsecPar_err[nbcth] -> SetLineColor(kRed);
+		// h_ratio_XsecPar_err[nbcth] -> SetLineColor(kRed);
 		h_ratio_DetePar_err[nbcth] -> SetLineColor(kGreen+1);
 
 		c_ratio_err -> cd(nbcth+1);
@@ -362,10 +362,10 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 
 		h_ratio_DetePar_err[nbcth] -> Draw("hist");
 		h_ratio_FluxPar_err[nbcth] -> Draw("same hist");
-		h_ratio_XsecPar_err[nbcth] -> Draw("same hist");
+		// h_ratio_XsecPar_err[nbcth] -> Draw("same hist");
 		h_ratio_TempPar_err[nbcth] -> Draw("same hist");
 
-		h_ratio_DetePar_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 0.2);
+		h_ratio_DetePar_err[nbcth] -> GetYaxis() -> SetRangeUser(0.0, 1.0);
 
 		if(nbcth==0)
 		{
@@ -377,7 +377,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 			leg2 -> SetHeader("Systematic contributions");
 			leg2 -> AddEntry(h_ratio_TempPar_err[0], "Statistics", "l");
 			leg2 -> AddEntry(h_ratio_FluxPar_err[0], "Flux", "l");
-			leg2 -> AddEntry(h_ratio_XsecPar_err[0], "Cross-section model", "l");
+			// leg2 -> AddEntry(h_ratio_XsecPar_err[0], "Cross-section model", "l");
 			leg2 -> AddEntry(h_ratio_DetePar_err[0], "Detector", "l");
 			c_ratio_err->cd(1);
 			leg2->Draw();
@@ -394,7 +394,7 @@ void DrawSystSingleContrib(const std::string& dir_name = "systSingleContrib", st
 	//======================================================================================================
 	delete fin_TempPar;
 	delete fin_FluxPar;
-	delete fin_XsecPar;
+	// delete fin_XsecPar;
 	delete fin_DetePar;
 
 	std::cout << "================================================" << std::endl;

@@ -58,13 +58,13 @@ public:
     void UsePrefitCov();
 
     void ReweightBestFit();
-    void ReweightBestFitRatio(); //LM
     void GenerateToys();
     void GenerateToys(const int ntoys);
 
     void CalcCovariance(bool use_best_fit);
 
     void ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy);
+    void ApplyEffRatio(TH1D& sel_hist_ratio, std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy);
     void ApplyNorm(std::vector<TH1D>& vec_hist, const std::vector<double>& param, bool is_toy);
     void ApplyNormTargetsRatio(TH1D& hist, bool is_toy); //LM
     void ApplyTargets(const unsigned int signal_id, TH1D& hist, bool is_toy);
@@ -127,6 +127,7 @@ private:
     TH1D eff_best_fit;
     TH1D sel_best_fit_ratio; //LM
     TH1D tru_best_fit_ratio; //LM
+    TH1D eff_best_fit_ratio;
     std::vector<TH1D> signal_best_fit;
     std::vector<TH1D> truth_best_fit;
     std::vector<TH1D> toys_sel_events;
@@ -134,6 +135,7 @@ private:
     std::vector<TH1D> toys_eff;
     std::vector<TH1D> toys_sel_ratio; //LM
     std::vector<TH1D> toys_tru_ratio; //LM
+    std::vector<TH1D> toys_eff_ratio; //LM
     std::vector<SigNorm> v_normalization;
 
     std::string config_file;

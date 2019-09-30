@@ -22,6 +22,7 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 	//==== setup enu bins and covm for flux 
 	TMatrixDSym *cov_mat = (TMatrixDSym*)findetcov -> Get("xsec_cov");
 	TMatrixDSym *cor_mat = (TMatrixDSym*)findetcov -> Get("xsec_cor");
+	TMatrixDSym *cor_mat_ratio = (TMatrixDSym*)findetcov -> Get("ratio_cor");
 
 	int NbinsCos[] = {1, 5, 6, 6, 7, 8, 7, 10, 8,
 					  1, 5, 6, 6, 7, 8, 7, 10, 8 };
@@ -43,28 +44,42 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 
 	//=== Draw an horizontal line for det samples
 	TLine *verline[Nlines];
+	TLine *verlineShort[Nlines];
 	for(int il = 0; il < Nlines; il++)
 	{
 		verline[il] = new TLine(boundary[il], 0, boundary[il], Nbins );
 		verline[il] -> SetLineWidth(1);
-		verline[il] -> SetLineStyle(2);
+		verline[il] -> SetLineStyle(1);
+		verline[il] -> SetLineColor(kGray+1);
+		verlineShort[il] = new TLine(boundary[il], 0, boundary[il], Nbins/2 );
+		verlineShort[il] -> SetLineWidth(1);
+		verlineShort[il] -> SetLineStyle(1);
+		verlineShort[il] -> SetLineColor(kGray+1);
 	}
 
 	//=== Draw a vertical line for det samples
 	TLine *orline[Nlines];
+	TLine *orlineShort[Nlines];
 	for(int il = 0; il < Nlines; il++)
 	{
 		orline[il] = new TLine(0, boundary[il], Nbins, boundary[il] );
 		orline[il] -> SetLineWidth(1);
-		orline[il] -> SetLineStyle(2);
+		orline[il] -> SetLineStyle(1);
+		orline[il] -> SetLineColor(kGray+1);
+		orlineShort[il] = new TLine(0, boundary[il], Nbins/2, boundary[il] );
+		orlineShort[il] -> SetLineWidth(1);
+		orlineShort[il] -> SetLineStyle(1);
+		orlineShort[il] -> SetLineColor(kGray+1);
 	}
 
+	//=== Draw horizontal and vertical lines to separate C and O submatrices
 	TLine *verlineTar = new TLine(Nbins/2, 0, Nbins/2, Nbins);
 	TLine *orlineTar  = new TLine(0, Nbins/2, Nbins, Nbins/2);
-	verlineTar -> SetLineWidth(3);
-	orlineTar  -> SetLineWidth(3);
-	verlineTar -> SetLineStyle(2);
-	orlineTar  -> SetLineStyle(2);
+	verlineTar -> SetLineWidth(2);
+	orlineTar  -> SetLineWidth(2);
+	verlineTar -> SetLineStyle(1);
+	orlineTar  -> SetLineStyle(1);
+
 	//====================================================================================================                      
 
 
@@ -121,6 +136,25 @@ void DrawCovarianceFinal(string inputname = "fit3_statFluc", const std::string& 
 
 	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
 	c3->Print(Form("plots/xsecResults/%s/FinalXsecCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
+	
+
+
+
+	// //=== Draw correlation matrix for xsec ratio
+	TCanvas *c4 = new TCanvas("c4","c4",1050,900);
+	c4 -> Draw();
+
+	TH2D *cor_mat_ratio_th2= new TH2D(*cor_mat_ratio);
+	cor_mat_ratio_th2 -> SetMinimum(-1.0);
+	cor_mat_ratio_th2 -> SetMaximum(1.0);
+
+	cor_mat_ratio_th2 -> Draw("colz");
+
+	for(int il=0; il<Nlines/2; il++) orlineShort[il]  -> Draw();
+	for(int il=0; il<Nlines/2; il++) verlineShort[il] -> Draw();
+	
+	c4->Print(Form("plots/xsecResults/%s/FinalXsecRatioCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
+	c4->Print(Form("plots/xsecResults/%s/FinalXsecRatioCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
 	
 
 	// Draw matrix diagonal elements

@@ -6,6 +6,7 @@
 
 root -b -q 'chi2_study.C("fit1_statFluc")'
 root -b -q 'chi2_study.C("fit3_statFluc")'
+root -b -q 'chi2_study.C("fit3_asimov_statFluc")'
 
 */
 
@@ -27,27 +28,25 @@ void chi2_study(string fit_type = "fit3_statFluc")
 	std::cout << "------------------------" << std::endl;
 	std::cout << "----- Begin script -----" << std::endl;
 
-	//ALL int toys[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
-	// int toys_fit1[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
-	// int toys_fit3[] = {1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
+	// fit1 
+	int toys_fit1[]   = {1, 10, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 11, 110, 111, 112, 113, 115, 116, 117, 118, 119, 12, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 13, 130, 131, 132, 133, 134, 135, 136, 137, 138, 14, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 15, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 16, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 17, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 18, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 19, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 2, 20, 200, 21, 23, 24, 25, 26, 27, 28, 29, 3, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 4, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 6, 60, 61, 62, 63, 64, 65, 66, 68, 69, 7, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 8, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99 };
 	
-	int toys_fit1[] = {10 , 100, 101, 102, 103, 104, 105, 106, 107, 11 , 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 12 , 120, 121, 122, 123, 124, 126, 127, 128, 129, 13 , 130, 131, 132, 134, 135, 136, 137, 138, 139, 14 , 140, 141, 142, 143, 145, 146, 147, 148, 149, 15 , 150, 151, 152, 153, 154, 156, 157, 158, 159, 16 , 161, 162, 164, 165, 166, 167, 168, 169, 17 , 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 18 , 180, 181, 183, 185, 187, 189, 19 , 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 2  , 20 , 200, 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 3  , 30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38 , 39 , 4  , 40 , 41 , 42 , 43 , 45 , 47 , 48 , 49 , 5  , 50 , 51 , 52 , 53 , 54 , 55 , 56 , 57 , 58 , 59 , 6  , 61 , 64 , 65 , 66 , 67 , 68 , 69 , 7  , 70 , 71 , 72 , 73 , 74 , 75 , 76 , 78 , 79 , 8  , 80 , 81 , 82 , 84 , 85 , 86 , 87 , 88 , 89 , 9  , 90 , 91 , 93 , 94 , 95 , 96 , 97 , 98 , 99 };
-	int toys_fit3[] = {1, 10, 100, 101, 102, 103, 104, 105, 11, 12, 13, 14, 15, 16, 17, 18, 19, 2, 20, 21, 22, 23, 24, 26, 27, 28, 29, 3, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 4, 40, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 6, 60, 61, 62, 63, 64, 66, 67, 68, 69, 7, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 8, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 9, 90, 91, 92, 93, 94, 95, 97, 98, 99 };
+	// fit3 
+	int toys_fit3[] = {1, 10, 11, 12, 15, 16, 18, 19, 2, 20, 21, 22, 23, 25, 26, 27, 28, 29, 3, 30, 31, 32, 34, 35, 36, 37, 38, 39, 4, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 6, 60, 61, 62, 63, 64, 67, 69, 7, 70, 71, 72, 73, 74, 76, 77, 8, 84, 86, 9 };
 	
-
 	int ntoys;
-	if(fit_type == "fit1_statFluc")      ntoys = (sizeof(toys_fit1)/sizeof(*toys_fit1));
-	else if(fit_type == "fit3_statFluc") ntoys = (sizeof(toys_fit3)/sizeof(*toys_fit3));
-
+	if(fit_type == "fit1_statFluc")             ntoys = (sizeof(toys_fit1)/sizeof(*toys_fit1));
+	else if(fit_type == "fit3_statFluc")        ntoys = (sizeof(toys_fit3)/sizeof(*toys_fit3));
+	
 	std::cout << "----- Number of toys used = "<<ntoys<<" -----" << std::endl;
 
-	string GenFilename_fits = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/%s_toy", fit_type.c_str());
-	string GenFilename_xsec = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toys/xsec_%s_toy", fit_type.c_str());
+	string GenFilename_fits = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toysStatFluc/%s_toy", fit_type.c_str());
+	string GenFilename_xsec = Form("/sps/t2k/lmaret/softwares/xsLLhFitterLM/outputs/toysStatFluc/xsec_%s_toy", fit_type.c_str());
 
 	double bin_min_minuit = 500;
 	double bin_max_minuit = 1500;
-	double bin_min_xsec   = 50;
-	double bin_max_xsec   = 150;
+	double bin_min_xsec   = 0;
+	double bin_max_xsec   = 200;
 
 	std::vector< double > chi2_xsec;
 	std::vector< double > chi2_minuit;
@@ -62,8 +61,9 @@ void chi2_study(string fit_type = "fit3_statFluc")
 	for(int itoy = 0; itoy<ntoys; itoy++)
 	{
 		string filename;
-		if(fit_type == "fit1_statFluc")      filename = Form("%s%d.root", GenFilename_fits.c_str(), toys_fit1[itoy]);
-		else if(fit_type == "fit3_statFluc") filename = Form("%s%d.root", GenFilename_fits.c_str(), toys_fit3[itoy]);
+		if(fit_type == "fit1_statFluc")             filename = Form("%s%d.root", GenFilename_fits.c_str(), toys_fit1[itoy]);
+		else if(fit_type == "fit3_statFluc")        filename = Form("%s%d.root", GenFilename_fits.c_str(), toys_fit3[itoy]);
+		// else if(fit_type == "fit3_asimov_statFluc") filename = Form("%s%d.root", GenFilename_fits.c_str(), toys_fit3_a[itoy]);
 		TFile* fin = new TFile(filename.c_str());
 		
 		TH1D* chi2_per_iter    = (TH1D*)(fin->Get("chi2_tot_periter"));
@@ -79,40 +79,46 @@ void chi2_study(string fit_type = "fit3_statFluc")
 
 
 
-	// ========================================================================================
-	std::cout << "----- Compute the final xsec chi2 w.r.t. fake data truth -----" << std::endl;
+	// // ========================================================================================
+	// std::cout << "----- Compute the final xsec chi2 w.r.t. fake data truth -----" << std::endl;
 
-	for(int itoy = 0; itoy<ntoys; itoy++)
-	{
-		string filename;
-		if(fit_type == "fit1_statFluc")      filename = Form("%s%d.root", GenFilename_xsec.c_str(), toys_fit1[itoy]);
-		else if(fit_type == "fit3_statFluc") filename = Form("%s%d.root", GenFilename_xsec.c_str(), toys_fit3[itoy]);
-		// TFile* fin = new TFile(filename.c_str());
+	// for(int itoy = 0; itoy<ntoys; itoy++)
+	// {
+	// 	string filename;
+	// 	if(fit_type == "fit1_statFluc")             filename = Form("%s%d.root", GenFilename_xsec.c_str(), toys_fit1[itoy]);
+	// 	else if(fit_type == "fit3_statFluc")        filename = Form("%s%d.root", GenFilename_xsec.c_str(), toys_fit3[itoy]);
+	// 	// else if(fit_type == "fit3_asimov_statFluc") filename = Form("%s%d.root", GenFilename_xsec.c_str(), toys_fit3_a[itoy]);
+	// 	// TFile* fin = new TFile(filename.c_str());
+		
+	// 	string fakedata_Name;
+	// 	if(fit_type == "fit1_statFluc")             fakedata_Name = "fake_data_concat";
+	// 	else if(fit_type == "fit3_statFluc")        fakedata_Name = "tru_best_fit";
+	// 	// else if(fit_type == "fit3_asimov_statFluc") fakedata_Name = "tru_best_fit";
+		
+	// 	// TMatrixDSym *cov_mat = (TMatrixDSym*)(fin -> Get("xsec_cov"));
+	// 	// TH1D* h_sel_best_fit = (TH1D*)(fin->Get("sel_best_fit"));
+	// 	// TH1D* h_tru_best_fit = (TH1D*)(fin->Get("fake_data_concat"));
 
-		// TMatrixDSym *cov_mat = (TMatrixDSym*)(fin -> Get("xsec_cov"));
-		// TH1D* h_sel_best_fit = (TH1D*)(fin->Get("sel_best_fit"));
-		// TH1D* h_tru_best_fit = (TH1D*)(fin->Get("fake_data_concat"));
+	// 	// double chi2_xsec_toy = calcChi2_M(h_sel_best_fit, h_tru_best_fit, *cov_mat);
+	// 	double chi2_xsec_toy = calc_chisq(filename, fakedata_Name);
 
-		// double chi2_xsec_toy = calcChi2_M(h_sel_best_fit, h_tru_best_fit, *cov_mat);
-		double chi2_xsec_toy = calc_chisq(filename);
+	// 	chi2_xsec.push_back(chi2_xsec_toy);
+	// 	h_chi2_xsec -> Fill(chi2_xsec_toy);
 
-		chi2_xsec.push_back(chi2_xsec_toy);
-		h_chi2_xsec -> Fill(chi2_xsec_toy);
+	// 	std::cout << "===== Chi2 for toy "<<itoy<<" = " << chi2_xsec[itoy] << std::endl;
 
-		std::cout << "===== Chi2 for toy "<<itoy<<" = " << chi2_xsec[itoy] << std::endl;
-
-		// delete fin;
-	}
+	// 	// delete fin;
+	// }
 
 
 	// ==================================================
 	std::cout << "----- Plot results -----" << std::endl;
 
-	int dof_fit = 1322;
+	int dof_fit = 1284;
 	int dof_xsec = 116;
 
 
-	TCanvas *c_chi2_minuit = new TCanvas("c_chi2_minuit","Pull distribution for parameters",900,700);
+	TCanvas *c_chi2_minuit = new TCanvas("c_chi2_minuit","Postfit chi2 distribution",900,700);
 	h_chi2_minuit -> SetTitle(Form(";MINUIT fit #chi^{2}; "));
 	c_chi2_minuit -> SetGrid();
 	h_chi2_minuit -> GetYaxis() -> SetRangeUser(0.0, 1.3 * h_chi2_minuit -> GetMaximum());
@@ -123,26 +129,32 @@ void chi2_study(string fit_type = "fit3_statFluc")
 
 	// double norm_factor_minuit = f_chisq->GetMaximum() / h_chi2_minuit->GetMaximum();
 	double norm_factor_minuit = 1.0 / (h_chi2_minuit->Integral());
-
 	h_chi2_minuit -> Scale( norm_factor_minuit );
 
 	h_chi2_minuit -> Draw();
-	f_chisq -> Draw("same");
+	// f_chisq       -> Draw("same");
 
 	c_chi2_minuit -> Print(Form("plots/pullstudy/chi2_postfit_distribution_%s.pdf", fit_type.c_str()));
 
 
 
 
-	TCanvas *c_chi2_xsec = new TCanvas("c_chi2_xsec","Pull distribution for parameters",900,700);
-	h_chi2_xsec -> SetTitle(Form(";Final xsec #chi^{2}; "));
-	c_chi2_xsec -> SetGrid();
-	h_chi2_xsec -> GetYaxis() -> SetRangeUser(0.0, 1.3 * h_chi2_xsec -> GetMaximum());
-	h_chi2_xsec -> GetXaxis() -> SetNdivisions(5);
+	// TCanvas *c_chi2_xsec = new TCanvas("c_chi2_xsec","Xsec chi2 distribution",900,700);
+	// h_chi2_xsec -> SetTitle(Form(";Final xsec #chi^{2}; "));
+	// c_chi2_xsec -> SetGrid();
+	// h_chi2_xsec -> GetYaxis() -> SetRangeUser(0.0, 1.3 * h_chi2_xsec -> GetMaximum());
+	// h_chi2_xsec -> GetXaxis() -> SetNdivisions(5);
 
-	h_chi2_xsec -> Draw();
+	// TF1* f_chisq_xsec = new TF1("f_chisq", "ROOT::Math::chisquared_pdf(x,[0],0)",0,1500);
+	// f_chisq_xsec -> SetParameter(0, dof_xsec);
 
-	c_chi2_xsec -> Print(Form("plots/pullstudy/chi2_xsec_distribution_%s.pdf", fit_type.c_str()));
+	// double norm_factor_xsec = 1.0 / (h_chi2_xsec->Integral());
+	// h_chi2_xsec -> Scale( norm_factor_xsec );
+
+	// h_chi2_xsec  -> Draw();
+	// // f_chisq_xsec -> Draw("same");
+
+	// c_chi2_xsec -> Print(Form("plots/pullstudy/chi2_xsec_distribution_%s.pdf", fit_type.c_str()));
 
 
 	std::cout << "----- End script -----" << std::endl;
@@ -235,7 +247,7 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 			// }
 		}
 	}
-	cout << "calcChi2_M::chi2 is: " << chi2 << endl;
+	// cout << "calcChi2_M::chi2 is: " << chi2 << endl;
 	return chi2;
 }
 
@@ -243,7 +255,7 @@ double calcChi2_M(TH1D* h1, TH1D* h2, TMatrixD covar)
 
 
 
-double calc_chisq(std::string filename)
+double calc_chisq(std::string filename, std::string fakedata_name)
 {
     // if(ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
     // {
@@ -252,7 +264,7 @@ double calc_chisq(std::string filename)
     // }
 
     std::string h1_name("sel_best_fit");
-    std::string h2_name("fake_data_concat");
+    std::string h2_name(fakedata_name.c_str());
     std::string cov_name("xsec_cov");
 
     unsigned int dof = 0;
@@ -293,7 +305,7 @@ double calc_chisq(std::string filename)
         }
     }
 
-    std::cout << "Chisq = " << chisq << std::endl;
+    // std::cout << "Chisq = " << chisq << std::endl;
     delete fin;
     return chisq;
 }

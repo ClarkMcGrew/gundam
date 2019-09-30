@@ -22,7 +22,8 @@ void signalEfficiency(string target = "C", string fbinning = "/sps/t2k/lmaret/so
 
 	string infilename_neut  = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_neut_prod6B/output_run2348_mc_500toys.root";
 	string infilename_genie = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_genie_prod6B/output_run2a_mc_500toys.root";
-	string infilename_nuwro = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_all_500toys.root";
+	// string infilename_nuwro = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_all_500toys.root";
+	string infilename_nuwro = "/sps/t2k/lmaret/outputs_highland2/numuCCZeroPi/outputs_nuwro/output_nuwro_mc_new.root";
 
 
 	//======================================================================================================  

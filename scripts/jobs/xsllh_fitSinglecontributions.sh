@@ -12,7 +12,9 @@ echo -e "lscpu; cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fg
 echo -e "lscpu; cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/singleContrib/config_onlyXsecPar.json" > job_xsllh_singleContr_onlyXsecPar.sh
 echo -e "lscpu; cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/singleContrib/config_onlyDetPar.json"  > job_xsllh_singleContr_onlyDetPar.sh
 
-source /usr/local/shared/bin/openmpi_env.sh
+echo -e "lscpu; cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/singleContrib/config_onlyXsecPar_noBkgRes.json" > job_xsllh_singleContr_onlyXsecPar_noBkgRes.sh
+
+source /pbs/software/centos-7-x86_64/openmpi/ccenv.sh
 
 # Submit jobs
 
@@ -20,6 +22,9 @@ qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job
 qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_singleContr_onlyFluxPar.sh
 qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_singleContr_onlyXsecPar.sh
 qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_singleContr_onlyDetPar.sh
+
+# qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long -M maretlucie@gmail.com -m be job_xsllh_singleContr_onlyXsecPar_noBkgRes.sh
+
 
 cd - 
 

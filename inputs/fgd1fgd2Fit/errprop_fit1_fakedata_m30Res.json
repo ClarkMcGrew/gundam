@@ -16,9 +16,9 @@
     },
     "sig_norm" : {
         "CC0piCarbon" : {
-            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-3-4-8.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av4_run2-3-4-8.root",
             "flux_hist" : "flux_rebin",
-            "flux_int"  : 2.19E13,
+            "flux_int"  : 2.13159E+13,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
             "num_targets_val" : 7.439E29,
@@ -26,9 +26,9 @@
             "relative_err" : true
         },
         "CC0piOxygen" : {
-            "flux_file" : "/inputs/flux/weighted_flux13av2_run2-3-4-8.root",
+            "flux_file" : "/inputs/flux/weighted_flux13av4_run2-3-4-8.root",
             "flux_hist" : "flux_rebin",
-            "flux_int"  : 2.19E13,
+            "flux_int"  : 2.13159E+13,
             "flux_err"  : 0.085,
             "use_flux_fit" : true,
             "num_targets_val" : 2.581E29,

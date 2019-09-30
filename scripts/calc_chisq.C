@@ -4,6 +4,11 @@
 
 double calc_chisq(std::string filename)
 {
+
+    unsigned int binZero1 = 69; // fit1
+    unsigned int binZero2 = 83; // fit1
+    unsigned int binZero3 = 76; // fit3
+
     // if(ROOT_VERSION_CODE < ROOT_VERSION(6,0,0))
     // {
     //     std::cout << "[ERROR]: ROOT version too old! Need ROOT 6 or higher." << std::endl;
@@ -11,7 +16,8 @@ double calc_chisq(std::string filename)
     // }
 
     std::string h1_name("sel_best_fit");
-    std::string h2_name("fake_data_concat");
+    std::string h2_name("fake_data_concat"); // fit1
+    // std::string h2_name("tru_best_fit"); // fit3
     std::string cov_name("xsec_cov");
 
     unsigned int dof = 0;
@@ -56,7 +62,13 @@ double calc_chisq(std::string filename)
         {
             double x = h1->GetBinContent(i+1) - h2->GetBinContent(i+1);
             double y = h1->GetBinContent(j+1) - h2->GetBinContent(j+1);
-            chisq += x * y * inv[i][j];
+            // std::cout << "chi2 contribution from bin i="<<i<<", j="<<j<<" is " << x * y * inv[i][j] << std::endl;
+            
+            // if(i!=binZero1 && j!=binZero1 && i!=binZero2 && j!=binZero2) // fit1
+            // if(i!=binZero3 && j!=binZero3) // fit3
+                chisq += x * y * inv[i][j];
+            // else
+            //     std::cout << "Skip contribution from bin i="<<i<<", j="<<j<<" which is " << x * y * inv[i][j] << std::endl;
         }
     }
 

@@ -26,11 +26,13 @@ class BinningTools{
 
   double* GetMomBinWidth();
   double* GetCosBinWidth();
+  double GetMomBinWidth_i(int i);
+  double GetCosBinWidth_i(int i);
 
  private:
 
-  vector<pair<double, double> > m_momedges;
-  vector<pair<double, double> > m_costhedges;
+  vector< pair<double, double> > m_momedges;
+  vector< pair<double, double> > m_costhedges;
   vector< pair<double, double> > m_costhslices;
   
   int m_nbins;

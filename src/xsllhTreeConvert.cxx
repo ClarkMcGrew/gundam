@@ -106,7 +106,13 @@ int main(int argc, char** argv)
     std::string out_fname = j["output"]["fname"];
     std::string out_seltree_name = j["output"]["sel_tree"];
     std::string out_trutree_name = j["output"]["tru_tree"];
-    const unsigned int do_fakedata = j["output"]["do_fakedata"];
+    const int do_fakedata = j["output"]["do_fakedata"];
+    bool is_data = false;
+    if(do_fakedata<0)
+        is_data = true;
+    if(is_data)
+        std::cout << TAG << "No truth tree, reading DATA." << std::endl;
+
 
     std::cout << TAG << "Out File          : " << out_fname << std::endl
               << TAG << "Out Selection Tree: " << out_seltree_name << std::endl
@@ -130,6 +136,8 @@ int main(int argc, char** argv)
                 std::cout << " -> Do fake data : add 30 percent of DIS reaction events." << std::endl;
             else if(do_fakedata==8)
                 std::cout << " -> Do fake data : remove 30 percent of DIS reaction events." << std::endl;
+            else if(do_fakedata==-1)
+                std::cout << " -> Real data !!!" << std::endl;
             else
                 std::cout << std::endl << ERR << "Error in the input fake data variable, do_fakedata should be equal to 0, 1, 2, 3 or 4." << std::endl;
 
@@ -207,7 +215,6 @@ int main(int argc, char** argv)
             for(const auto& kv : temp_json_targ)
                 f.targetmap.emplace(std::make_pair(std::stoi(kv.first), kv.second));
             
-
             f.sel_var = ParseHL2Var(file["sel_var"], true);
             f.tru_var = ParseHL2Var(file["tru_var"], false);
 
@@ -281,12 +288,23 @@ int main(int argc, char** argv)
             hl2_seltree -> GetEntry(i);
 
             bool event_passed = false;
+
+            bool topol_valid = false;
+            for(const auto& kv : file.topologymap)
+            {
+                if(topology == kv.second)
+                {
+                    topology = kv.first;
+                    topol_valid = true;
+                }
+            }
+
             for(const auto& kv : file.samples)
             {
                 for(const auto& branch : kv.second)
                 {
                     // if(accum_level[0][branch] > file.cuts[branch])
-                    if(sample[0]==branch && topology>=0)
+                    if(sample[0]==branch && ( (topology>=0 && topol_valid) || is_data ) )  // FOR DATA : No condition on the topology, variable is TRUE only
                     {
                         cut_branch = kv.first;
                         event_passed = true;
@@ -294,11 +312,6 @@ int main(int argc, char** argv)
                         break;
                     }
                 }
-            }
-
-            for(const auto& kv : file.topologymap)
-            {
-                if(topology == kv.second) topology = kv.first;
             }
 
             for(const auto& kv : file.targetmap)

@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 
     std::cout << TAG << "Setting up the number of events and reweighting with best fit parameters..." << std::endl;
     xsec.ReweightBestFit();
-    xsec.ReweightBestFitRatio(); //LM
+    // xsec.ReweightBestFitRatio(); //LM
     
     std::cout << TAG << "Generating toys..." << std::endl;
     if(num_toys != 0)

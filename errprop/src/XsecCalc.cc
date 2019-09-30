@@ -71,14 +71,13 @@ XsecCalc::XsecCalc(const std::string& json_config, const std::string& cli_filena
 
     std::cout << TAG << "Initializing fit objects..." << std::endl;
     selected_events = new FitObj(sel_json_config, "selectedEvents", false);
-    true_events = new FitObj(tru_json_config, "trueEvents", true);
+    true_events     = new FitObj(tru_json_config, "trueEvents",     true);
     total_signal_bins = selected_events->GetNumSignalBins();
     signal_bins = total_signal_bins/2;
     is_fit_type_throw = selected_events->GetFitType() == 3 ? true : false;
 
-
     selected_events_ratio = new FitObj(sel_json_config, "selectedEvents", false);
-    true_events_ratio = new FitObj(tru_json_config, "trueEvents", true);
+    true_events_ratio     = new FitObj(tru_json_config, "trueEvents",     true);
 
     std::cout << TAG << "Reading post-fit file..." << std::endl;
     TH1::AddDirectory(false);
@@ -282,16 +281,25 @@ void XsecCalc::ReweightBestFit()
     selected_events -> ReweightEvents(postfit_param);
     true_events     -> ReweightEvents(postfit_param);
 
+    selected_events_ratio -> ReweightEvents(postfit_param);
+    true_events_ratio     -> ReweightEvents(postfit_param);
+
     //Get the histograms. Currently both selected and true events have the
     //postfit parameters applied.
     auto sel_hists       = selected_events -> GetSignalHist();
     auto tru_hists       = true_events     -> GetSignalHist();
 
+    auto sel_hists_ratio = selected_events_ratio -> GetRatioHist();
+    auto tru_hists_ratio = true_events_ratio     -> GetRatioHist();
+
     //Calculate and apply efficiency using the postfit weighted selected
     //and true events. Apply the rest of the normalizations using the postfit
     //parameters to the selected events. Now we have the postfit cross-section.
-    ApplyEff(sel_hists, tru_hists, false);
+    
+    ApplyEffRatio(sel_hists_ratio, sel_hists, tru_hists, false); //LM 11.07.2019
+    ApplyNormTargetsRatio(sel_hists_ratio, false);
 
+    ApplyEff(sel_hists, tru_hists, false);
     ApplyNorm(sel_hists, postfit_param, false);
 
     //For comparisons, we need the nominal truth weights for the true events. Or
@@ -308,15 +316,21 @@ void XsecCalc::ReweightBestFit()
     //ReweightEvents function always starts from the original MC weights.
     if(is_fit_type_throw)
     {
-        true_events->ReweightEvents(prefit_param_toy);
-        tru_hists       = true_events->GetSignalHist();
+        true_events       -> ReweightEvents(prefit_param_toy);
+        true_events_ratio -> ReweightEvents(prefit_param_toy);
+        tru_hists       = true_events       -> GetSignalHist();
+        tru_hists_ratio = true_events_ratio -> GetRatioHist();
         ApplyNorm(tru_hists, prefit_param_toy, false);
+        ApplyNormTargetsRatio(tru_hists_ratio, false);
     }
     else
     {
-        true_events->ReweightNominal();
-        tru_hists       = true_events->GetSignalHist();
+        true_events       -> ReweightNominal();
+        true_events_ratio -> ReweightNominal();
+        tru_hists       = true_events       -> GetSignalHist();
+        tru_hists_ratio = true_events_ratio -> GetRatioHist();
         ApplyNorm(tru_hists, prefit_param_original, false);
+        ApplyNormTargetsRatio(tru_hists_ratio, false);
     }
 
     sel_best_fit = ConcatHist(sel_hists, "sel_best_fit");
@@ -324,30 +338,6 @@ void XsecCalc::ReweightBestFit()
 
     signal_best_fit = std::move(sel_hists);
     truth_best_fit  = std::move(tru_hists);
-}
-
-void XsecCalc::ReweightBestFitRatio() //LM
-{
-    selected_events_ratio -> ReweightEvents(postfit_param);
-    true_events_ratio     -> ReweightEvents(postfit_param);
-
-    auto sel_hists_ratio = selected_events_ratio -> GetRatioHist();
-    auto tru_hists_ratio = true_events_ratio     -> GetRatioHist();
-
-    ApplyNormTargetsRatio(sel_hists_ratio, false);
-
-    if(is_fit_type_throw)
-    {
-        true_events_ratio -> ReweightEvents(prefit_param_toy);
-        tru_hists_ratio = true_events_ratio->GetRatioHist();
-        ApplyNormTargetsRatio(tru_hists_ratio, false);
-    }
-    else
-    {
-        true_events_ratio -> ReweightNominal();
-        tru_hists_ratio = true_events_ratio->GetRatioHist();
-        ApplyNormTargetsRatio(tru_hists_ratio, false);
-    }
 
     sel_best_fit_ratio = std::move(sel_hists_ratio);
     tru_best_fit_ratio = std::move(tru_hists_ratio);
@@ -375,23 +365,30 @@ void XsecCalc::GenerateToys(const int ntoys)
 
         std::transform(toy.begin(), toy.end(), postfit_param.begin(), toy.begin(),
                        std::plus<double>());
-        for(int i = 0; i < npar; ++i)
-        {
-            if(toy[i] < 0.0)
-                toy[i] = 0.01;
-        }
+        //LM Commented out to allow template parameters to go negative
+        //   ( boundary set in FitParameters.cc : pars_limlow.push_back(-10.0); )
+        // for(int i = 0; i < npar; ++i)
+        // {
+        //     if(toy[i] < 0.0)
+        //         toy[i] = 0.01;
+        // }
 
         selected_events -> ReweightEvents(toy);
         true_events     -> ReweightEvents(toy);
+
+        selected_events_ratio -> ReweightEvents(toy);
+        true_events_ratio     -> ReweightEvents(toy);
 
         auto sel_hists       = selected_events       -> GetSignalHist();
         auto tru_hists       = true_events           -> GetSignalHist();
         auto sel_hists_ratio = selected_events_ratio -> GetRatioHist(); //LM
         auto tru_hists_ratio = true_events_ratio     -> GetRatioHist(); //LM
 
+        ApplyEffRatio(sel_hists_ratio, sel_hists, tru_hists, true); //LM 11.07.2019
+        ApplyNormTargetsRatio(sel_hists_ratio, true);
+
         ApplyEff(sel_hists, tru_hists, true);
         ApplyNorm(sel_hists, toy, true);
-        ApplyNormTargetsRatio(sel_hists_ratio, true);
 
         toys_sel_events.emplace_back(ConcatHist(sel_hists, ("sel_signal_toy" + std::to_string(i))));
         toys_tru_events.emplace_back(ConcatHist(tru_hists, ("tru_signal_toy" + std::to_string(i))));
@@ -435,6 +432,37 @@ void XsecCalc::ApplyEff(std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist
     else
     {
         eff_best_fit = ConcatHist(eff_hist, "eff_best_fit");
+    }
+}
+
+void XsecCalc::ApplyEffRatio(TH1D& sel_hist_ratio, std::vector<TH1D>& sel_hist, std::vector<TH1D>& tru_hist, bool is_toy)
+{
+    std::vector<TH1D> eff_hist;
+    TH1D eff_hist_ratio;
+    for(int i = 0; i < num_signals; ++i)
+    {
+        TH1D eff = sel_hist[i];
+        eff.Divide(&sel_hist[i], &tru_hist[i]);
+        eff_hist.emplace_back(eff);
+    }
+
+    for(int j = 1; j <= sel_hist_ratio.GetNbinsX(); ++j)
+    {
+        double bin_eff_C = eff_hist[0].GetBinContent(j);
+        double bin_eff_O = eff_hist[1].GetBinContent(j);
+        double bin_val = sel_hist_ratio.GetBinContent(j);
+        sel_hist_ratio.SetBinContent(j, bin_val * bin_eff_C / bin_eff_O);
+        eff_hist_ratio.SetBinContent(j, bin_eff_O / bin_eff_C);
+    }
+
+    if(is_toy)
+    {
+        std::string eff_name = "eff_combined_toy" + std::to_string(toys_eff.size());
+        toys_eff_ratio.emplace_back(eff_hist_ratio);
+    }
+    else
+    {
+        eff_best_fit_ratio = eff_hist_ratio;
     }
 }
 
@@ -706,6 +734,7 @@ void XsecCalc::SaveOutput(bool save_toys)
             toys_sel_ratio.at(i).Write();
             toys_tru_ratio.at(i).Write();
             toys_eff.at(i).Write();
+            toys_eff_ratio.at(i).Write();
         }
     }
 
@@ -714,6 +743,7 @@ void XsecCalc::SaveOutput(bool save_toys)
     sel_best_fit_ratio.Write("sel_best_fit_ratio");
     tru_best_fit_ratio.Write("tru_best_fit_ratio");
     eff_best_fit.Write("eff_best_fit");
+    eff_best_fit_ratio.Write("eff_best_fit_ratio");
 
     xsec_cov.Write("xsec_cov");
     xsec_cor.Write("xsec_cor");

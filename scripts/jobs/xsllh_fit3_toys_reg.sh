@@ -4,7 +4,7 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-source /usr/local/shared/bin/openmpi_env.sh
+source /pbs/software/centos-7-x86_64/openmpi/ccenv.sh
 
 strength=(0.001 0.01 0.1 0.5 1.0 2.5 5.0)
 
@@ -14,7 +14,7 @@ do
 	echo -e "{
     \"data_file\" : \"xsllh_fakedata.root\",
     \"mc_file\"   : \"xsllh_nominal.root\",
-    \"output_file\" : \"/outputs/toys/fit3_statFluc_reg_toy${N}.root\",
+    \"output_file\" : \"/outputs/toysReg/fit3_statFluc_reg_toy${N}.root\",
     \"input_dir\" : \"/inputs/fgd1fgd2Fit/\",
     \"fit_type\"  : 3,
     \"stat_fluc\" : true,

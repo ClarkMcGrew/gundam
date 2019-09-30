@@ -25,7 +25,7 @@ void DrawXsecCov(	int Nbins = 26,
 	for(int il = 0; il < Nboundary; il++)
 	{
 		orline[il] = new TLine(boundary[il], 0, boundary[il], Nbins );
-		orline[il] -> SetLineWidth(3);
+		orline[il] -> SetLineWidth(2);
 		orline[il] -> SetLineStyle(2);
 	}
 
@@ -34,7 +34,7 @@ void DrawXsecCov(	int Nbins = 26,
 	for(int il = 0; il < Nboundary; il++)
 	{
 		verline[il] = new TLine(0, boundary[il], Nbins, boundary[il] );
-		verline[il] -> SetLineWidth(3);
+		verline[il] -> SetLineWidth(2);
 		verline[il] -> SetLineStyle(2);
 	}
 

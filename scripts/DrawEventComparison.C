@@ -75,10 +75,10 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		nameSamples[0].push_back(Form("evhist_sam%d", is));
 
 	for(int is = 0; is < Nsample; is++)// add FGD2x distributions
-		nameSamples[1].push_back(Form("evhist_sam%d", is+8));
+		nameSamples[1].push_back(Form("evhist_sam%d", is+Nsample));
 	
 	for(int is = 0; is < Nsample; is++)// add FGD2y distributions
-		nameSamples[2].push_back(Form("evhist_sam%d", is+16));
+		nameSamples[2].push_back(Form("evhist_sam%d", is+2*Nsample));
 
 	//======================================================================================================
 
@@ -175,10 +175,13 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 	
 	TH1D* chi2_tot  = (TH1D*)(fin->Get("chi2_tot_periter"));
 	TH1D* chi2_stat = (TH1D*)(fin->Get("chi2_stat_periter"));
+	TH1D* chi2_reg  = (TH1D*)(fin->Get("chi2_reg_periter"));
 	Double_t chi2_tot_prefit   = chi2_tot  -> GetBinContent(1);
-	Double_t chi2_tot_postfit  = chi2_tot  -> GetBinContent(chi2_tot->GetNbinsX()-1);
+	Double_t chi2_tot_postfit  = chi2_tot  -> GetBinContent(chi2_tot  -> GetNbinsX()-1);
 	Double_t chi2_stat_prefit  = chi2_stat -> GetBinContent(1);
-	Double_t chi2_stat_postfit = chi2_stat -> GetBinContent(chi2_tot->GetNbinsX()-1);
+	Double_t chi2_stat_postfit = chi2_stat -> GetBinContent(chi2_stat -> GetNbinsX()-1);
+	Double_t chi2_reg_prefit   = chi2_reg  -> GetBinContent(1);
+	Double_t chi2_reg_postfit  = chi2_reg  -> GetBinContent(chi2_reg  -> GetNbinsX()-1);
 	//======================================================================================================
 
 
@@ -214,12 +217,12 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			hSample_prefit[ifgd][is] -> GetYaxis() -> SetTitle("# events");
 
 			hSample_data[ifgd][is]    -> SetLineColor(kBlack);
-			hSample_prefit[ifgd][is]  -> SetLineColor(kBlue+1);
-			hSample_postfit[ifgd][is] -> SetLineColor(kRed+1);
+			hSample_prefit[ifgd][is]  -> SetLineColor(kRed+2);
+			hSample_postfit[ifgd][is] -> SetLineColor(kBlue+2);
 
 			hSample_data[ifgd][is]    -> SetMarkerColor(kBlack);
-			hSample_prefit[ifgd][is]  -> SetMarkerColor(kBlue+1);
-			hSample_postfit[ifgd][is] -> SetMarkerColor(kRed+1);
+			hSample_prefit[ifgd][is]  -> SetMarkerColor(kRed+2);
+			hSample_postfit[ifgd][is] -> SetMarkerColor(kBlue+2);
 
 			c_events[ifgd] -> cd(ipad+1);
 
@@ -244,16 +247,26 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 			hSample_postfit[ifgd][is]->Draw("SAME");
 			hSample_data[ifgd][is]   ->Draw("E SAME"); // with error bars
 
+			TPaveText *paveFGD = new TPaveText(0.6, 0.75, 0.9, 0.87, "NDC");
+			paveFGD->SetFillColor(0);
+			TText *t1=paveFGD->AddText(Form("#chi^{2}_{simpl.} = %d", (int)calculateChi2(hSample_data[ifgd][is], hSample_postfit[ifgd][is]) ));
+			paveFGD -> Draw();
+			c_events[ifgd] -> Update();
+
 			if(ipad==4)
 			{
-				leg[ifgd] = new TLegend(0.2,0.24,0.8,0.64);
+				leg[ifgd] = new TLegend(0.15,0.24,0.95,0.64);
 				leg[ifgd] -> SetFillColor(0);
 				leg[ifgd] -> SetBorderSize(1);
 				leg[ifgd] -> SetFillStyle(0);
 				//leg[ifgd]->SetTextSize(0.075);
-				leg[ifgd] -> AddEntry(hSample_data[ifgd][0],        "(Fake) data",    "lep");
-				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
-				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
+				if(inputname == "fit2_data" || inputname == "fit2_dataCS_fakedataSignal")
+					leg[ifgd] -> AddEntry(hSample_data[ifgd][0],        "Data",        "lep");
+				else
+					leg[ifgd] -> AddEntry(hSample_data[ifgd][0],        "(Fake) data", "lep");
+				leg[ifgd] -> AddEntry(hSample_prefit[ifgd][0], Form("Pre-fit  #chi^{2}_{tot} = %d",                                              (int)chi2_tot_prefit), "l");
+				// leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d,  #chi^{2}_{reg} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit, (int)chi2_reg_postfit),"l");
+				leg[ifgd] -> AddEntry(hSample_postfit[ifgd][0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d",                       (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 				c_events[ifgd]->cd(6);
 				leg[ifgd]->Draw();
 			}
@@ -290,12 +303,12 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		hSample_prefit_allSubDet[is] -> GetYaxis() -> SetTitle("# events");
 
 		hSample_data_allSubDet[is]    -> SetLineColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetLineColor(kBlue+1);
-		hSample_postfit_allSubDet[is] -> SetLineColor(kRed+1);
+		hSample_prefit_allSubDet[is]  -> SetLineColor(kRed+2);
+		hSample_postfit_allSubDet[is] -> SetLineColor(kBlue+2);
 
 		hSample_data_allSubDet[is]    -> SetMarkerColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kBlue+1);
-		hSample_postfit_allSubDet[is] -> SetMarkerColor(kRed+1);
+		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kRed+2);
+		hSample_postfit_allSubDet[is] -> SetMarkerColor(kBlue+2);
 
 		c_events_allSubDet -> cd(ipad+1);
 
@@ -322,20 +335,24 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 
 		TPaveText *pave = new TPaveText(0.6, 0.75, 0.9, 0.87, "NDC");
 		pave->SetFillColor(0);
-		TText *t1=pave->AddText(Form("''#chi^{2}'' = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
+		TText *t1=pave->AddText(Form("#chi^{2}_{simpl.} = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
 		pave->Draw();
 		c_events_allSubDet->Update();
 
 		if(ipad==4)
 		{
-			leg_allSubDet = new TLegend(0.2,0.24,0.8,0.64);
+			leg_allSubDet = new TLegend(0.15,0.24,0.95,0.64);
 			leg_allSubDet -> SetFillColor(0);
 			leg_allSubDet -> SetBorderSize(1);
 			leg_allSubDet -> SetFillStyle(0);
 			//leg_allSubDet->SetTextSize(0.075);
-			leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
-			leg_allSubDet -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
-			leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
+			if(inputname == "fit2_data" || inputname == "fit2_dataCS_fakedataSignal")
+				leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "Data",        "lep");
+			else
+				leg_allSubDet -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data", "lep");
+			leg_allSubDet -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit  #chi^{2}_{tot} = %d",                                              (int)chi2_tot_prefit), "l");
+			// leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d,  #chi^{2}_{reg} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit, (int)chi2_reg_postfit),"l");
+			leg_allSubDet -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d",                       (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 			c_events_allSubDet->cd(6);
 			leg_allSubDet->Draw();
 		}
@@ -378,12 +395,12 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		hSample_prefit_allSubDet[is] -> GetYaxis() -> SetTitle("# events");
 
 		hSample_data_allSubDet[is]    -> SetLineColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetLineColor(kBlue+1);
-		hSample_postfit_allSubDet[is] -> SetLineColor(kRed+1);
+		hSample_prefit_allSubDet[is]  -> SetLineColor(kRed+2);
+		hSample_postfit_allSubDet[is] -> SetLineColor(kBlue+2);
 
 		hSample_data_allSubDet[is]    -> SetMarkerColor(kBlack);
-		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kBlue+1);
-		hSample_postfit_allSubDet[is] -> SetMarkerColor(kRed+1);
+		hSample_prefit_allSubDet[is]  -> SetMarkerColor(kRed+2);
+		hSample_postfit_allSubDet[is] -> SetMarkerColor(kBlue+2);
 
 		c_events_allSubDet_grouped -> cd(ipad+1);
 
@@ -410,7 +427,7 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 
 		TPaveText *pave = new TPaveText(0.6, 0.75, 0.9, 0.87, "NDC");
 		pave->SetFillColor(0);
-		TText *t1=pave->AddText(Form("''#chi^{2}'' = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
+		TText *t1=pave->AddText(Form("#chi^{2}_{simpl.} = %d", (int)calculateChi2(hSample_data_allSubDet[is], hSample_postfit_allSubDet[is]) ));
 		pave->Draw();
 		c_events_allSubDet_grouped->Update();
 
@@ -418,14 +435,18 @@ void DrawEventComparison(string inputname = "fit3_statFluc", const std::string& 
 		ipad++;
 	}
 
-	leg_allSubDet_grouped = new TLegend(0.2,0.24,0.8,0.64);
+	leg_allSubDet_grouped = new TLegend(0.15,0.24,0.95,0.64);
 	leg_allSubDet_grouped -> SetFillColor(0);
 	leg_allSubDet_grouped -> SetBorderSize(1);
 	leg_allSubDet_grouped -> SetFillStyle(0);
 	//leg_allSubDet_grouped->SetTextSize(0.075);
-	leg_allSubDet_grouped -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
-	leg_allSubDet_grouped -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit,  #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_prefit , (int)chi2_stat_prefit), "l");
-	leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit, #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
+	if(inputname == "fit2_data" || inputname == "fit2_dataCS_fakedataSignal")
+		leg_allSubDet_grouped -> AddEntry(hSample_data_allSubDet[0],   "Data",    "lep");
+	else
+		leg_allSubDet_grouped -> AddEntry(hSample_data_allSubDet[0],   "(Fake) data",    "lep");
+	leg_allSubDet_grouped -> AddEntry(hSample_prefit_allSubDet[0], Form("Pre-fit  #chi^{2}_{tot} = %d",                                              (int)chi2_tot_prefit), "l");
+	// leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d,  #chi^{2}_{reg} = %d", (int)chi2_tot_postfit, (int)chi2_stat_postfit, (int)chi2_reg_postfit),"l");
+	leg_allSubDet_grouped -> AddEntry(hSample_postfit_allSubDet[0],Form("Post-fit #chi^{2}_{tot} = %d,  #chi^{2}_{stat} = %d",                       (int)chi2_tot_postfit, (int)chi2_stat_postfit),"l");
 	c_events_allSubDet_grouped->cd(7);
 	leg_allSubDet_grouped->Draw();
 

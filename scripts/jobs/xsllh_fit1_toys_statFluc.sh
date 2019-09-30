@@ -4,16 +4,15 @@ export WORKDIR='/sps/t2k/lmaret/softwares/xsLLhFitterLM/'
 
 cd $WORKDIR/scripts/jobs/toSubmit
 
-source /usr/local/shared/bin/openmpi_env.sh
+source /pbs/software/centos-7-x86_64/openmpi/ccenv.sh
 
-
-for N in {1..200}; # loop over toys
+for N in {1..100}; # loop over toys
 do
 	# Write a file containing the inputs for the fitter
 	echo -e "{
-    \"data_file\" : \"xsllh_fakedata.root\",
+    \"data_file\" : \"xsllh_nominal.root\",
     \"mc_file\"   : \"xsllh_nominal.root\",
-    \"output_file\" : \"/outputs/toys/fit1_statFluc_toy${N}.root\",
+    \"output_file\" : \"/outputs/toysStatFluc/fit1_statFluc_toy${N}.root\",
     \"input_dir\" : \"/inputs/fgd1fgd2Fit/\",
     \"fit_type\"  : 1,
     \"stat_fluc\" : true,
@@ -21,7 +20,7 @@ do
     \"data_POT\"  : 1.0,
     \"mc_POT\"    : 1.0,
     \"rng_seed\"  : $((12258 + N)),
-    \"num_threads\" : 8,
+    \"num_threads\" : 16,
     \"sample_topology\" : [\"cc0pi\", \"cc1pi\", \"ccother\", \"bkg\", \"oofv\"],
     \"min_settings\" : {
         \"minimizer\" : \"Minuit2\",
@@ -59,7 +58,7 @@ do
     },
     \"regularisation\" : {
         \"enable\" : false,
-        \"strength\" : 0.011,
+        \"strength\" : 1.5,
         \"method\" : \"kL2Reg\"
     },
     \"detectors\" : [
@@ -263,13 +262,13 @@ do
         }
     ]
 }
-" > $WORKDIR/inputs/fgd1fgd2Fit/toys/config_fit1_toy${N}.json
+" > $WORKDIR/inputs/fgd1fgd2Fit/toysStatFluc/config_fit1_toy${N}.json
 
 	# Write a file containing the job
-	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toys/config_fit1_toy${N}.json" > job_xsllh_fit1_toy${N}.sh
+	echo -e "cd $WORKDIR; source setup.sh; xsllhFit -j $WORKDIR/inputs/fgd1fgd2Fit/toysStatFluc/config_fit1_toy${N}.json" > job_xsllh_fit1_toy${N}.sh
 
 	# Submit job
-	qsub -l os=cl7,sps=1 -pe openmpi 8 -q pa_long job_xsllh_fit1_toy${N}.sh
+	qsub -l os=cl7,sps=1 -pe openmpi 16 -q pa_long job_xsllh_fit1_toy${N}.sh
 
 done
 

@@ -151,6 +151,17 @@ double* BinningTools::GetMomBinWidth() {
 
 
 //========================================================================================================
+double BinningTools::GetMomBinWidth_i(int nb) {
+//======================================================================================================
+
+  double binwidth = m_momedges[nb].second - m_momedges[nb].first;  
+ 
+  return binwidth;
+ 
+}
+
+
+//========================================================================================================
 double* BinningTools::GetCosBinWidth() {
 //======================================================================================================
 
@@ -158,6 +169,17 @@ double* BinningTools::GetCosBinWidth() {
 
   for(int nb=0; nb<m_nbins; nb++)
     binwidth[nb] = m_costhedges[nb].second - m_costhedges[nb].first;  
+ 
+  return binwidth;
+ 
+}
+
+
+//========================================================================================================
+double BinningTools::GetCosBinWidth_i(int nb) {
+//======================================================================================================
+
+  double binwidth = m_costhedges[nb].second - m_costhedges[nb].first;  
  
   return binwidth;
  

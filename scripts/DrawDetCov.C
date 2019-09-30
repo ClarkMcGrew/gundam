@@ -44,7 +44,8 @@ void DrawDetCov(	int NsamplesTot = 24,
 	{
 		orline[il] = new TLine(boundary[il], 0, boundary[il], Nmatdim );
 		orline[il] -> SetLineWidth(1);
-		orline[il] -> SetLineStyle(2);
+		orline[il] -> SetLineStyle(1);
+		orline[il] -> SetLineColor(kGray+2);
 	}
 
 	//=== Draw a vertical line for each angular boundaries                                                                     
@@ -53,7 +54,8 @@ void DrawDetCov(	int NsamplesTot = 24,
 	{
 		verline[il] = new TLine(0, boundary[il], Nmatdim, boundary[il] );
 		verline[il] -> SetLineWidth(1);
-		verline[il] -> SetLineStyle(2);
+		verline[il] -> SetLineStyle(1);
+		verline[il] -> SetLineColor(kGray+2);
 	}
 
 
@@ -77,8 +79,8 @@ void DrawDetCov(	int NsamplesTot = 24,
 	for(int il = 0; il < Nfgds-1; il++)
 	{
 		orlinefgd[il] = new TLine(boundaryfgd[il], 0, boundaryfgd[il], Nmatdim );
-		orlinefgd[il] -> SetLineWidth(3);
-		orlinefgd[il] -> SetLineStyle(2);
+		orlinefgd[il] -> SetLineWidth(2);
+		orlinefgd[il] -> SetLineStyle(1);
 	}
 
 	//=== Draw a vertical line for each angular boundaries                                                                     
@@ -86,8 +88,8 @@ void DrawDetCov(	int NsamplesTot = 24,
 	for(int il = 0; il < Nfgds-1; il++)
 	{
 		verlinefgd[il] = new TLine(0, boundaryfgd[il], Nmatdim, boundaryfgd[il] );
-		verlinefgd[il] -> SetLineWidth(3);
-		verlinefgd[il] -> SetLineStyle(2);
+		verlinefgd[il] -> SetLineWidth(2);
+		verlinefgd[il] -> SetLineStyle(1);
 	}
 
 	//====================================================================================================                      

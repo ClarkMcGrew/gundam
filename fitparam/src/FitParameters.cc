@@ -193,7 +193,8 @@ void FitParameters::InitParameters()
                 pars_prior.push_back(1.0); //all weights are 1.0 a priori
 
             pars_step.push_back(0.05);
-            pars_limlow.push_back(0.0);
+            // pars_limlow.push_back(0.0);
+            pars_limlow.push_back(-10.0); //LM 07.2019 Allow template parameters to go negative
             pars_limhigh.push_back(10.0);
             pars_fixed.push_back(false);
         }

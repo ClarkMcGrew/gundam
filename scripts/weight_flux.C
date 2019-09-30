@@ -1,6 +1,6 @@
 // root 'weight_flux.C()'
 
-void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av2/")
+void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av4/")
 {
     const double run2_pot  = 0.079263;
     const double run3b_pot = 0.021727;
@@ -11,36 +11,36 @@ void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLh
 
     std::cout << "POT Info (10^21)" << std::endl;
 
-    std::string run2_file = flux_path + "/run2/nd5_tuned13av2_13anom_run2_numode_fine.root";
-    // std::string run2_file = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av2/run2/nd5_tuned13av2_13anom_run2_numode_fine.root";
+    std::string run2_file = flux_path + "/run2/nd5_tuned13av4_13anom_run2_numode_fine.root";
+    // std::string run2_file = "/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/tuned13av4/run2/nd5_tuned13av4_13anom_run2_numode_fine.root";
     TFile* flux_run2 = TFile::Open(run2_file.c_str(), "READ");
     TH1D* h_flux_run2 = (TH1D*)flux_run2 -> Get("enu_nd5_tuned13a_numu");
     h_flux_run2 -> Scale(run2_pot);
 
     std::cout << "Run2 : " << run2_pot << std::endl;
 
-    std::string run3b_file = flux_path + "/run3b/nd5_tuned13av2_13anom_run3b_numode_fine.root";
+    std::string run3b_file = flux_path + "/run3b/nd5_tuned13av4_13anom_run3b_numode_fine.root";
     TFile* flux_run3b = TFile::Open(run3b_file.c_str(), "READ");
     TH1D* h_flux_run3b = (TH1D*)flux_run3b -> Get("enu_nd5_tuned13a_numu");
     h_flux_run3b -> Scale(run3b_pot);
 
     std::cout << "Run3b: " << run3b_pot << std::endl;
 
-    std::string run3c_file = flux_path + "/run3c/nd5_tuned13av2_13anom_run3c_numode_fine.root";
+    std::string run3c_file = flux_path + "/run3c/nd5_tuned13av4_13anom_run3c_numode_fine.root";
     TFile* flux_run3c = TFile::Open(run3c_file.c_str(), "READ");
     TH1D* h_flux_run3c = (TH1D*)flux_run3c -> Get("enu_nd5_tuned13a_numu");
     h_flux_run3c -> Scale(run3c_pot);
 
     std::cout << "Run3c: " << run3c_pot << std::endl;
 
-    std::string run4_file = flux_path + "/run4/nd5_tuned13av2_13anom_run4_numode_fine.root";
+    std::string run4_file = flux_path + "/run4/nd5_tuned13av4_13anom_run4_numode_fine.root";
     TFile* flux_run4 = TFile::Open(run4_file.c_str(), "READ");
     TH1D* h_flux_run4 = (TH1D*)flux_run4 -> Get("enu_nd5_tuned13a_numu");
     h_flux_run4 -> Scale(run4_pot);
 
     std::cout << "Run4 : " << run4_pot << std::endl;
 
-    std::string run8_file = flux_path + "/run8/nd5_tuned13av2_13anom_run8_numode_fine.root";
+    std::string run8_file = flux_path + "/run8/nd5_tuned13av4_13anom_run8_numode_fine.root";
     TFile* flux_run8 = TFile::Open(run8_file.c_str(), "READ");
     TH1D* h_flux_run8 = (TH1D*)flux_run8 -> Get("enu_nd5_tuned13a_numu");
     h_flux_run8 -> Scale(run8_pot);
@@ -64,7 +64,7 @@ void weight_flux(const std::string& flux_path = "/sps/t2k/lmaret/softwares/xsLLh
                             1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
     h_flux_nom_numu = (TH1D*)h_flux_total_numu -> Rebin(nbins, "h_flux_nom_numu", flux_bins);
 
-    TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/weighted_flux13av2_run2-3-4-8.root", "RECREATE");
+    TFile* output = TFile::Open("/sps/t2k/lmaret/softwares/xsLLhFitterLM/inputs/flux/weighted_flux13av4_run2-3-4-8.root", "RECREATE");
     output -> cd();
     h_flux_total_numu -> Write("flux_fine");
     h_flux_nom_numu -> Write("flux_rebin");

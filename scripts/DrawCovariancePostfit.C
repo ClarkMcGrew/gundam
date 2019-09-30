@@ -26,7 +26,7 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	
 	int NbinsAna  = 58;
 	int NbinsFlux = 20;  
-	int NbinsXsec = 22;
+	int NbinsXsec = 26;
 	int NbinsDet[] = {58, 58, 58, 10, 16, 58, 58, 58,
 		              58, 58, 58, 10, 16, 58, 58, 58,
 		              58, 58, 58, 10, 16, 58, 58, 58 };
@@ -53,10 +53,10 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	{
 		verline[il] = new TLine(boundary[il], boundary[il], boundary[il], boundary[il+1] );
 		verline[il] -> SetLineWidth(2);
-		verline[il] -> SetLineStyle(2);
+		verline[il] -> SetLineStyle(1);
 		verline[il+Nlines] = new TLine(boundary[il+1], boundary[il], boundary[il+1], boundary[il+1] );
 		verline[il+Nlines] -> SetLineWidth(2);
-		verline[il+Nlines] -> SetLineStyle(2);
+		verline[il+Nlines] -> SetLineStyle(1);
 	}
 
 	//=== Draw a vertical line for parameter type
@@ -65,10 +65,10 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	{
 		orline[il] = new TLine(boundary[il], boundary[il], boundary[il+1], boundary[il] );
 		orline[il] -> SetLineWidth(2);
-		orline[il] -> SetLineStyle(2);
+		orline[il] -> SetLineStyle(1);
 		orline[il+Nlines] = new TLine(boundary[il], boundary[il+1], boundary[il+1], boundary[il+1] );
 		orline[il+Nlines] -> SetLineWidth(2);
-		orline[il+Nlines] -> SetLineStyle(2);
+		orline[il+Nlines] -> SetLineStyle(1);
 	}
 
 
@@ -89,7 +89,8 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	{
 		verlineSample[il] = new TLine(boundarySample[il], 2*NbinsAna+NbinsFlux+NbinsXsec, boundarySample[il], Nbins );
 		verlineSample[il] -> SetLineWidth(1);
-		verlineSample[il] -> SetLineStyle(2);
+		verlineSample[il] -> SetLineStyle(1);
+		verlineSample[il] -> SetLineColor(kGray+2);
 	}
 
 	//=== Draw a vertical line for det samples
@@ -98,7 +99,8 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	{
 		orlineSample[il] = new TLine(2*NbinsAna+NbinsFlux+NbinsXsec, boundarySample[il], Nbins, boundarySample[il] );
 		orlineSample[il] -> SetLineWidth(1);
-		orlineSample[il] -> SetLineStyle(2);
+		orlineSample[il] -> SetLineStyle(1);
+		orlineSample[il] -> SetLineColor(kGray+2);
 	}
 	//====================================================================================================                      
 
@@ -148,11 +150,14 @@ void DrawCovariancePostfit(string inputname = "fit3_statFluc", const std::string
 	
 	cor_mat_th2 -> Draw("colz");
 
-	for(int il=0; il<2*Nlines; il++) orline[il]  -> Draw();
-	for(int il=0; il<2*Nlines; il++) verline[il] -> Draw();
+	if(cor_mat -> GetNrows() > 1200)
+	{
+		for(int il=0; il<2*Nlines; il++) orline[il]  -> Draw();
+		for(int il=0; il<2*Nlines; il++) verline[il] -> Draw();
 
-	for(int il=0; il<Nsamples; il++) orlineSample[il]  -> Draw();
-	for(int il=0; il<Nsamples; il++) verlineSample[il] -> Draw();
+		for(int il=0; il<Nsamples; il++) orlineSample[il]  -> Draw();
+		for(int il=0; il<Nsamples; il++) verlineSample[il] -> Draw();
+	}
 
 	c3->Print(Form("plots/fitteroutput/%s/PostFitCorrMatrix_%s.pdf", dir_name.c_str(), inputname.c_str()));
 	c3->Print(Form("plots/fitteroutput/%s/PostFitCorrMatrix_%s.png", dir_name.c_str(), inputname.c_str()));
