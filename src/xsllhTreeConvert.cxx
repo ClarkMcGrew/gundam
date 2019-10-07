@@ -110,7 +110,11 @@ int GetIngridReaction(int code);
 int GetIngridTopology(int code);
 
 double GetTestEnuWeight(double enu);
-double GetTestQ2Weight(double q2);
+double GetBeRPAWeight(double q2);
+double GetCCResQ2Weight(double q2);
+double GetCCZeroPiQ2Weight(double q2);
+double GetFluxWeightND5(double enu);
+double GetFluxWeightND2(double enu);
 
 int main(int argc, char** argv)
 {
@@ -356,15 +360,16 @@ int main(int argc, char** argv)
 
             if(do_apply_weights)
             {
+                if(reaction == 0)
+                    weight = weight * GetBeRPAWeight(q2_true / 1.0E6);
                 //if(reaction == 1)
-                //    weight = weight * GetTestQ2Weight(q2_true / 1.0E6);
+                //    weight = weight * GetCCResQ2Weight(q2_true / 1.0E6);
                 //weight = weight * GetTestEnuWeight(enu_true);
                 //if(topology == 0 || topology == 1 || topology == 2)
                 //    weight *= 0.80;
-                //if(cut_branch == 0)
-                //    weight *= 1.02;
-                //if(cut_branch == 1)
-                //    weight *= 0.9068;
+                //if(topology == 0 || topology == 1 || topology == 2)
+                //    weight = weight * GetCCZeroPiQ2Weight(q2_true / 1.0E6);
+                //weight = weight * GetFluxWeightND5(enu_true);
             }
 
             if(do_apply_templates)
@@ -434,11 +439,17 @@ int main(int argc, char** argv)
 
             if(do_apply_weights)
             {
+                if(reaction_true == 0)
+                    weight_true = weight_true * GetBeRPAWeight(q2_true / 1.0E6);
                 //if(reaction_true == 1)
-                //    weight_true = weight_true * GetTestQ2Weight(q2_true / 1.0E6);
+                //    weight_true = weight_true * GetCCResQ2Weight(q2_true / 1.0E6);
                 //weight_true = weight_true * GetTestEnuWeight(enu_true);
                 //if(topology_true == 0 || topology_true == 1 || topology_true == 2)
                 //    weight_true *= 0.80;
+                //if(topology_true == 0 || topology_true == 1 || topology_true == 2)
+                //    weight_true = weight_true * GetCCZeroPiQ2Weight(q2_true / 1.0E6);
+                //weight_true = weight_true * GetFluxVarWeight(enu_true);
+                //weight_true = weight_true * GetFluxWeightND5(enu_true);
             }
 
             if(do_apply_templates)
@@ -596,16 +607,16 @@ int main(int argc, char** argv)
 
             if(do_apply_weights)
             {
+                if(reaction == 0)
+                    weight = weight * GetBeRPAWeight(q2_true / 1.0E6);
                 //if(reaction == 1)
-                //    weight = weight * GetTestQ2Weight(q2_true / 1.0E6);
+                //    weight = weight * GetCCResQ2Weight(q2_true / 1.0E6);
                 //weight = weight * GetTestEnuWeight(enu_true);
                 //if(topology == 0 || topology == 1 || topology == 2)
                 //    weight *= 1.20;
                 //if(topology == 0 || topology == 1 || topology == 2)
-                //{
-                //    if(D1True > 350 && D1True < 500)
-                //        weight *= 10;
-                //}
+                //    weight = weight * GetCCZeroPiQ2Weight(q2_true / 1.0E6);
+                //weight = weight * GetFluxWeightND2(enu_true);
             }
 
             if(do_apply_templates && reaction >= 0)
@@ -765,7 +776,33 @@ double GetTestEnuWeight(double enu)
     return weight;
 }
 
-double GetTestQ2Weight(double q2)
+double GetBeRPAWeight(double q2)
+{
+    const double A = 0.59;
+    const double B = 1.05;
+    const double D = 1.13;
+    const double E = 0.88;
+    const double U = 1.20;
+
+    double weight = 1;
+    if(q2 < U)
+    {
+        const double xp = q2 / U;
+        const double mxp = 1.0 - xp;
+        const double C = D + U * E * (D-1) / 3.0;
+
+        weight = A * mxp * mxp * mxp
+               + 3 * B * mxp * mxp * xp
+               + 3 * C * mxp * xp * xp
+               + D * xp * xp * xp;
+    }
+    else
+        weight = 1 + (D-1) * std::exp(-E * (q2 - U));
+
+    return weight;
+}
+
+double GetCCResQ2Weight(double q2)
 {
     double weight = 1.0;
 
@@ -773,4 +810,72 @@ double GetTestQ2Weight(double q2)
         weight = 1.01 / (1 + std::exp(1 - (std::sqrt(q2) / 0.156)));
 
     return weight;
+}
+
+double GetCCZeroPiQ2Weight(double q2)
+{
+    std::vector<double> min_q2_bins = {0, 0.00625, 0.0125, 0.025, 0.0375, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 2, 4, 100};
+    std::vector<double> min_q2_vals = {0.735455, 0.778532, 0.952489, 1.05089, 1.0566, 1.05761, 1.01586, 1.03872, 1.04451, 1.0605, 1.06971, 1.06523, 1.08958, 1.08486, 1.05823, 0.789291, 0.451755};
+
+    int bin = -1;
+    for(int i = 0; i < min_q2_bins.size(); ++i)
+    {
+        if(q2 < min_q2_bins.at(i))
+        {
+           bin = i-1;
+           break;
+        }
+    }
+
+    //std::cout << "Q2 : " << q2 << std::endl;
+    //std::cout << "bin: " << bin << std::endl;
+    //std::cout << "val: " << min_q2_vals[bin] << std::endl;
+
+    return bin >= 0 ? min_q2_vals.at(bin) : 1.0;
+}
+
+double GetFluxWeightND5(double enu)
+{
+    std::vector<double> enu_bins = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,
+                                    1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
+    //std::vector<double> enu_vals = {1.01015, 1.006, 1.00655, 1.00926, 1.0102, 1.02011, 1.02012, 1.02127, 1.03202, 0.994345, 0.995292, 0.971514, 1.00326, 1.00371, 1.01274, 1.00728, 1.00433, 1.02093, 1.01379, 1.0};
+    std::vector<double> enu_vals = {1.00829, 1.00595, 0.9982, 1.00807, 1.00048, 1.00893, 1.0062, 1.00645, 1.00593, 0.99711, 1.02508, 1.0165, 1.01261, 1.00304, 1.01192, 1.00151, 1.00258, 1.00053, 1.0116, 1.0};
+
+    int bin = -1;
+    double enu_gev = enu / 1000.0;
+    for(int i = 0; i < enu_bins.size(); ++i)
+    {
+        if(enu_gev < enu_bins.at(i))
+        {
+           bin = i-1;
+           break;
+        }
+    }
+
+    //std::cout << "enu: " << enu << std::endl;
+    //std::cout << "bin: " << bin << std::endl;
+    //std::cout << "val: " << enu_vals[bin] << std::endl;
+
+    return bin >= 0 ? 1.0 + 3 * (enu_vals.at(bin) - 1.0) : 1.0;
+}
+
+double GetFluxWeightND2(double enu)
+{
+    std::vector<double> enu_bins = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0,
+                                    1.2, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0, 30.0};
+    //std::vector<double> enu_vals = {1.00741, 1.00906, 1.01141, 1.01169, 1.01883, 1.0151, 1.0113, 1.01153, 1.01486, 1.01775, 1.0179, 1.03152, 1.03926, 1.05449, 1.07131, 1.07828, 1.04941, 1.01617, 1.01962, 1.0};
+    std::vector<double> enu_vals = {1.00962, 1.0062, 1.00624, 1.00513, 1.00824, 1.00179, 1.00215, 1.00755, 1.00688, 1.00393, 1.00644, 1.00959, 1.00436, 1.00538, 1.01224, 1.00602, 1.01365, 1.01655, 0.9999, 1.0};
+
+    int bin = -1;
+    double enu_gev = enu / 1000.0;
+    for(int i = 0; i < enu_bins.size(); ++i)
+    {
+        if(enu_gev < enu_bins.at(i))
+        {
+           bin = i-1;
+           break;
+        }
+    }
+
+    return bin >= 0 ? 1.0 + 3 * (enu_vals.at(bin) - 1.0) : 1.0;
 }

@@ -10,6 +10,7 @@
     "save_events" : false,
     "rng_seed"  : 12257,
     "num_threads" : 12,
+    "par_scan_list" : [58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69],
     "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
     "min_settings" : {
         "minimizer" : "Minuit2",

@@ -193,20 +193,20 @@ void plot_ingrid_topology(const std::string fname)
 
         //event_weight *= 1.16;
 
-        if(selected_sample == 0 && track_sample < 4)
-        //if(selected_sample == 1 && track_sample < 4)
+        if(selected_sample == 0 && track_sample < 6)
+        //if(selected_sample == 1 && track_sample < 6)
             sel += event_weight;
 
         if(is_fv && !is_anti && !is_nue && fsi_int < 3 && new_event == 1)
         //if(is_fv && !is_anti && !is_nue && fsi_int == 3 && new_event == 1)
             gen += event_weight;
 
-        if(selected_sample == 0 && fsi_int < 3 && !is_anti && !is_nue && track_sample < 4)
-        //if(selected_sample == 1 && fsi_int == 3 && !is_anti && !is_nue && track_sample < 4)
+        if(selected_sample == 0 && fsi_int < 3 && !is_anti && !is_nue && track_sample < 6)
+        //if(selected_sample == 1 && fsi_int == 3 && !is_anti && !is_nue && track_sample < 6)
             sig += event_weight;
 
-        if(selected_sample == 0 && track_sample < 4)
-        //if(selected_sample == 1 && track_sample < 4)
+        if(selected_sample == 0 && track_sample < 6)
+        //if(selected_sample == 1 && track_sample < 6)
         {
             h1d_angle->Fill(angle_reco, event_weight);
             h1d_dist->Fill(pmu_reco, event_weight);
@@ -291,6 +291,15 @@ void plot_ingrid_topology(const std::string fname)
     hs_angle_fsi->GetXaxis()->SetTitle("#theta^{reco}_{#mu} (degrees)");
     hs_angle_fsi->GetYaxis()->SetTitle("Num. Events");
 
+    std::cout << h1d_angle_fsi0->Integral() << std::endl;
+    std::cout << h1d_angle_fsi1->Integral() << std::endl;
+    std::cout << h1d_angle_fsi2->Integral() << std::endl;
+    std::cout << h1d_angle_fsi3->Integral() << std::endl;
+    std::cout << h1d_angle_fsi4->Integral() << std::endl;
+    std::cout << h1d_angle_fsi5->Integral() << std::endl;
+    std::cout << h1d_angle_fsi6->Integral() << std::endl;
+    std::cout << h1d_angle_fsi7->Integral() << std::endl;
+
     TLegend* ld = new TLegend(0.70, 0.60, 0.90, 0.90);
     ld->AddEntry(h1d_angle_fsi0, "CC0#pi (0p)", "f");
     ld->AddEntry(h1d_angle_fsi1, "CC0#pi (1p)", "f");
@@ -317,6 +326,15 @@ void plot_ingrid_topology(const std::string fname)
     hs_dist_fsi->Draw("hist");
     hs_dist_fsi->GetXaxis()->SetTitle("d^{reco}_{#mu} (cm)");
     hs_dist_fsi->GetYaxis()->SetTitle("Num. Events");
+
+    std::cout << h1d_dist_fsi0->Integral() << std::endl;
+    std::cout << h1d_dist_fsi1->Integral() << std::endl;
+    std::cout << h1d_dist_fsi2->Integral() << std::endl;
+    std::cout << h1d_dist_fsi3->Integral() << std::endl;
+    std::cout << h1d_dist_fsi4->Integral() << std::endl;
+    std::cout << h1d_dist_fsi5->Integral() << std::endl;
+    std::cout << h1d_dist_fsi6->Integral() << std::endl;
+    std::cout << h1d_dist_fsi7->Integral() << std::endl;
 
     TLegend* le = new TLegend(0.70, 0.60, 0.90, 0.90);
     le->AddEntry(h1d_dist_fsi0, "CC0#pi (0p)", "f");

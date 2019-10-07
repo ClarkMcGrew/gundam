@@ -7,7 +7,7 @@
 
     "highland_files" : [
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run2a.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run2a.root",
             "file_id" : 0,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -41,7 +41,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run2w.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run2w.root",
             "file_id" : 1,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -75,7 +75,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run3b.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run3b.root",
             "file_id" : 2,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -109,7 +109,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run3c.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run3c.root",
             "file_id" : 3,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -143,7 +143,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run4a.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run4a.root",
             "file_id" : 4,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -177,7 +177,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run4w.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run4w.root",
             "file_id" : 5,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -211,7 +211,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run8a.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run8a.root",
             "file_id" : 6,
             "sel_tree" : "default",
             "tru_tree" : "truth",
@@ -245,7 +245,7 @@
             }
         },
         {
-            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_merge_run8w.root",
+            "fname" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_merge_run8w.root",
             "file_id" : 7,
             "sel_tree" : "default",
             "tru_tree" : "truth",

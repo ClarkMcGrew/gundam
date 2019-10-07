@@ -1,7 +1,7 @@
 {
     "files" : [
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run2-4.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_run2-4.root",
             "tree_name" : "all_syst",
             "detector": "FGD1",
             "num_toys" : 500,
@@ -12,7 +12,7 @@
             "use" : true
         },
         {
-            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r2/files/highland_run8.root",
+            "fname_input" : "/mnt/home/cuddandr/work/nd280Software/analysis/highland2/numuCCZeroPiAnalysis/v2r6/files/highland_run8.root",
             "tree_name" : "all_syst",
             "detector": "FGD1",
             "num_toys" : 500,
@@ -38,7 +38,7 @@
     "single_syst" : false,
     "syst_idx" : 0,
     "var_names" : ["selmu_costheta", "selmu_mom"],
-    "mc_stat_error" : true,
+    "mc_stat_error" : false,
     "projection" : false,
     "plot_variable" : "selmu_mom",
     "pdf_print" : false,
