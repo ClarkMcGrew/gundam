@@ -54,8 +54,8 @@
         "fit_par" : false
     },
     "regularisation" : {
-        "enable" : false,
-        "strength" : 0.011,
+        "enable" : true,
+        "strength" : 0.111,
         "method" : "kL2Reg"
     },
     "detectors" : [

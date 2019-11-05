@@ -242,7 +242,8 @@ void FitParameters::AddDetector(const std::string& det, const std::vector<Signal
 
 double FitParameters::CalcRegularisation(const std::vector<double>& params) const
 {
-    return CalcRegularisation(params, m_regstrength, m_regmethod);
+    return CalcRegHack(params);
+    //return CalcRegularisation(params, m_regstrength, m_regmethod);
 }
 
 double FitParameters::CalcRegularisation(const std::vector<double>& params, double strength,
@@ -284,4 +285,19 @@ double FitParameters::CalcRegularisation(const std::vector<double>& params, doub
     }
 
     return strength * L_reg;
+}
+
+double FitParameters::CalcRegHack(const std::vector<double>& params) const
+{
+    double L_reg = 0;
+    const std::vector<unsigned int> br_points = {1, 6, 12, 18, 25, 33, 40, 50, 58, 62, 66, 70};
+    for(unsigned int b = 0; b < br_points.size()-1; ++b)
+    {
+        for(unsigned int i = br_points.at(b); i < br_points.at(b+1)-1; ++i)
+        {
+            L_reg += (params.at(i) - params.at(i+1)) * (params.at(i) - params.at(i+1));
+        }
+    }
+
+    return m_regstrength * L_reg;
 }

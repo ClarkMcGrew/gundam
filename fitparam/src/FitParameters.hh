@@ -29,6 +29,7 @@ class FitParameters : public AnaFitParameters
         double CalcRegularisation(const std::vector<double>& params) const;
         double CalcRegularisation(const std::vector<double>& params, double strength,
                                   RegMethod flag = kL2Reg) const;
+        double CalcRegHack(const std::vector<double>& params) const;
 
     private:
         std::map<std::string, std::vector<xsllh::FitBin>> m_fit_bins;
