@@ -77,13 +77,20 @@ else()
     message(WARNING "You are using an untested compiler.")
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#Setting the CXX standard should be done with the following commands, but
+#CMAKE places the flag at the end which overrides the ROOT CXX std flag.
+#So for now set the flag manually at the beginning so ROOT can override it
+#if necessary.
+
+#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "-std=c++11")
+
 option(CMAKE_CXX_EXTENSIONS "Enable GNU extensions to C++ langauge (-std=gnu++11)." OFF)
 option(CXX_MARCH_FLAG "Enable cpu architecture specific optimzations." OFF)
 option(CXX_WARNINGS "Enable most C++ warning flags." ON)
 option(COLOR_OUTPUT "Enable colored terminal output." ON)
-option(TTYCHECK "Enable check if output is being sent to terminal/TTY." ON)
+option(TTYCHECK "Enable checking if output is being sent to terminal/TTY." ON)
 
 include(FindOpenMP)
 if(OPENMP_FOUND)
@@ -113,8 +120,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fPIC ${ROOT_CXX_FLAGS} 
 
 if(VERBOSE)
   cmessage (STATUS "C++ Compiler      : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-  cmessage (STATUS "C++ Release flags : ${CMAKE_CXX_FLAGS_RELEASE}")
-  cmessage (STATUS "C++ Debug flags   : ${CMAKE_CXX_FLAGS_DEBUG}")
+  cmessage (STATUS "C++ Release flags : ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
+  cmessage (STATUS "C++ Debug flags   : ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
 
 ################################################################################
