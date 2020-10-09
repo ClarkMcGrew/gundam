@@ -51,7 +51,6 @@ public:
     void SetMinSettings(const MinSettings& ms);
     void SetSeed(int seed);
     void SetZeroSyst(bool flag) { m_zerosyst = flag; }
-    void SetTopology(const std::vector<std::string> vec_top) { v_topology = vec_top; }
     void SetNumThreads(const unsigned int num) { m_threads = num; }
     void SetSaveFreq(int freq, bool flag = true)
     {
@@ -116,7 +115,6 @@ private:
     int m_threads;
     int m_npar, m_calls, m_freq;
     std::string paramVectorFileName;
-    std::vector<std::string> v_topology;
     std::vector<std::string> par_names;
     std::vector<double> par_prefit;
     std::vector<double> vec_chi2_stat;

@@ -97,8 +97,6 @@ class OptParser
 
         unsigned int par_scan_steps;
         std::vector<int> par_scan_list;
-
-        std::vector<std::string> sample_topology;
         std::vector<SignalDef> signal_definition;
 
         CovOpt flux_cov;

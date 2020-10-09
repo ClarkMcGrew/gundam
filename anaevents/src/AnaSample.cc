@@ -393,39 +393,6 @@ double AnaSample::CalcChi2() const
     return chi2;
 }
 
-double AnaSample::CalcEffLLH() const
-{
-    const unsigned int nbins = m_hpred->GetNbinsX();
-    double* exp_w  = m_hpred->GetArray();
-    double* exp_w2 = m_hpred->GetSumw2()->GetArray();
-    double* data   = m_hdata->GetArray();
-
-    //std::cout << m_name << std::endl;
-
-    double llh_eff = 0.0;
-    for(unsigned int i = 1; i <= nbins; ++i)
-    {
-        if(exp_w[i] <= 0.0)
-            continue;
-
-        const double b = exp_w[i] / exp_w2[i];
-        const double a = (exp_w[i] * b) + 1.0;
-        const double k = data[i];
-
-        //std::cout << "--------------" << std::endl;
-        //std::cout << "i  : " << i << std::endl;
-        //std::cout << "w  : " << exp_w[i] << std::endl;
-        //std::cout << "w2 : " << exp_w2[i] << std::endl;
-        //std::cout << "a  : " << a << std::endl;
-        //std::cout << "b  : " << b << std::endl;
-        //std::cout << "k  : " << data[i] << std::endl;
-
-        llh_eff += a * std::log(b) + std::lgamma(k+a) - std::lgamma(k+1) - ((k+a) * std::log1p(b)) - std::lgamma(a);
-    }
-
-    return -2 * llh_eff;
-}
-
 void AnaSample::Write(TDirectory* dirout, const std::string& bsname, int fititer)
 {
     dirout->cd();
@@ -437,73 +404,4 @@ void AnaSample::Write(TDirectory* dirout, const std::string& bsname, int fititer
         if(m_hdata != nullptr)
             m_hdata->Write(Form("%s_data", bsname.c_str()));
     }
-}
-
-void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
-                                   const std::vector<std::string>& topology, bool save)
-{
-    const int ntopology = topology.size();
-    int compos[ntopology];
-    std::vector<TH1D> hAnybin_rec;
-    std::vector<TH1D> hAnybin_true;
-
-    for(int i = 0; i < ntopology; ++i)
-    {
-        compos[i] = 0;
-        hAnybin_rec.emplace_back(
-            TH1D(Form("%s_Anybins_rec_%s_%s", m_name.c_str(), topology[i].c_str(), tag.c_str()),
-                 Form("%s_Anybins_rec_%s_%s", m_name.c_str(), topology[i].c_str(), tag.c_str()),
-                 m_nbins, 0, m_nbins));
-        hAnybin_rec[i].SetDirectory(0);
-        hAnybin_rec[i].GetXaxis()->SetTitle("Bin Index");
-
-        hAnybin_true.emplace_back(
-            TH1D(Form("%s_Anybins_true_%s_%s", m_name.c_str(), topology[i].c_str(), tag.c_str()),
-                 Form("%s_Anybins_true_%s_%s", m_name.c_str(), topology[i].c_str(), tag.c_str()),
-                 m_nbins, 0, m_nbins));
-        hAnybin_true[i].SetDirectory(0);
-        hAnybin_true[i].GetXaxis()->SetTitle("Bin Index");
-    }
-
-    int Ntot = GetN();
-    for(std::size_t i = 0; i < m_events.size(); ++i)
-    {
-        double D1_rec    = m_events[i].GetRecoD1();
-        double D2_rec    = m_events[i].GetRecoD2();
-        double D1_true   = m_events[i].GetTrueD1();
-        double D2_true   = m_events[i].GetTrueD2();
-        double wght      = m_events[i].GetEvWght();
-        int evt_topology = m_events[i].GetTopology();
-
-        compos[evt_topology]++;
-        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
-        int anybin_index_true = GetBinIndex(D1_true, D2_true);
-        hAnybin_rec[evt_topology].Fill(anybin_index_rec + 0.5, wght);
-        hAnybin_true[evt_topology].Fill(anybin_index_true + 0.5, wght);
-    }
-
-    dirout->cd();
-    for(int i = 0; i < ntopology; ++i)
-    {
-        hAnybin_true[i].Scale(m_norm);
-        hAnybin_rec[i].Scale(m_norm);
-
-        if(save == true)
-        {
-            hAnybin_true[i].Write();
-            hAnybin_rec[i].Write();
-        }
-    }
-
-    std::cout << TAG << "GetSampleBreakdown()\n"
-              << "============ Sample " << m_name << " ===========" << std::endl;
-
-    for(int j = 0; j < ntopology; ++j)
-    {
-        std::cout << std::setw(10) << topology[j] << std::setw(5) << j << std::setw(5) << compos[j]
-                  << std::setw(10) << ((1.0 * compos[j]) / Ntot) * 100.0 << "%" << std::endl;
-    }
-
-    std::cout << std::setw(10) << "Total" << std::setw(5) << " " << std::setw(5) << Ntot
-              << std::setw(10) << "100.00%" << std::endl;
 }

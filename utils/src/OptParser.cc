@@ -44,8 +44,6 @@ bool OptParser::ParseJSON(std::string json_file)
     par_scan_steps = j.value("par_scan_steps", 20);
     par_scan_list = j.value("par_scan_list", std::vector<int>{});
 
-    sample_topology = j["sample_topology"].get<std::vector<std::string>>();
-
     flux_cov.fname = input_dir + j["flux_cov"]["file"].get<std::string>();
     flux_cov.matrix = j["flux_cov"]["matrix"];
     flux_cov.binning = j["flux_cov"]["binning"];

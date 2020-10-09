@@ -55,13 +55,10 @@ public:
 
     void SetLLHFunction(const std::string& func_name);
     double CalcLLH() const;
-
     double CalcChi2() const;
-    double CalcEffLLH() const;
+
     void FillEventHist(int datatype, bool stat_fluc = false);
     void Write(TDirectory* dirout, const std::string& bsname, int fititer);
-    void GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
-                            const std::vector<std::string>& topology, bool save);
 
     double GetNorm() const { return m_norm; }
     int GetSampleID() const { return m_sample_id; }

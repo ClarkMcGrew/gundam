@@ -84,7 +84,6 @@ int main(int argc, char** argv)
     std::string input_dir = parser.input_dir;
     std::string fname_data = parser.fname_data;
     std::string fname_mc   = parser.fname_mc;
-    std::vector<std::string> topology = parser.sample_topology;
 
     const double potD  = parser.data_POT;
     const double potMC = parser.mc_POT;
@@ -139,11 +138,6 @@ int main(int argc, char** argv)
     AnaTreeMC selTree(fname_mc.c_str(), "selectedEvents");
     std::cout << TAG << "Reading and collecting events." << std::endl;
     selTree.GetEvents(samples, parser.signal_definition, false);
-
-    std::cout << TAG << "Getting sample breakdown by reaction." << std::endl;
-    for(auto& sample : samples)
-        sample -> GetSampleBreakdown(fout, "nominal", topology, false);
-
 
     //*************** FITTER SETTINGS **************************
     //In the bit below we choose which params are used in the fit
@@ -273,7 +267,7 @@ int main(int argc, char** argv)
     //xsecfit.SetSaveFreq(10000);
     xsecfit.SetMinSettings(parser.min_settings);
     xsecfit.SetPOTRatio(potD/potMC);
-    xsecfit.SetTopology(topology);
+    //xsecfit.SetTopology(topology);
     xsecfit.SetZeroSyst(parser.zero_syst);
     xsecfit.SetSaveEvents(parser.save_events);
 
