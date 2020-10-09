@@ -40,11 +40,13 @@ private:
     float enu_reco;
     float weight;
 
-    bool read_extra_var;
+    std::vector<float>* reco_var;
+    std::vector<float>* true_var;
+
     const std::string TAG = color::GREEN_STR + "[AnaTreeMC]: " + color::RESET_STR;
 
 public:
-    AnaTreeMC(const std::string& file_name, const std::string& tree_name, bool extra_var = false);
+    AnaTreeMC(const std::string& file_name, const std::string& tree_name);
     ~AnaTreeMC();
 
     long int GetEntry(long int entry) const;

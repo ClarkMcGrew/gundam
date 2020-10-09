@@ -123,6 +123,9 @@ int main(int argc, char** argv)
     float D2True, D2Reco;
     float weight, weight_true;
 
+    std::vector<float> reco_var;
+    std::vector<float> true_var;
+
     out_seltree -> Branch("nutype", &nutype, "nutype/I");
     out_seltree -> Branch("reaction", &reaction, "reaction/I");
     out_seltree -> Branch("topology", &topology, "topology/I");
@@ -137,6 +140,8 @@ int main(int argc, char** argv)
     out_seltree -> Branch("D2True", &D2True, "D2True/F");
     out_seltree -> Branch("D2Reco", &D2Reco, "D2Reco/F");
     out_seltree -> Branch("weight", &weight, "weight/F");
+    out_seltree -> Branch("reco_var", &reco_var);
+    out_seltree -> Branch("true_var", &true_var);
 
     out_trutree -> Branch("nutype", &nutype_true, "nutype/I");
     out_trutree -> Branch("reaction", &reaction_true, "reaction/I");
@@ -148,6 +153,7 @@ int main(int argc, char** argv)
     out_trutree -> Branch("D1True", &D1True, "D1True/F");
     out_trutree -> Branch("D2True", &D2True, "D2True/F");
     out_trutree -> Branch("weight", &weight_true, "weight/F");
+    out_trutree -> Branch("true_var", &true_var);
 
     std::vector<HL2FileOpt> v_files;
     for(const auto& file : j["highland_files"])
@@ -240,6 +246,9 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
+            reco_var = std::vector<float>{D2Reco, D1Reco};
+            true_var = std::vector<float>{D2True, D1True};
+
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
                 - mu_mass * mu_mass;
@@ -277,6 +286,8 @@ int main(int argc, char** argv)
 
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
+
+            true_var = std::vector<float>{D2True, D1True};
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)

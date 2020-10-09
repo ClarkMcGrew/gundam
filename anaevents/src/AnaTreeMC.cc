@@ -3,8 +3,7 @@
 
 #include "AnaTreeMC.hh"
 
-AnaTreeMC::AnaTreeMC(const std::string& file_name, const std::string& tree_name, bool extra_var)
-    : read_extra_var(extra_var)
+AnaTreeMC::AnaTreeMC(const std::string& file_name, const std::string& tree_name)
 {
     fChain = new TChain(tree_name.c_str());
     fChain->Add(file_name.c_str());
@@ -29,6 +28,9 @@ long int AnaTreeMC::GetEntry(long int entry) const
 void AnaTreeMC::SetBranches()
 {
     // Set branch addresses and branch pointers
+    reco_var = 0;
+    true_var = 0;
+
     fChain->SetBranchAddress("nutype", &nutype);
     fChain->SetBranchAddress("cut_branch", &sample);
     fChain->SetBranchAddress("topology", &topology);
@@ -43,11 +45,8 @@ void AnaTreeMC::SetBranches()
     fChain->SetBranchAddress("enu_true", &enu_true);
     fChain->SetBranchAddress("enu_reco", &enu_reco);
     fChain->SetBranchAddress("weight", &weight);
-
-    if(read_extra_var)
-    {
-        //Put extra variables here.
-    }
+    fChain->SetBranchAddress("reco_var", &reco_var);
+    fChain->SetBranchAddress("true_var", &true_var);
 }
 
 void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
@@ -85,10 +84,12 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
         ev.SetQ2True(q2_true);
         ev.SetQ2Reco(q2_reco);
 
-        if(read_extra_var)
-        {
-            //Put extra variables here.
-        }
+        //auto reco_array = reco_var.GetMatrixArray();
+        //auto true_array = true_var.GetMatrixArray();
+        //ev.SetRecoVar(std::vector<double>(reco_array, reco_array + reco_var.GetNrows()));
+        //ev.SetTrueVar(std::vector<double>(true_array, true_array + true_var.GetNrows()));
+        ev.SetRecoVar(*reco_var);
+        ev.SetTrueVar(*true_var);
 
         int signal_type = 0;
         for(const auto& sd : v_signal)

@@ -12,6 +12,7 @@
 #include <TDirectory.h>
 #include <TH1D.h>
 #include <TH2D.h>
+#include <TMath.h>
 #include <TRandom3.h>
 #include <TTree.h>
 

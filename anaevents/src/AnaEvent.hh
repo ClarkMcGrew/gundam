@@ -2,10 +2,7 @@
 #define __AnaEvent_hh__
 
 #include <iostream>
-
-#include <TMath.h>
-
-#include <FitStructs.hh>
+#include <vector>
 
 class AnaEvent
 {
@@ -34,65 +31,65 @@ class AnaEvent
         }
 
         //Set/Get methods
-        void SetTopology(int val){ m_topology = val; }
-        int GetTopology(){ return m_topology; }
+        inline void SetTopology(const short val){ m_topology = val; }
+        inline short GetTopology() const { return m_topology; }
 
-        void SetReaction(int val){ m_reaction = val; }
-        int GetReaction(){ return m_reaction; }
+        inline void SetReaction(const short val){ m_reaction = val; }
+        inline short GetReaction() const { return m_reaction; }
 
-        void SetTarget(int val){ m_target = val; }
-        int GetTarget(){ return m_target; }
+        inline void SetTarget(const short val){ m_target = val; }
+        inline short GetTarget() const { return m_target; }
 
-        void SetSampleType(int val){ m_sample = val; }
-        int GetSampleType(){ return m_sample; }
+        inline void SetSampleType(const short val){ m_sample = val; }
+        inline short GetSampleType() const { return m_sample; }
 
-        void SetSignalEvent(const bool flag = true){ m_signal = flag; }
-        bool isSignalEvent(){ return m_signal; }
+        inline void SetSignalEvent(const bool flag = true){ m_signal = flag; }
+        inline bool isSignalEvent() const { return m_signal; }
 
-        void SetSignalType(int val){ m_sig_type = val; }
-        int GetSignalType(){ return m_sig_type; }
+        inline void SetSignalType(const short val){ m_sig_type = val; }
+        inline short GetSignalType() const { return m_sig_type; }
 
-        void SetTrueEvent(const bool flag = true){ m_true_evt = flag; }
-        bool isTrueEvent(){ return m_true_evt; }
+        inline void SetTrueEvent(const bool flag = true){ m_true_evt = flag; }
+        inline bool isTrueEvent() const { return m_true_evt; }
 
-        void SetFlavor(const int flavor){ m_flavor = flavor; }
-        int GetFlavor(){ return m_flavor; }
+        inline void SetFlavor(const short flavor){ m_flavor = flavor; }
+        inline short GetFlavor() const { return m_flavor; }
 
-        long int GetEvId(){ return m_evid; }
+        inline long int GetEvId() const { return m_evid; }
 
-        void SetTrueEnu(double val) {m_enu_true = val;}
-        double GetTrueEnu(){ return m_enu_true; }
+        inline void SetTrueEnu(double val) {m_enu_true = val;}
+        inline double GetTrueEnu() const { return m_enu_true; }
 
-        void SetRecoEnu(double val){ m_enu_reco = val; }
-        double GetRecoEnu(){ return m_enu_reco; }
+        inline void SetRecoEnu(double val){ m_enu_reco = val; }
+        inline double GetRecoEnu() const { return m_enu_reco; }
 
-        void SetTrueD1(double val){ m_trueD1 = val; }
-        double GetTrueD1(){ return m_trueD1; }
+        inline void SetTrueD1(double val){ m_trueD1 = val; }
+        inline double GetTrueD1() const { return m_trueD1; }
 
-        void SetRecoD1(double val){ m_recoD1 = val; }
-        double GetRecoD1(){ return m_recoD1; }
+        inline void SetRecoD1(double val){ m_recoD1 = val; }
+        inline double GetRecoD1() const { return m_recoD1; }
 
-        void SetTrueD2(double val){ m_trueD2 = val; }
-        double GetTrueD2(){ return m_trueD2; }
+        inline void SetTrueD2(double val){ m_trueD2 = val; }
+        inline double GetTrueD2() const { return m_trueD2; }
 
-        void SetRecoD2(double val){ m_recoD2 = val; }
-        double GetRecoD2(){ return m_recoD2; }
+        inline void SetRecoD2(double val){ m_recoD2 = val; }
+        inline double GetRecoD2() const { return m_recoD2; }
 
-        void SetEvWght(double val){ m_wght  = val; }
-        void SetEvWghtMC(double val){ m_wghtMC  = val; }
-        void AddEvWght(double val){ m_wght *= val; }
-        double GetEvWght(){ return m_wght; }
-        double GetEvWghtMC(){ return m_wghtMC; }
+        inline void SetEvWght(double val){ m_wght  = val; }
+        inline void SetEvWghtMC(double val){ m_wghtMC  = val; }
+        inline void AddEvWght(double val){ m_wght *= val; }
+        inline double GetEvWght() const { return m_wght; }
+        inline double GetEvWghtMC() const { return m_wghtMC; }
 
-        void ResetEvWght(){ m_wght = m_wghtMC; }
+        inline void ResetEvWght(){ m_wght = m_wghtMC; }
 
-        void SetQ2Reco(double val){m_q2_reco = val;}
-        double GetQ2Reco() const { return m_q2_reco; }
+        inline void SetQ2Reco(double val){m_q2_reco = val;}
+        inline double GetQ2Reco() const { return m_q2_reco; }
 
-        void SetQ2True(double val){m_q2_true = val;}
-        double GetQ2True() const { return m_q2_true; }
+        inline void SetQ2True(double val){m_q2_true = val;}
+        inline double GetQ2True() const { return m_q2_true; }
 
-        void Print()
+        void Print() const
         {
             std::cout << "Event ID    " << m_evid << std::endl
                       << "Topology    " << GetTopology() << std::endl
@@ -129,14 +126,19 @@ class AnaEvent
                 return -1;
         }
 
+        inline const std::vector<float>& GetRecoVar() const { return reco_var; }
+        inline const std::vector<float>& GetTrueVar() const { return true_var; }
+        inline void SetRecoVar(std::vector<float> vec) { reco_var = vec; }
+        inline void SetTrueVar(std::vector<float> vec) { true_var = vec; }
+
     private:
         long int m_evid;   //unique event id
-        int m_flavor;      //flavor of neutrino (numu, etc.)
-        int m_topology;    //final state topology type
-        int m_reaction;    //event interaction mode
-        int m_target;      //target nuclei
-        int m_sample;      //sample type (aka cutBranch)
-        int m_sig_type;
+        short m_flavor;      //flavor of neutrino (numu, etc.)
+        short m_topology;    //final state topology type
+        short m_reaction;    //event interaction mode
+        short m_sample;      //sample type (aka cutBranch)
+        short m_sig_type;
+        short m_target;      //target nuclei
         bool m_signal;     //flag if signal event
         bool m_true_evt;   //flag if true event
         double m_enu_true; //true nu energy
@@ -149,6 +151,10 @@ class AnaEvent
         double m_q2_reco;
         double m_wght;     //event weight
         double m_wghtMC;   //event weight from original MC
+
+        //unsigned short nvar;
+        std::vector<float> reco_var;
+        std::vector<float> true_var;
 };
 
 #endif

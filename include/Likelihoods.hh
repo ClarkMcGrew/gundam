@@ -30,7 +30,7 @@ public:
         {
             chi2 = 2 * (mc - data);
             if(data > 0.0)
-                chi2 += 2 * data * TMath::Log(data / mc);
+                chi2 += 2 * data * std::log(data / mc);
         }
 
         return (chi2 >= 0.0) ? chi2 : 0.0;
