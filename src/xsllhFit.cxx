@@ -139,6 +139,9 @@ int main(int argc, char** argv)
     std::cout << TAG << "Reading and collecting events." << std::endl;
     selTree.GetEvents(samples, parser.signal_definition, false);
 
+    for(const auto& s : samples)
+        s->InitEventMap();
+
     //*************** FITTER SETTINGS **************************
     //In the bit below we choose which params are used in the fit
     //For stats only just use fit params
@@ -267,7 +270,6 @@ int main(int argc, char** argv)
     //xsecfit.SetSaveFreq(10000);
     xsecfit.SetMinSettings(parser.min_settings);
     xsecfit.SetPOTRatio(potD/potMC);
-    //xsecfit.SetTopology(topology);
     xsecfit.SetZeroSyst(parser.zero_syst);
     xsecfit.SetSaveEvents(parser.save_events);
 

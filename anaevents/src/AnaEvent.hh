@@ -15,6 +15,7 @@ class AnaEvent
             m_reaction = -1;
             m_target   = -1;
             m_sample   = -1;
+            m_bin      = -1;
             m_signal   = false;
             m_sig_type = -1;
             m_true_evt = false;
@@ -42,6 +43,9 @@ class AnaEvent
 
         inline void SetSampleType(const short val){ m_sample = val; }
         inline short GetSampleType() const { return m_sample; }
+
+        inline void SetSampleBin(const short val){ m_bin = val; }
+        inline short GetSampleBin() const { return m_bin; }
 
         inline void SetSignalEvent(const bool flag = true){ m_signal = flag; }
         inline bool isSignalEvent() const { return m_signal; }
@@ -137,6 +141,7 @@ class AnaEvent
         short m_topology;    //final state topology type
         short m_reaction;    //event interaction mode
         short m_sample;      //sample type (aka cutBranch)
+        short m_bin;
         short m_sig_type;
         short m_target;      //target nuclei
         bool m_signal;     //flag if signal event

@@ -1,6 +1,7 @@
 #ifndef __AnaSample_hh__
 #define __AnaSample_hh__
 
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -17,6 +18,7 @@
 #include <TTree.h>
 
 #include "AnaEvent.hh"
+#include "BinManager.hh"
 #include "ColorOutput.hh"
 #include "FitStructs.hh"
 #include "Likelihoods.hh"
@@ -43,6 +45,7 @@ public:
     void ClearEvents();
     void AddEvent(const AnaEvent& event);
     void ResetWeights();
+    void InitEventMap();
 
     void PrintStats() const;
     void SetNorm(const double val) { m_norm = val; }
@@ -83,6 +86,7 @@ protected:
     std::vector<AnaEvent> m_events;
     std::vector<FitBin> m_bin_edges;
 
+    BinManager bm;
     CalcLLHFunc* m_llh;
 
     TTree* m_data_tree;

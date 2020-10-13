@@ -12,17 +12,14 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
     , m_norm(1.0)
 {
     TH1::SetDefaultSumw2(true);
-    SetBinning(m_binning);
+    //SetBinning(m_binning);
 
-    std::cout << TAG << m_name << ", ID " << m_sample_id << std::endl
-              << TAG << "Detector: " << m_detector << std::endl
-              << TAG << "Bin edges: " << std::endl;
+    std::cout << TAG << "Sample: " << m_name << " (ID: " << m_sample_id << ")" << std::endl
+              << TAG << "Detector: " << m_detector << std::endl;
 
-    for(const auto& bin : m_bin_edges)
-    {
-        std::cout << bin.D2low << " " << bin.D2high << " " << bin.D1low << " " << bin.D1high
-                  << std::endl;
-    }
+    bm.SetBinning(m_binning);
+    bm.Print();
+    m_nbins = bm.GetNbins();
 
     m_hpred    = nullptr;
     m_hmc      = nullptr;
@@ -80,11 +77,9 @@ void AnaSample::SetBinning(const std::string& binning)
     }
 }
 
-// ClearEvents -- clears all events from event vector
 void AnaSample::ClearEvents() { m_events.clear(); }
-
-// GetN -- get number of events stored
 int AnaSample::GetN() const { return (int)m_events.size(); }
+void AnaSample::AddEvent(const AnaEvent& event) { m_events.push_back(event); }
 
 AnaEvent* AnaSample::GetEvent(int evnum)
 {
@@ -103,8 +98,6 @@ AnaEvent* AnaSample::GetEvent(int evnum)
 
     return &m_events.at(evnum);
 }
-
-void AnaSample::AddEvent(const AnaEvent& event) { m_events.push_back(event); }
 
 void AnaSample::ResetWeights()
 {
@@ -170,6 +163,19 @@ int AnaSample::GetBinIndex(const double D1, const double D2) const
     return -1;
 }
 
+void AnaSample::InitEventMap()
+{
+    for(auto& e : m_events)
+    {
+        const double D1_rec  = e.GetRecoD1();
+        const double D2_rec  = e.GetRecoD2();
+        const int b = bm.GetBinIndex(std::vector<double>{D2_rec, D1_rec});
+        e.SetSampleBin(b);
+    }
+
+    std::sort(m_events.begin(), m_events.end(), [](AnaEvent& a, AnaEvent& b){ return a.GetSampleBin() < b.GetSampleBin(); });
+}
+
 void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 {
     if(m_hpred != nullptr)
@@ -189,8 +195,12 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         double D2_true = m_events[i].GetTrueD2();
         double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
 
-        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
-        int anybin_index_true = GetBinIndex(D1_true, D2_true);
+        //int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
+        //int anybin_index_true = GetBinIndex(D1_true, D2_true);
+        //int anybin_index_rec  = bm.GetBinIndex(std::vector<double>{D2_rec, D1_rec});
+        //int anybin_index_true = bm.GetBinIndex(std::vector<double>{D2_true, D1_true});
+        int anybin_index_rec  = m_events[i].GetSampleBin();
+        int anybin_index_true = bm.GetBinIndex(std::vector<double>{D2_true, D1_true});
 
         m_hpred->Fill(anybin_index_rec + 0.5, wght);
         m_hmc->Fill(anybin_index_rec + 0.5, wght);
