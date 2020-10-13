@@ -12,7 +12,7 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
     , m_norm(1.0)
 {
     TH1::SetDefaultSumw2(true);
-    //SetBinning(m_binning);
+    SetBinning(m_binning);
 
     std::cout << TAG << "Sample: " << m_name << " (ID: " << m_sample_id << ")" << std::endl
               << TAG << "Detector: " << m_detector << std::endl;
@@ -138,8 +138,6 @@ void AnaSample::MakeHistos()
     m_hsig = new TH1D(Form("%s_mc_trueSignal", m_name.c_str()),
                       Form("%s_mc_trueSignal", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hsig->SetDirectory(0);
-
-    std::cout << TAG << m_nbins << " bins inside MakeHistos()." << std::endl;
 }
 
 void AnaSample::SetData(TObject* hdata)
@@ -178,41 +176,43 @@ void AnaSample::InitEventMap()
 
 void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 {
-    if(m_hpred != nullptr)
-        m_hpred->Reset();
-    if(m_hmc != nullptr)
-        m_hmc->Reset();
-    if(m_hmc_true != nullptr)
-        m_hmc_true->Reset();
-    if(m_hsig != nullptr)
-        m_hsig->Reset();
-
-    for(std::size_t i = 0; i < m_events.size(); ++i)
+#ifndef NDEBUG
+    if(m_hpred == nullptr)
     {
-        double D1_rec  = m_events[i].GetRecoD1();
-        double D2_rec  = m_events[i].GetRecoD2();
-        double D1_true = m_events[i].GetTrueD1();
-        double D2_true = m_events[i].GetTrueD2();
-        double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
+        std::cout << ERR << "In AnaSample::FillEventHist() h_pred is a nullptr!"
+                         << "Returning from function." << std::endl;
+        return;
+    }
+#endif
+    m_hpred->Reset();
+
+    //for(std::size_t i = 0; i < m_events.size(); ++i)
+    for(const auto& e : m_events)
+    {
+        //double D1_rec  = m_events[i].GetRecoD1();
+        //double D2_rec  = m_events[i].GetRecoD2();
+        //double D1_true = m_events[i].GetTrueD1();
+        //double D2_true = m_events[i].GetTrueD2();
+        //double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
 
         //int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
         //int anybin_index_true = GetBinIndex(D1_true, D2_true);
-        //int anybin_index_rec  = bm.GetBinIndex(std::vector<double>{D2_rec, D1_rec});
-        //int anybin_index_true = bm.GetBinIndex(std::vector<double>{D2_true, D1_true});
-        int anybin_index_rec  = m_events[i].GetSampleBin();
-        int anybin_index_true = bm.GetBinIndex(std::vector<double>{D2_true, D1_true});
 
-        m_hpred->Fill(anybin_index_rec + 0.5, wght);
-        m_hmc->Fill(anybin_index_rec + 0.5, wght);
-        m_hmc_true->Fill(anybin_index_true + 0.5, wght);
+        //m_hpred->Fill(anybin_index_rec + 0.5, wght);
+        //m_hmc->Fill(anybin_index_rec + 0.5, wght);
+        //m_hmc_true->Fill(anybin_index_true + 0.5, wght);
 
-        if(m_events[i].isSignalEvent())
-            m_hsig->Fill(anybin_index_true + 0.5, wght);
+        //if(m_events[i].isSignalEvent())
+        //    m_hsig->Fill(anybin_index_true + 0.5, wght);
+
+        const double weight = datatype >= 0 ? e.GetEvWght() : e.GetEvWghtMC();
+        const int reco_bin  = e.GetSampleBin();
+        m_hpred->Fill(reco_bin + 0.5, weight);
     }
 
     m_hpred->Scale(m_norm);
-    m_hmc->Scale(m_norm);
-    m_hsig->Scale(m_norm);
+    //m_hmc->Scale(m_norm);
+    //m_hsig->Scale(m_norm);
 
     if(datatype == 0 || datatype == -1)
         return;
