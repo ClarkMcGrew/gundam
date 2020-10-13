@@ -140,9 +140,7 @@ void AnaSample::InitEventMap()
 {
     for(auto& e : m_events)
     {
-        const double D1_rec  = e.GetRecoD1();
-        const double D2_rec  = e.GetRecoD2();
-        const int b = bm.GetBinIndex(std::vector<double>{D2_rec, D1_rec});
+        const int b = bm.GetBinIndex(e.GetRecoVar());
         e.SetSampleBin(b);
     }
 
@@ -238,9 +236,7 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 
         if(stat_fluc && datatype == 2)
         {
-            if(stat_fluc)
-                std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
-
+            std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
             for(unsigned int i = 1; i <= m_hdata->GetNbinsX(); ++i)
             {
                 double val = gRandom->Poisson(m_hdata->GetBinContent(i));

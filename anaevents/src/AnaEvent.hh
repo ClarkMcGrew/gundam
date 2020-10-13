@@ -130,10 +130,10 @@ class AnaEvent
                 return -1;
         }
 
-        inline const std::vector<float>& GetRecoVar() const { return reco_var; }
-        inline const std::vector<float>& GetTrueVar() const { return true_var; }
-        inline void SetRecoVar(std::vector<float> vec) { reco_var = vec; }
-        inline void SetTrueVar(std::vector<float> vec) { true_var = vec; }
+        inline const std::vector<double>& GetRecoVar() const { return reco_var; }
+        inline const std::vector<double>& GetTrueVar() const { return true_var; }
+        inline void SetRecoVar(std::vector<double> vec) { reco_var = vec; }
+        inline void SetTrueVar(std::vector<double> vec) { true_var = vec; }
 
     private:
         long int m_evid;   //unique event id
@@ -158,8 +158,8 @@ class AnaEvent
         double m_wghtMC;   //event weight from original MC
 
         //unsigned short nvar;
-        std::vector<float> reco_var;
-        std::vector<float> true_var;
+        std::vector<double> reco_var;
+        std::vector<double> true_var;
 };
 
 #endif

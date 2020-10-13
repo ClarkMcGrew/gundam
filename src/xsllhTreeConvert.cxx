@@ -123,8 +123,8 @@ int main(int argc, char** argv)
     float D2True, D2Reco;
     float weight, weight_true;
 
-    std::vector<float> reco_var;
-    std::vector<float> true_var;
+    std::vector<double> reco_var;
+    std::vector<double> true_var;
 
     out_seltree -> Branch("nutype", &nutype, "nutype/I");
     out_seltree -> Branch("reaction", &reaction, "reaction/I");
@@ -246,8 +246,8 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
-            reco_var = std::vector<float>{D2Reco, D1Reco};
-            true_var = std::vector<float>{D2True, D1True};
+            reco_var = std::vector<double>{D2Reco, D1Reco};
+            true_var = std::vector<double>{D2True, D1True};
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)
@@ -287,7 +287,7 @@ int main(int argc, char** argv)
             float selmu_mom_true = D1True;
             float selmu_cos_true = D2True;
 
-            true_var = std::vector<float>{D2True, D1True};
+            true_var = std::vector<double>{D2True, D1True};
 
             double emu_true = std::sqrt(selmu_mom_true * selmu_mom_true + mu_mass * mu_mass);
             q2_true = 2.0 * enu_true * (emu_true - selmu_mom_true * selmu_cos_true)

@@ -40,8 +40,8 @@ private:
     float enu_reco;
     float weight;
 
-    std::vector<float>* reco_var;
-    std::vector<float>* true_var;
+    std::vector<double>* reco_var;
+    std::vector<double>* true_var;
 
     const std::string TAG = color::GREEN_STR + "[AnaTreeMC]: " + color::RESET_STR;
 
