@@ -41,7 +41,7 @@ public:
     ~AnaSample();
 
     int GetN() const;
-    AnaEvent* GetEvent(int evnum);
+    AnaEvent* GetEvent(const unsigned int evnum);
     void ClearEvents();
     void AddEvent(const AnaEvent& event);
     void ResetWeights();
@@ -69,12 +69,6 @@ public:
     std::string GetDetector() const { return m_detector; }
     std::string GetDetBinning() const { return m_binning; }
 
-    TH1D* GetPredHisto() const { return m_hpred; }
-    TH1D* GetDataHisto() const { return m_hdata; }
-    TH1D* GetMCHisto() const { return m_hmc; }
-    TH1D* GetMCTruthHisto() const { return m_hmc_true; }
-    TH1D* GetSignalHisto() const { return m_hsig; }
-
 protected:
     int m_sample_id;
     int m_nbins;
@@ -90,11 +84,8 @@ protected:
     CalcLLHFunc* m_llh;
 
     TTree* m_data_tree;
-    TH1D* m_hmc_true;
-    TH1D* m_hmc;
     TH1D* m_hpred;
     TH1D* m_hdata;
-    TH1D* m_hsig;
 
     const std::string TAG = color::GREEN_STR + "[AnaSample]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + "[ERROR]: " + color::RESET_STR;
