@@ -113,6 +113,11 @@ void AnaSample::MakeHistos()
     m_hpred = new TH1D(Form("%s_pred_recD1D2", m_name.c_str()),
                        Form("%s_pred_recD1D2", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hpred->SetDirectory(0);
+
+    if(m_hdata != nullptr)
+        delete m_hdata;
+    m_hdata = new TH1D(Form("%s_data", m_name.c_str()), Form("%s_data", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hdata->SetDirectory(0);
 }
 
 void AnaSample::SetData(TObject* hdata)
@@ -141,13 +146,23 @@ void AnaSample::InitEventMap()
     for(auto& e : m_events)
     {
         const int b = bm.GetBinIndex(e.GetRecoVar());
+#ifndef NDEBUG
+        if(b < 0)
+        {
+            std::cout << WAR << "In AnaSample::InitEventMap()\n"
+                      << WAR << "No bin for current event." << std::endl;
+            std::cout << WAR << "Event kinematics: " << std::endl;
+            for(const auto val : e.GetRecoVar())
+                std::cout << "\t" << val << std::endl;
+        }
+#endif
         e.SetSampleBin(b);
     }
 
     std::sort(m_events.begin(), m_events.end(), [](AnaEvent& a, AnaEvent& b){ return a.GetSampleBin() < b.GetSampleBin(); });
 }
 
-void AnaSample::FillEventHist(int datatype, bool stat_fluc)
+void AnaSample::FillEventHist(bool reset_weights)
 {
 #ifndef NDEBUG
     if(m_hpred == nullptr)
@@ -161,21 +176,20 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
 
     for(const auto& e : m_events)
     {
-        const double weight = datatype >= 0 ? e.GetEvWght() : e.GetEvWghtMC();
+        const double weight = reset_weights ? e.GetEvWghtMC() : e.GetEvWght();
         const int reco_bin  = e.GetSampleBin();
         m_hpred->Fill(reco_bin + 0.5, weight);
     }
 
     m_hpred->Scale(m_norm);
+    return;
+}
 
-    if(datatype == 0 || datatype == -1)
-        return;
-
-    else if(datatype == 1)
+void AnaSample::FillDataHist(int datatype, bool stat_fluc)
+{
+    if(datatype == kAsimov)
     {
-        SetData(m_hpred);
         m_hdata->Reset();
-
         if(stat_fluc)
             std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
 
@@ -185,56 +199,60 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
             if(stat_fluc)
                 val = gRandom->Poisson(val);
 #ifndef NDEBUG
-            if(val == 0.0)
+            if(val <= 0.0)
             {
-                std::cout << "[WARNING] In AnaSample::FillEventHist()\n"
-                          << "[WARNING] " << m_name << " bin " << j
-                          << " has 0 entries. This may cause a problem with chi2 computations."
+                std::cout << WAR << "In AnaSample::FillEventHist()\n"
+                          << WAR << "In Sample " <<  m_name << ", bin " << j
+                          << " has 0 (or negative) entries. This may cause a problem with chi2 computations."
                           << std::endl;
-                continue;
             }
 #endif
             m_hdata->SetBinContent(j, val);
         }
     }
-
-    else if(datatype == 2 || datatype == 3)
+    else if(datatype == kExternal || datatype == kData)
     {
-        SetData(m_hpred);
         m_hdata->Reset();
 
-        float D1_rec_tree, D2_rec_tree, wght;
-        int cut_branch;
+        //float D1_rec_tree, D2_rec_tree, wght;
+        //int cut_branch;
 
-        m_data_tree->SetBranchAddress("cut_branch", &cut_branch);
-        m_data_tree->SetBranchAddress("weight", &wght);
-        m_data_tree->SetBranchAddress("D1Reco", &D1_rec_tree);
-        m_data_tree->SetBranchAddress("D2Reco", &D2_rec_tree);
+        int sample = -1;
+        float weight = 1.0;
+        std::vector<double>* reco_var = 0;
+
+        m_data_tree->SetBranchAddress("cut_branch", &sample);
+        m_data_tree->SetBranchAddress("weight", &weight);
+        m_data_tree->SetBranchAddress("reco_var", &reco_var);
+        //m_data_tree->SetBranchAddress("D1Reco", &D1_rec_tree);
+        //m_data_tree->SetBranchAddress("D2Reco", &D2_rec_tree);
 
         long int n_entries = m_data_tree->GetEntries();
         for(std::size_t i = 0; i < n_entries; ++i)
         {
             m_data_tree->GetEntry(i);
-            if(cut_branch != m_sample_id)
+            if(sample != m_sample_id)
                 continue;
 
-            int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree);
-            if(anybin_index != -1)
+            //int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree);
+            const int bin = bm.GetBinIndex(*reco_var);
+            if(bin > -1)
             {
-                m_hdata->Fill(anybin_index + 0.5, wght);
+                m_hdata->Fill(bin + 0.5, weight);
             }
 #ifndef NDEBUG
             else
             {
-                std::cout << "[WARNING] In AnaSample::FillEventHist()\n"
-                          << "[WARNING] No bin for current data event.\n"
-                          << "[WARNING] D1 Reco: " << D1_rec_tree << std::endl
-                          << "[WARNING] D2 Reco: " << D2_rec_tree << std::endl;
+                std::cout << WAR << "In AnaSample::FillEventHist()\n"
+                          << WAR << "No bin for current data event." << std::endl;
+                std::cout << WAR << "Event kinematics: " << std::endl;
+                for(const auto val : *reco_var)
+                    std::cout << "\t" << val << std::endl;
             }
 #endif
         }
 
-        if(stat_fluc && datatype == 2)
+        if(stat_fluc && datatype == kExternal)
         {
             std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
             for(unsigned int i = 1; i <= m_hdata->GetNbinsX(); ++i)
@@ -243,17 +261,15 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
                 m_hdata->SetBinContent(i, val);
             }
         }
-
 #ifndef NDEBUG
         std::cout << TAG << "Data histogram filled: " << std::endl;
         m_hdata->Print();
 #endif
     }
-
     else
     {
-        std::cout << "[WARNING]: In AnaSample::FillEventHist()\n"
-                  << "[WARNING]: Invalid data type to fill histograms!\n";
+        std::cout << WAR << "In AnaSample::FillDataHist()\n"
+                  << WAR << "Invalid data type to fill histograms!\n";
     }
 }
 

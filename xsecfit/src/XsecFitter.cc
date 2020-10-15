@@ -206,20 +206,23 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return false;
     }
 
+    for(const auto& s : m_samples)
+        s->FillEventHist();
+
     if(fit_type == kAsimovFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)
-            m_samples[s]->FillEventHist(kAsimov, stat_fluc);
+            m_samples[s]->FillDataHist(kAsimov, stat_fluc);
     }
     else if(fit_type == kExternalFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)
-            m_samples[s]->FillEventHist(kExternal, stat_fluc);
+            m_samples[s]->FillDataHist(kExternal, stat_fluc);
     }
     else if(fit_type == kDataFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)
-            m_samples[s]->FillEventHist(kData, stat_fluc);
+            m_samples[s]->FillDataHist(kData, stat_fluc);
     }
     else if(fit_type == kToyFit)
     {
@@ -379,8 +382,9 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
                 m_fitpara[j]->ReWeight(ev, det, s, i, fitpar_throw[j]);
         }
 
-        m_samples[s]->FillEventHist(kAsimov, stat_fluc);
-        m_samples[s]->FillEventHist(kReset);
+        m_samples[s]->FillEventHist(false);
+        m_samples[s]->FillDataHist(kAsimov, stat_fluc);
+        m_samples[s]->FillEventHist(true);
         chi2_stat += m_samples[s]->CalcChi2();
     }
 
@@ -424,7 +428,7 @@ double XsecFitter::FillSamples(std::vector<std::vector<double>>& new_pars, int d
             }
         }
 
-        m_samples[s]->FillEventHist(datatype);
+        m_samples[s]->FillEventHist();
         //double sample_chi2 = m_samples[s]->CalcChi2();
         double sample_chi2 = m_samples[s]->CalcLLH();
         //double sample_chi2 = m_samples[s]->CalcEffLLH();

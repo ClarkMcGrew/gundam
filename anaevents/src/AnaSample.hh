@@ -60,7 +60,8 @@ public:
     double CalcLLH() const;
     double CalcChi2() const;
 
-    void FillEventHist(int datatype, bool stat_fluc = false);
+    void FillEventHist(bool reset_weights = false);
+    void FillDataHist(int datatype, bool stat_fluc = false);
     void Write(TDirectory* dirout, const std::string& bsname, int fititer);
 
     double GetNorm() const { return m_norm; }
@@ -89,6 +90,7 @@ protected:
 
     const std::string TAG = color::GREEN_STR + "[AnaSample]: " + color::RESET_STR;
     const std::string ERR = color::RED_STR + "[ERROR]: " + color::RESET_STR;
+    const std::string WAR = color::RED_STR + "[WARNING]: " + color::RESET_STR;
 };
 
 #endif
