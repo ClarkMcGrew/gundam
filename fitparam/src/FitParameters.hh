@@ -1,14 +1,12 @@
 #ifndef __FitParameters_hh__
 #define __FitParameters_hh__
 
-#include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <string>
 
-#include <TRandom3.h>
-
 #include "AnaFitParameters.hh"
+#include "BinManager.hh"
 #include "FitStructs.hh"
 #include "OptParser.hh"
 
@@ -22,19 +20,15 @@ class FitParameters : public AnaFitParameters
         void InitEventMap(std::vector<AnaSample*> &sample, int mode);
         void ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent,
                       std::vector<double>& params);
-        bool SetBinning(const std::string& file_name, std::vector<xsllh::FitBin>& bins);
-        void AddDetector(const std::string& det, const std::string& f_binning);
         void AddDetector(const std::string& det, const std::vector<SignalDef>& v_input);
-        int GetBinIndex(const int sig, double D1, double D2) const;
         double CalcRegularisation(const std::vector<double>& params) const;
         double CalcRegularisation(const std::vector<double>& params, double strength,
                                   RegMethod flag = kL2Reg) const;
 
     private:
-        std::map<std::string, std::vector<xsllh::FitBin>> m_fit_bins;
+        std::map<int, BinManager> m_signal_bm;
         std::map<std::string, int> m_det_offset;
         std::vector<std::string> v_detectors;
-        std::map<int, std::vector<xsllh::FitBin>> m_signal_bins;
         std::map<int, int> m_sig_offset;
         std::vector<int> v_signals;
         unsigned int signal_id;

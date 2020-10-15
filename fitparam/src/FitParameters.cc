@@ -10,66 +10,6 @@ FitParameters::FitParameters(const std::string& par_name)
 FitParameters::~FitParameters()
 {;}
 
-bool FitParameters::SetBinning(const std::string& file_name, std::vector<FitBin>& bins)
-{
-    std::ifstream fin(file_name, std::ios::in);
-    if(!fin.is_open())
-    {
-        std::cerr << ERR << "In FitParameters::SetBinning()\n"
-                  << ERR << "Failed to open binning file: " << file_name << std::endl;
-        return false;
-    }
-
-    else
-    {
-        std::string line;
-        while(getline(fin, line))
-        {
-            std::stringstream ss(line);
-            double D1_1, D1_2, D2_1, D2_2;
-            if(!(ss>>D2_1>>D2_2>>D1_1>>D1_2))
-            {
-                std::cout << WAR << "In FitParameters::SetBinning()\n"
-                          << WAR << "Bad line format: " << line << std::endl;
-                continue;
-            }
-            bins.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2));
-        }
-        fin.close();
-
-        std::cout << TAG << "Fit binning: \n";
-        for(std::size_t i = 0; i < bins.size(); ++i)
-        {
-            std::cout << std::setw(3) << i
-                      << std::setw(5) << bins[i].D2low
-                      << std::setw(5) << bins[i].D2high
-                      << std::setw(5) << bins[i].D1low
-                      << std::setw(5) << bins[i].D1high << std::endl;
-        }
-
-        return true;
-    }
-}
-
-int FitParameters::GetBinIndex(const int sig, double D1, double D2) const
-{
-    int bin = BADBIN;
-    const std::vector<FitBin> &temp_bins = m_signal_bins.at(sig);
-
-    for(int i = 0; i < temp_bins.size(); ++i)
-    {
-        if(D1 >= temp_bins[i].D1low && D1 < temp_bins[i].D1high &&
-           D2 >= temp_bins[i].D2low && D2 < temp_bins[i].D2high)
-        {
-            bin = i;
-            break;
-        }
-    }
-    return bin;
-}
-
-
-// initEventMap
 void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
 {
     for(const auto& s : sample)
@@ -102,16 +42,17 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
 
             if(ev -> isSignalEvent())
             {
-                double D1 = ev -> GetTrueD1();
-                double D2 = ev -> GetTrueD2();
-                //int bin = GetBinIndex(sample[s] -> GetDetector(), D1, D2);
-                int bin = GetBinIndex(ev -> GetSignalType(), D1, D2);
+                const int sig = ev -> GetSignalType();
+                const int bin = m_signal_bm[sig].GetBinIndex(ev->GetTrueVar());
 #ifndef NDEBUG
                 if(bin == BADBIN)
                 {
                     std::cout << WAR << m_name << ", Event: " << i << std::endl
-                              << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", falls outside bin ranges." << std::endl
-                              << WAR << "This event will be ignored in the analysis." << std::endl;
+                              << WAR << "Falls outside bin ranges, and will be ignored in the analysis" << std::endl;
+
+                    std::cout << WAR << "Event kinematics: " << std::endl;
+                    for(const auto val : ev->GetTrueVar())
+                        std::cout << "\t" << val << std::endl;
                 }
 #endif
                 sample_map.push_back(bin);
@@ -129,23 +70,24 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
 
 void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent, std::vector<double> &params)
 {
+#ifndef NDEBUG
     if(m_evmap.empty()) //need to build an event map first
     {
         std::cerr << ERR << "In FitParameters::ReWeight()\n"
                   << ERR << "Need to build event map index for " << m_name << std::endl;
         return;
     }
+#endif
 
     const int bin = m_evmap[nsample][nevent];
 
     //skip event if not Signal
-    if(bin == PASSEVENT) return;
+    if(bin == PASSEVENT || bin == BADBIN)
+        return;
 
-    // If bin fell out of valid ranges, pretend the event just didn't happen:
-    if(bin == BADBIN)
-        event -> AddEvWght(1.0);
     else
     {
+#ifndef NDEBUG
         if(bin > params.size())
         {
             std::cout << WAR << "In FitParameters::ReWeight()\n"
@@ -153,6 +95,7 @@ void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsampl
                       << WAR << "Setting event weight to zero." << std::endl;
             event -> AddEvWght(0.0);
         }
+#endif
 
         event -> AddEvWght(params[bin + m_sig_offset.at(event->GetSignalType())]);
 
@@ -175,7 +118,7 @@ void FitParameters::InitParameters()
     for(const auto& sig : v_signals)
     {
         m_sig_offset.emplace(std::make_pair(sig, offset));
-        const int nbins = m_signal_bins.at(sig).size();
+        const int nbins = m_signal_bm.at(sig).GetNbins();
         for(int i = 0; i < nbins; ++i)
         {
             pars_name.push_back(Form("%s_sig%d_%d", m_name.c_str(), sig, i));
@@ -195,20 +138,6 @@ void FitParameters::InitParameters()
     pars_original = pars_prior;
 }
 
-void FitParameters::AddDetector(const std::string& det, const std::string& f_binning)
-{
-    std::cout << TAG << "Adding detector " << det << " for " << m_name << std::endl;
-
-    std::vector<FitBin> temp_vector;
-    if(SetBinning(f_binning, temp_vector))
-    {
-        m_fit_bins.emplace(std::make_pair(det, temp_vector));
-        v_detectors.emplace_back(det);
-    }
-    else
-        std::cout << WAR << "Adding detector failed." << std::endl;
-}
-
 void FitParameters::AddDetector(const std::string& det, const std::vector<SignalDef>& v_input)
 {
     std::cout << TAG << "Adding detector " << det << " for " << m_name << std::endl;
@@ -223,15 +152,9 @@ void FitParameters::AddDetector(const std::string& det, const std::vector<Signal
         std::cout << TAG << "Adding signal " << sig.name << " with ID " << signal_id
                   << " to fit." << std::endl;
 
-        std::vector<FitBin> temp_vector;
-        if(SetBinning(sig.binning, temp_vector))
-        {
-            m_signal_bins.emplace(std::make_pair(signal_id, temp_vector));
-            v_detectors.emplace_back(det);
-            signal_id++;
-        }
-        else
-            std::cout << WAR << "Adding signal binning failed." << std::endl;
+        m_signal_bm.emplace(std::make_pair(signal_id, BinManager(sig.binning)));
+        v_detectors.emplace_back(det);
+        signal_id++;
     }
 }
 
@@ -243,18 +166,11 @@ double FitParameters::CalcRegularisation(const std::vector<double>& params) cons
 double FitParameters::CalcRegularisation(const std::vector<double>& params, double strength,
                                          RegMethod flag) const
 {
-    /*
-    auto L2_lambda = [](double a, double b) -> double
-    {
-        return (a - b) * (a - b);
-    };
-    */
-
     double L_reg = 0;
     unsigned int offset = 0;
     for(const auto& signal_id : v_signals)
     {
-        const unsigned int nbins = m_signal_bins.at(signal_id).size();
+        const unsigned int nbins = m_signal_bm.at(signal_id).GetNbins();
 
         if(flag == kL1Reg)
         {
