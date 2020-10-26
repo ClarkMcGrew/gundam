@@ -161,7 +161,7 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-                detpara->AddDetector(opt.name, samples, true);
+                detpara->AddDetector(opt.name, samples);
         }
         if(is_true_tree)
             detpara->InitEventMap(samples, 2);

@@ -68,7 +68,7 @@ public:
     int GetSampleID() const { return m_sample_id; }
     std::string GetName() const { return m_name; }
     std::string GetDetector() const { return m_detector; }
-    std::string GetDetBinning() const { return m_binning; }
+    std::string GetBinning() const { return m_binning; }
 
 protected:
     int m_sample_id;

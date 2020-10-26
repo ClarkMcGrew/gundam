@@ -259,7 +259,7 @@ int main(int argc, char** argv)
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-                detpara.AddDetector(opt.name, samples, true);
+                detpara.AddDetector(opt.name, samples);
         }
         detpara.InitEventMap(samples, 0);
         fitpara.push_back(&detpara);
