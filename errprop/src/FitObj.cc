@@ -20,9 +20,6 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
     std::string fname_output = parser.fname_output;
 
     npar = 0;
-    const double potD = parser.data_POT;
-    const double potMC = parser.mc_POT;
-    m_norm = potD / potMC;
     m_threads = parser.num_threads;
     m_fit_type = parser.fit_type;
     signal_def = parser.signal_definition;
@@ -46,7 +43,6 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
                       << TAG << "Use Sample: " << std::boolalpha << opt.use_sample << std::endl;
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
-            s->SetNorm(potD / potMC);
             if(opt.cut_branch >= 0 && !is_true_tree)
                 samples.push_back(s);
             else if(opt.cut_branch < 0 && is_true_tree)
@@ -254,9 +250,6 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
             }
         }
     }
-
-    for(auto& hist : signal_hist)
-        hist.Scale(m_norm);
 }
 
 void FitObj::ReweightNominal()
@@ -278,9 +271,6 @@ void FitObj::ReweightNominal()
             }
         }
     }
-
-    for(auto& hist : signal_hist)
-        hist.Scale(m_norm);
 }
 
 void FitObj::ResetHist()

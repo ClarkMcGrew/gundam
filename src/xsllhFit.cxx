@@ -85,9 +85,6 @@ int main(int argc, char** argv)
     std::string fname_data = parser.fname_data;
     std::string fname_mc   = parser.fname_mc;
 
-    const double potD  = parser.data_POT;
-    const double potMC = parser.mc_POT;
-
     if(fname_output.empty())
         fname_output = parser.fname_output;
     else
@@ -129,7 +126,6 @@ int main(int argc, char** argv)
 
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
             s -> SetLLHFunction(parser.min_settings.likelihood);
-            s -> SetNorm(potD/potMC);
             samples.push_back(s);
         }
     }
@@ -269,7 +265,6 @@ int main(int argc, char** argv)
     XsecFitter xsecfit(fout, seed, threads);
     //xsecfit.SetSaveFreq(10000);
     xsecfit.SetMinSettings(parser.min_settings);
-    xsecfit.SetPOTRatio(potD/potMC);
     xsecfit.SetZeroSyst(parser.zero_syst);
     xsecfit.SetSaveEvents(parser.save_events);
 

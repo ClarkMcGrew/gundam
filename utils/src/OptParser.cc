@@ -34,8 +34,6 @@ bool OptParser::ParseJSON(std::string json_file)
     fit_type = j["fit_type"];
     stat_fluc = j.value("stat_fluc", false);
     zero_syst = j.value("zero_syst", false);
-    data_POT = j.value("data_POT", 1.0);
-    mc_POT = j.value("mc_POT", 1.0);
     rng_template = j.value("rng_template", false);
     rng_seed = j.value("rng_seed", 0);
     num_threads = j.value("num_threads", 1);
@@ -173,8 +171,6 @@ void OptParser::PrintOptions(bool short_list) const
     << std::endl << TAG << "MC     File : " << fname_mc
     << std::endl << TAG << "Output File : " << fname_output
     << std::endl << TAG << "Fit Type : " << fit_type
-    << std::endl << TAG << "Data POT : " << data_POT
-    << std::endl << TAG << "MC   POT : " << mc_POT
     << std::endl << TAG << "RNG Seed : " << rng_seed
     << std::endl << TAG << "N Threads: " << num_threads
     << std::endl << TAG << "Saving Events: " << std::boolalpha << save_events

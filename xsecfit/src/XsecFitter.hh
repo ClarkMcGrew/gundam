@@ -58,7 +58,6 @@ public:
         m_save = flag;
     }
     void SetSaveEvents(bool flag = true) { m_save_events = flag; };
-    void SetPOTRatio(double val) { m_potratio = val; }
 
     TTree* outtree;
 
@@ -111,7 +110,6 @@ private:
     bool m_save;
     bool m_save_events;
     bool m_zerosyst;
-    double m_potratio;
     int m_threads;
     int m_npar, m_calls, m_freq;
     std::string paramVectorFileName;

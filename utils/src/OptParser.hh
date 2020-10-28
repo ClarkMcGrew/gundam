@@ -84,8 +84,6 @@ class OptParser
         int fit_type;
         int rng_seed;
         int num_threads;
-        double data_POT;
-        double mc_POT;
 
         bool stat_fluc;
         bool zero_syst;

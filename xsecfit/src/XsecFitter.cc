@@ -10,7 +10,6 @@ XsecFitter::XsecFitter(TDirectory* dirout, const int seed, const int num_threads
     , m_zerosyst(false)
     , m_freq(10000)
     , m_threads(num_threads)
-    , m_potratio(1.0)
     , m_npar(0)
     , m_calls(0)
 {
@@ -548,8 +547,8 @@ void XsecFitter::SaveEventTree(std::vector<std::vector<double>>& res_params)
             D2true   = ev->GetTrueD2();
             D1Reco   = ev->GetRecoD1();
             D2Reco   = ev->GetRecoD2();
-            weightMC = ev->GetEvWghtMC() * m_potratio;
-            weight   = ev->GetEvWght() * m_potratio;
+            weightMC = ev->GetEvWghtMC();
+            weight   = ev->GetEvWght();
             outtree->Fill();
         }
     }
