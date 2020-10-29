@@ -49,7 +49,6 @@ public:
 
     void PrintStats() const;
     void SetNorm(const double val) { m_norm = val; }
-    void SetData(TObject* data);
     void MakeHistos();
 
     void SetBinning(const std::string& binning);
@@ -62,7 +61,9 @@ public:
 
     void FillEventHist(bool reset_weights = false);
     void FillDataHist(int datatype, bool stat_fluc = false);
-    void Write(TDirectory* dirout, const std::string& bsname, int fititer);
+
+    void WriteEventHist(TDirectory* dirout, const std::string& bsname);
+    void WriteDataHist(TDirectory* dirout, const std::string& bsname);
 
     double GetNorm() const { return m_norm; }
     int GetSampleID() const { return m_sample_id; }

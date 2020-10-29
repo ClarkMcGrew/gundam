@@ -110,21 +110,13 @@ void AnaSample::MakeHistos()
 {
     if(m_hpred != nullptr)
         delete m_hpred;
-    m_hpred = new TH1D(Form("%s_pred_recD1D2", m_name.c_str()),
-                       Form("%s_pred_recD1D2", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hpred = new TH1D(Form("%s_pred_reco", m_name.c_str()),
+                       Form("%s_pred_reco", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hpred->SetDirectory(0);
 
     if(m_hdata != nullptr)
         delete m_hdata;
     m_hdata = new TH1D(Form("%s_data", m_name.c_str()), Form("%s_data", m_name.c_str()), m_nbins, 0, m_nbins);
-    m_hdata->SetDirectory(0);
-}
-
-void AnaSample::SetData(TObject* hdata)
-{
-    if(m_hdata != nullptr)
-        delete m_hdata;
-    m_hdata = (TH1D*)hdata->Clone(Form("%s_data", m_name.c_str()));
     m_hdata->SetDirectory(0);
 }
 
@@ -371,13 +363,16 @@ double AnaSample::CalcChi2() const
     return chi2;
 }
 
-void AnaSample::Write(TDirectory* dirout, const std::string& bsname, int fititer)
+void AnaSample::WriteEventHist(TDirectory* dirout, const std::string& bsname)
 {
     dirout->cd();
-    m_hpred->Write(Form("%s_pred", bsname.c_str()));
-    if(fititer == 0)
-    {
-        if(m_hdata != nullptr)
-            m_hdata->Write(Form("%s_data", bsname.c_str()));
-    }
+    if(m_hpred != nullptr)
+        m_hpred->Write(Form("evhist_sam%d_pred%s", m_sample_id, bsname.c_str()));
+}
+
+void AnaSample::WriteDataHist(TDirectory* dirout, const std::string& bsname)
+{
+    dirout->cd();
+    if(m_hdata != nullptr)
+        m_hdata->Write(Form("evhist_sam%d_data%s", m_sample_id, bsname.c_str()));
 }

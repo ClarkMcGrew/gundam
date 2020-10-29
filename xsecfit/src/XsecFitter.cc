@@ -234,7 +234,7 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
         return false;
     }
 
-    SaveEventHist(m_calls);
+    SaveEventHist();
 
     bool did_converge = false;
     std::cout << TAG << "Fit prepared." << std::endl;
@@ -341,7 +341,7 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     postfit_globalcc.Write("res_globalcc");
 
     SaveResults(res_pars, err_pars);
-    SaveEventHist(m_calls, true);
+    SaveEventHist(true);
 
     if(m_save_events)
         SaveEventTree(res_pars);
@@ -490,7 +490,7 @@ double XsecFitter::CalcLikelihood(const double* par)
     if(m_calls % m_freq == 0 && m_save)
     {
         SaveParams(new_pars);
-        SaveEventHist(m_calls);
+        SaveEventHist();
     }
 
     if(output_chi2)
@@ -505,24 +505,26 @@ double XsecFitter::CalcLikelihood(const double* par)
     return chi2_stat + chi2_sys + chi2_reg;
 }
 
-void XsecFitter::SaveEventHist(int fititer, bool is_final)
+void XsecFitter::SaveEventHist(bool is_final)
 {
-    for(int s = 0; s < m_samples.size(); s++)
+    for(auto& sample : m_samples)
     {
         std::stringstream ss;
-        ss << "evhist_sam" << s;
+        if(!is_final)
+            sample->WriteDataHist(m_dir, ss.str());
+
         if(is_final)
-            ss << "_finaliter";
+            ss << "_final";
         else
             ss << "_iter" << m_calls;
 
-        m_samples[s]->Write(m_dir, ss.str(), fititer);
+        sample->WriteEventHist(m_dir, ss.str());
     }
 }
 
 void XsecFitter::SaveEventTree(std::vector<std::vector<double>>& res_params)
 {
-    outtree = new TTree("selectedEvents", "selectedEvents");
+    m_outtree = new TTree("selectedEvents", "selectedEvents");
     InitOutputTree();
 
     for(size_t s = 0; s < m_samples.size(); s++)
@@ -543,17 +545,16 @@ void XsecFitter::SaveEventTree(std::vector<std::vector<double>>& res_params)
             reaction = ev->GetReaction();
             target   = ev->GetTarget();
             nutype   = ev->GetFlavor();
-            D1true   = ev->GetTrueD1();
-            D2true   = ev->GetTrueD2();
-            D1Reco   = ev->GetRecoD1();
-            D2Reco   = ev->GetRecoD2();
+            sam_bin  = ev->GetSampleBin();
+            reco_var = ev->GetRecoVar();
+            true_var = ev->GetTrueVar();
             weightMC = ev->GetEvWghtMC();
             weight   = ev->GetEvWght();
-            outtree->Fill();
+            m_outtree->Fill();
         }
     }
     m_dir->cd();
-    outtree->Write();
+    m_outtree->Write();
 }
 
 void XsecFitter::SaveParams(const std::vector<std::vector<double>>& new_pars)
@@ -587,15 +588,10 @@ void XsecFitter::SaveParams(const std::vector<std::vector<double>>& new_pars)
 void XsecFitter::SaveChi2()
 {
     TH1D h_chi2stat("chi2_stat_periter", "chi2_stat_periter", m_calls + 1, 0, m_calls + 1);
-    TH1D h_chi2sys("chi2_sys_periter", "chi2_sys_periter", m_calls + 1, 0, m_calls + 1);
+    TH1D h_chi2sys("chi2_syst_periter", "chi2_syst_periter", m_calls + 1, 0, m_calls + 1);
     TH1D h_chi2reg("chi2_reg_periter", "chi2_reg_periter", m_calls + 1, 0, m_calls + 1);
-    TH1D h_chi2tot("chi2_tot_periter", "chi2_tot_periter", m_calls + 1, 0, m_calls + 1);
+    TH1D h_chi2tot("chi2_total_periter", "chi2_total_periter", m_calls + 1, 0, m_calls + 1);
 
-    if(vec_chi2_stat.size() != vec_chi2_sys.size())
-    {
-        std::cout << ERR << "Number of saved iterations for chi2 stat and chi2 syst are different."
-                  << std::endl;
-    }
     for(size_t i = 0; i < vec_chi2_stat.size(); i++)
     {
         h_chi2stat.SetBinContent(i + 1, vec_chi2_stat[i]);
@@ -604,11 +600,23 @@ void XsecFitter::SaveChi2()
         h_chi2tot.SetBinContent(i + 1, vec_chi2_sys[i] + vec_chi2_stat[i] + vec_chi2_reg[i]);
     }
 
+    std::vector<double> v_chi2_prefit = {vec_chi2_stat.front(), vec_chi2_sys.front(), vec_chi2_reg.front()};
+    v_chi2_prefit.push_back(std::accumulate(v_chi2_prefit.begin(), v_chi2_prefit.end(), 0.0, std::plus<double>()));
+
+    std::vector<double> v_chi2_pstfit = {vec_chi2_stat.back(), vec_chi2_sys.back(), vec_chi2_reg.back()};
+    v_chi2_pstfit.push_back(std::accumulate(v_chi2_pstfit.begin(), v_chi2_pstfit.end(), 0.0, std::plus<double>()));
+
+    TVectorD chi2_prefit(v_chi2_prefit.size(), v_chi2_prefit.data());
+    TVectorD chi2_pstfit(v_chi2_pstfit.size(), v_chi2_pstfit.data());
+
     m_dir->cd();
     h_chi2stat.Write();
     h_chi2sys.Write();
     h_chi2reg.Write();
     h_chi2tot.Write();
+
+    chi2_prefit.Write("chi2_tuple_prefit");
+    chi2_pstfit.Write("chi2_tuple_postfit");
 }
 
 void XsecFitter::SaveResults(const std::vector<std::vector<double>>& par_results,
@@ -653,7 +661,7 @@ void XsecFitter::SaveResults(const std::vector<std::vector<double>>& par_results
 
             double err_prior = 0.0;
             if(cov_mat != nullptr)
-                err_prior = TMath::Sqrt((*cov_mat)(j,j));
+                err_prior = std::sqrt((*cov_mat)(j,j));
 
             h_err_prior.GetXaxis()->SetBinLabel(j + 1, vec_names[j].c_str());
             h_err_prior.SetBinContent(j + 1, err_prior);

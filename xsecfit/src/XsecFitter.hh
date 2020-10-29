@@ -2,8 +2,11 @@
 #define __XsecFitter_hh__
 
 #include <algorithm>
+#include <cmath>
+#include <functional>
 #include <iostream>
 #include <iterator>
+#include <numeric>
 #include <sstream>
 #include <string>
 
@@ -13,7 +16,6 @@
 
 #include <TFile.h>
 #include <TGraph.h>
-#include <TMath.h>
 #include <TMatrixT.h>
 #include <TMatrixTSym.h>
 #include <TRandom3.h>
@@ -59,44 +61,39 @@ public:
     }
     void SetSaveEvents(bool flag = true) { m_save_events = flag; };
 
-    TTree* outtree;
-
     // Declaration of leaf types
-    Int_t sample;
-    Float_t D1true;
-    Float_t D2true;
-    Int_t nutype;
-    Int_t topology;
-    Int_t reaction;
-    Int_t target;
-    Int_t sigtype;
-    Float_t D1Reco;
-    Float_t D2Reco;
-    Float_t weight;
-    Float_t weightNom;
-    Float_t weightMC;
+    int sample;
+    int nutype;
+    int topology;
+    int reaction;
+    int target;
+    int sigtype;
+    int sam_bin;
+    float weight;
+    float weightMC;
+    std::vector<double> reco_var;
+    std::vector<double> true_var;
 
     void InitOutputTree()
     {
-        outtree->Branch("nutype", &nutype, "nutype/I");
-        outtree->Branch("reaction", &reaction, "reaction/I");
-        outtree->Branch("target", &target, "target/I");
-        outtree->Branch("sample", &sample, "cut_branch/I");
-        outtree->Branch("sigtype", &sigtype, "signal/I");
-        outtree->Branch("topology", &topology, "topology/I");
-        outtree->Branch("D1True", &D1true, ("D1True/F"));
-        outtree->Branch("D1Reco", &D1Reco, ("D1Reco/F"));
-        outtree->Branch("D2True", &D2true, ("D2True/F"));
-        outtree->Branch("D2Reco", &D2Reco, ("D2Reco/F"));
-        outtree->Branch("weight", &weight, "weight/F");
-        outtree->Branch("weightMC", &weightMC, "weightMC/F");
+        m_outtree->Branch("nutype", &nutype, "nutype/I");
+        m_outtree->Branch("reaction", &reaction, "reaction/I");
+        m_outtree->Branch("topology", &topology, "topology/I");
+        m_outtree->Branch("target", &target, "target/I");
+        m_outtree->Branch("sample", &sample, "sample/I");
+        m_outtree->Branch("sigtype", &sigtype, "signal/I");
+        m_outtree->Branch("sam_bin", &sam_bin, "sam_bin/I");
+        m_outtree->Branch("reco_var", &reco_var);
+        m_outtree->Branch("true_var", &true_var);
+        m_outtree->Branch("weight", &weight, "weight_post/F");
+        m_outtree->Branch("weightMC", &weightMC, "weight_nom/F");
     }
 
 private:
     void GenerateToyData(int toy_type, bool stat_fluc = false);
     double FillSamples(std::vector<std::vector<double>>& new_pars, int datatype = 0);
     void SaveParams(const std::vector<std::vector<double>>& new_pars);
-    void SaveEventHist(int fititer, bool is_final = false);
+    void SaveEventHist(bool is_final = false);
     void SaveEventTree(std::vector<std::vector<double>>& par_results);
     void SaveChi2();
     void SaveResults(const std::vector<std::vector<double>>& parresults,
@@ -105,6 +102,7 @@ private:
     ROOT::Math::Minimizer* m_fitter;
     ROOT::Math::Functor* m_fcn;
 
+    TTree* m_outtree;
     TRandom3* rng;
     TDirectory* m_dir;
     bool m_save;
@@ -112,7 +110,6 @@ private:
     bool m_zerosyst;
     int m_threads;
     int m_npar, m_calls, m_freq;
-    std::string paramVectorFileName;
     std::vector<std::string> par_names;
     std::vector<double> par_prefit;
     std::vector<double> vec_chi2_stat;
