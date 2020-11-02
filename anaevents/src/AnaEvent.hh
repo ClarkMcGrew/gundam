@@ -10,14 +10,15 @@ class AnaEvent
         AnaEvent(long int evid)
         {
             m_evid     = evid;
-            m_flavor   = -1;
-            m_topology = -1;
-            m_reaction = -1;
-            m_target   = -1;
-            m_sample   = -1;
-            m_bin      = -1;
+            m_flavor   = -99;
+            m_beammode = -99;
+            m_topology = -99;
+            m_reaction = -99;
+            m_target   = -99;
+            m_sample   = -99;
+            m_bin      = -99;
+            m_sig_type = -99;
             m_signal   = false;
-            m_sig_type = -1;
             m_true_evt = false;
             m_enu_true = -999.0;
             m_enu_reco = -999.0;
@@ -58,6 +59,9 @@ class AnaEvent
 
         inline void SetFlavor(const short flavor){ m_flavor = flavor; }
         inline short GetFlavor() const { return m_flavor; }
+
+        inline void SetBeamMode(const short beammode){ m_beammode = beammode; }
+        inline short GetBeamMode() const { return m_beammode; }
 
         inline long int GetEvId() const { return m_evid; }
 
@@ -100,16 +104,21 @@ class AnaEvent
                       << "Reaction    " << GetReaction() << std::endl
                       << "Target      " << GetTarget() << std::endl
                       << "Flavor      " << GetFlavor() << std::endl
+                      << "Beam mode   " << GetBeamMode() << std::endl
                       << "Sample      " << GetSampleType() << std::endl
                       << "Signal      " << GetSignalType() << std::endl
-                      << "True energy " << GetTrueEnu() << std::endl
                       << "Reco energy " << GetRecoEnu() << std::endl
-                      << "True D1     " << GetTrueD1() << std::endl
-                      << "Reco D1     " << GetRecoD1() << std::endl
-                      << "True D2     " << GetTrueD2() << std::endl
-                      << "Reco D2     " << GetRecoD2() << std::endl
+                      << "True energy " << GetTrueEnu() << std::endl
                       << "Weight      " << GetEvWght() << std::endl
                       << "Weight MC   " << GetEvWghtMC() << std::endl;
+
+            std::cout << "Reco Variables: \n";
+            for(const auto val : GetRecoVar())
+                std::cout << "\t" << val << std::endl;
+
+            std::cout << "True Variables: \n";
+            for(const auto val : GetTrueVar())
+                std::cout << "\t" << val << std::endl;
         }
 
         int GetEventVar(const std::string& var) const
@@ -137,13 +146,14 @@ class AnaEvent
 
     private:
         long int m_evid;   //unique event id
-        short m_flavor;      //flavor of neutrino (numu, etc.)
-        short m_topology;    //final state topology type
-        short m_reaction;    //event interaction mode
-        short m_sample;      //sample type (aka cutBranch)
-        short m_bin;
-        short m_sig_type;
-        short m_target;      //target nuclei
+        short m_flavor;    //flavor of neutrino (numu, etc.)
+        short m_beammode;  //beam polarity, FHC vs RHC
+        short m_topology;  //final state topology type (e.g. CC0pi)
+        short m_reaction;  //event interaction mode (e.g. CCQE)
+        short m_sample;    //sample type (aka cutBranch)
+        short m_bin;       //reco bin for the sample binning
+        short m_sig_type;  //signal type or id
+        short m_target;    //target nuclei
         bool m_signal;     //flag if signal event
         bool m_true_evt;   //flag if true event
         double m_enu_true; //true nu energy

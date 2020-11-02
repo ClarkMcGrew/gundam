@@ -85,8 +85,8 @@ public:
         m_outtree->Branch("sam_bin", &sam_bin, "sam_bin/I");
         m_outtree->Branch("reco_var", &reco_var);
         m_outtree->Branch("true_var", &true_var);
-        m_outtree->Branch("weight", &weight, "weight_post/F");
-        m_outtree->Branch("weightMC", &weightMC, "weight_nom/F");
+        m_outtree->Branch("weight_post", &weight, "weight_post/F");
+        m_outtree->Branch("weight_nom", &weightMC, "weight_nom/F");
     }
 
 private:

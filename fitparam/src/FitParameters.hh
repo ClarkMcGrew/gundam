@@ -7,7 +7,6 @@
 
 #include "AnaFitParameters.hh"
 #include "BinManager.hh"
-#include "FitStructs.hh"
 #include "OptParser.hh"
 
 class FitParameters : public AnaFitParameters
