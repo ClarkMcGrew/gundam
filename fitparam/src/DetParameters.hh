@@ -7,7 +7,6 @@
 
 #include "AnaFitParameters.hh"
 #include "BinManager.hh"
-#include "FitStructs.hh"
 
 class DetParameters : public AnaFitParameters
 {

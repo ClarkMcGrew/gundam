@@ -82,22 +82,21 @@ public:
             else
                 bar.replace(b, 1, " ");
         }
-        
-        #ifdef TTYCHECK
+
+#ifdef TTYCHECK
         if(isatty(fileno(stdout)))
         {
-            std::cout << "\r" << prefix << "[" << (is_rainbow ? color::RainbowText(bar) : bar) << "] "
-                      << int(progress * 100.0) << "%";
+            std::cout << "\r" << prefix << "[" << (is_rainbow ? color::RainbowText(bar) : bar)
+                      << "] " << int(progress * 100.0) << "%";
         }
         else
         {
             std::cout << " " << int(progress * 100.0) << "%";
         }
-        #else
-            std::cout << "\r" << prefix << "[" << (is_rainbow ? color::RainbowText(bar) : bar) << "] "
-                      << int(progress * 100.0) << "%";
-        #endif
-
+#else
+        std::cout << "\r" << prefix << "[" << (is_rainbow ? color::RainbowText(bar) : bar) << "] "
+                  << int(progress * 100.0) << "%";
+#endif
 
         if(current == limit)
             std::cout << std::endl;

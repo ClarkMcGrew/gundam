@@ -73,22 +73,7 @@ foreach(mod ${MODULETargets})
   target_link_libraries(xsllhTreeConvert ${mod})
 endforeach()
 
-#xsllhUnitTests
-add_executable(xsllhUnitTest xsllhUnitTests.cxx)
-
-set_target_properties(xsllhUnitTest PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
-
-foreach(mod ${MODULES})
- target_include_directories(xsllhUnitTest PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
- target_include_directories(xsllhUnitTest PUBLIC ${CMAKE_SOURCE_DIR}/include)
-endforeach()
-
-foreach(mod ${MODULETargets})
-  cmessage(STATUS "Linking with: ${mod}")
-  target_link_libraries(xsllhUnitTest ${mod})
-endforeach()
-
-#xsllhXseCov
+#xsllhXsecCov
 add_executable(xsllhXsecCov xsllhXsecCov.cxx)
 
 set_target_properties(xsllhXsecCov PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
@@ -104,4 +89,4 @@ foreach(mod ${MODULETargets})
 endforeach()
 
 #install targets
-install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhPlot xsllhTreeConvert xsllhUnitTest xsllhXsecCov DESTINATION bin)
+install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhPlot xsllhTreeConvert xsllhXsecCov DESTINATION bin)

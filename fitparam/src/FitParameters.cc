@@ -100,8 +100,9 @@ void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsampl
 
         /*
         std::cout << "-----------------" << std::endl;
-        std::cout << "Ev D1: " << event -> GetTrueD1() << std::endl
-                  << "Ev D2: " << event -> GetTrueD2() << std::endl;
+        std::cout << "Event kinematics: " << std::endl;
+        for(const auto val : ev->GetTrueVar())
+            std::cout << "\t" << val << std::endl;
         std::cout << "Ev ST: " << event -> GetSignalType() << std::endl;
         std::cout << "Ev TP: " << event -> GetTopology() << std::endl;
         std::cout << "Ev TG: " << event -> GetTarget() << std::endl;
