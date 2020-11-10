@@ -116,15 +116,15 @@ int main(int argc, char** argv)
 
     for(const auto& opt : parser.samples)
     {
-        if(opt.use_sample == true && opt.cut_branch >= 0)
+        if(opt.use_sample == true && opt.sample_id >= 0)
         {
             std::cout << TAG << "Adding new sample to fit.\n"
                       << TAG << "Name: " << opt.name << std::endl
-                      << TAG << "CutB: " << opt.cut_branch << std::endl
+                      << TAG << "CutB: " << opt.sample_id << std::endl
                       << TAG << "Detector: " << opt.detector << std::endl
                       << TAG << "Use Sample: " << std::boolalpha << opt.use_sample << std::endl;
 
-            auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
+            auto s = new AnaSample(opt.sample_id, opt.name, opt.detector, opt.binning, tdata);
             s -> SetLLHFunction(parser.min_settings.likelihood);
             samples.push_back(s);
         }
@@ -156,7 +156,6 @@ int main(int argc, char** argv)
     {
         if(opt.use_detector)
             sigfitpara.AddDetector(opt.name, parser.signal_definition);
-            //sigfitpara.AddDetector(opt.name, opt.binning);
     }
     sigfitpara.InitEventMap(samples, 0);
     fitpara.push_back(&sigfitpara);

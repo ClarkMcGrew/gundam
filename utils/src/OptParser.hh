@@ -16,7 +16,7 @@ using json = nlohmann::json;
 
 struct SampleOpt
 {
-    int cut_branch;
+    int sample_id;
     bool use_sample;
     std::string name;
     std::string detector;
@@ -48,7 +48,6 @@ struct DetOpt
 {
     std::string name;
     std::string xsec;
-    std::string binning;
     bool use_detector;
 };
 
