@@ -156,3 +156,11 @@ void FluxParameters::AddDetector(const std::string& det, const std::vector<doubl
     m_det_bins.emplace(std::make_pair(det, bins));
     v_detectors.emplace_back(det);
 }
+
+void FluxParameters::AddDetector(const std::string& det, const std::string& binning_file)
+{
+    std::cout << TAG << "Adding detector " << det << " for " << this->m_name
+              << std::endl;
+    m_flux_bm.emplace(std::make_pair(det, BinManager(binning_file)));
+    v_detectors.emplace_back(det);
+}
