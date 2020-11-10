@@ -1,23 +1,22 @@
 {
-    "data_file" : "xsllh_nominal_full.root",
-    "mc_file"   : "xsllh_nominal_full.root",
+    "data_file" : "xsllh_double.root",
+    "mc_file"   : "xsllh_double.root",
     "output_file" : "test.root",
     "input_dir" : "/inputs/ingridFit/",
     "fit_type"  : 0,
-    "stat_fluc" : false,
+    "stat_fluc" : true,
     "zero_syst" : false,
     "rng_template" : false,
-    "save_events" : false,
+    "save_events" : true,
     "rng_seed"  : 12257,
-    "num_threads" : 12,
-    "par_scan_list" : [78, 79, 80, 81, 82, 83],
-    "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
+    "num_threads" : 6,
+    "par_scan_list" : [],
     "min_settings" : {
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
         "likelihood" : "Poisson",
         "print_level" : 2,
-        "tolerance" : 1E-1,
+        "tolerance" : 1E+1,
         "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
@@ -32,12 +31,12 @@
         "fit_par" : true
     },
     "det_cov" : {
-        "file" : "detector_cov.root",
-        "matrix" : "cov_mat",
+        "file" : "combined_detcov_extra.root",
+        "matrix" : "nd280_cov_no_michel",
         "throw"  : false,
         "decomp" : true,
         "variance" : 0.99,
-        "fit_par" : false
+        "fit_par" : true
     },
     "xsec_cov" : {
         "file" : "xsec_cov_normalized.root",
@@ -45,7 +44,7 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
         "enable" : false,
@@ -56,101 +55,73 @@
         {
             "name" : "ND280",
             "xsec_config" : "normalized_dials.json",
-            "binning" : "binning/analysis_binning.txt",
             "template_par" : [
                 {
                     "name" : "CC0pi",
                     "binning" : "binning/analysis_binning.txt",
-                    "signal" : {"topology" : [0,1,2]},
-                    "use" : true
-                },
-                {
-                    "name" : "CC1pi",
-                    "binning" : "binning/analysis_binning.txt",
-                    "signal" : {"topology" : [3]},
-                    "use" : false
-                }
-            ],
-            "use_detector" : true
-        },
-        {
-            "name" : "INGRID",
-            "xsec_config" : "ptheta_dials.json",
-            "binning" : "ingrid_binning.txt",
-            "template_par" : [
-                {
-                    "name" : "CC0pi",
-                    "binning" : "tn337_binning.txt",
                     "signal" : {"topology" : [0,1,2]},
                     "use" : true
                 }
             ],
-            "use_detector" : false
+            "use_detector" : true
         }
     ],
     "samples" : [
         {
-            "cut_branch" : -1,
+            "sample_id" : -1,
             "name" : "truth",
             "detector" : "ND280",
             "binning" : "binning/analysis_binning.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 0,
+            "sample_id" : 0,
             "name" : "muTPC",
             "detector" : "ND280",
             "binning" : "binning/sample0_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 1,
+            "sample_id" : 1,
             "name" : "muTPCpTPC",
             "detector" : "ND280",
             "binning" : "binning/sample1_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 2,
+            "sample_id" : 2,
             "name" : "muTPCpFGD",
             "detector" : "ND280",
             "binning" : "binning/sample2_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 3,
+            "sample_id" : 3,
             "name" : "muFGDpTPC",
             "detector" : "ND280",
             "binning" : "binning/sample3_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 4,
+            "sample_id" : 4,
             "name" : "muFGD",
             "detector" : "ND280",
             "binning" : "binning/sample4_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 5,
+            "sample_id" : 5,
             "name" : "CC1pi",
             "detector" : "ND280",
             "binning" : "binning/sample5_bins.txt",
             "use_sample" : true
         },
         {
-            "cut_branch" : 6,
+            "sample_id" : 6,
             "name" : "CCDIS",
             "detector" : "ND280",
             "binning" : "binning/sample6_bins.txt",
             "use_sample" : true
-        },
-        {
-            "cut_branch" : 10,
-            "name": "INGRID",
-            "detector" : "INGRID",
-            "binning" : "ingrid_binning.txt",
-            "use_sample" : false
         }
     ]
 }
