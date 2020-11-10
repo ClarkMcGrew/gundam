@@ -12,7 +12,6 @@
 
 #include <TDirectory.h>
 #include <TH1D.h>
-#include <TH2D.h>
 #include <TMath.h>
 #include <TRandom3.h>
 #include <TTree.h>
@@ -20,9 +19,7 @@
 #include "AnaEvent.hh"
 #include "BinManager.hh"
 #include "ColorOutput.hh"
-#include "FitStructs.hh"
 #include "Likelihoods.hh"
-using xsllh::FitBin;
 
 enum DataType
 {
@@ -40,20 +37,17 @@ public:
               const std::string& binning, TTree* t_data);
     ~AnaSample();
 
-    int GetN() const;
+    inline int GetN() const { return m_events.size(); }
+    inline void ClearEvents() { m_events.clear(); }
+    inline void AddEvent(const AnaEvent& event) { m_events.push_back(event); }
+
     AnaEvent* GetEvent(const unsigned int evnum);
-    void ClearEvents();
-    void AddEvent(const AnaEvent& event);
     void ResetWeights();
     void InitEventMap();
 
     void PrintStats() const;
-    void SetNorm(const double val) { m_norm = val; }
     void MakeHistos();
-
-    void SetBinning(const std::string& binning);
-    int GetBinIndex(const double D1, const double D2) const;
-    std::vector<FitBin> GetBinEdges() const { return m_bin_edges; }
+    void SetNorm(const double val) { m_norm = val; }
 
     void SetLLHFunction(const std::string& func_name);
     double CalcLLH() const;
@@ -65,11 +59,11 @@ public:
     void WriteEventHist(TDirectory* dirout, const std::string& bsname);
     void WriteDataHist(TDirectory* dirout, const std::string& bsname);
 
-    double GetNorm() const { return m_norm; }
-    int GetSampleID() const { return m_sample_id; }
-    std::string GetName() const { return m_name; }
-    std::string GetDetector() const { return m_detector; }
-    std::string GetBinning() const { return m_binning; }
+    inline double GetNorm() const { return m_norm; }
+    inline int GetSampleID() const { return m_sample_id; }
+    inline std::string GetName() const { return m_name; }
+    inline std::string GetDetector() const { return m_detector; }
+    inline std::string GetBinning() const { return m_binning; }
 
 protected:
     int m_sample_id;
@@ -80,7 +74,6 @@ protected:
     std::string m_detector;
     std::string m_binning;
     std::vector<AnaEvent> m_events;
-    std::vector<FitBin> m_bin_edges;
 
     BinManager bm;
     CalcLLHFunc* m_llh;

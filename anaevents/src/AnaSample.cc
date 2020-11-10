@@ -1,7 +1,5 @@
 #include "AnaSample.hh"
-using xsllh::FitBin;
 
-// ctor
 AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& detector,
                      const std::string& binning, TTree* t_data)
     : m_sample_id(sample_id)
@@ -14,7 +12,6 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
     , m_norm(1.0)
 {
     TH1::SetDefaultSumw2(true);
-    SetBinning(m_binning);
 
     std::cout << TAG << "Sample: " << m_name << " (ID: " << m_sample_id << ")" << std::endl
               << TAG << "Detector: " << m_detector << std::endl;
@@ -39,39 +36,6 @@ AnaSample::~AnaSample()
         delete m_hdata;
 }
 
-void AnaSample::SetBinning(const std::string& binning)
-{
-    m_binning = binning;
-    m_nbins   = 0;
-
-    std::ifstream fin(m_binning, std::ios::in);
-    if(!fin.is_open())
-    {
-        std::cerr << ERR << "In AnaSample::SetBinning().\n"
-                  << ERR << "Failed to open binning file: " << m_binning << std::endl;
-    }
-    else
-    {
-        std::string line;
-        while(std::getline(fin, line))
-        {
-            std::stringstream ss(line);
-            double D1_1, D1_2, D2_1, D2_2;
-            if(!(ss >> D2_1 >> D2_2 >> D1_1 >> D1_2))
-            {
-                std::cerr << TAG << "Bad line format: " << line << std::endl;
-                continue;
-            }
-            m_bin_edges.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2));
-        }
-        m_nbins = m_bin_edges.size();
-    }
-}
-
-void AnaSample::ClearEvents() { m_events.clear(); }
-int AnaSample::GetN() const { return (int)m_events.size(); }
-void AnaSample::AddEvent(const AnaEvent& event) { m_events.push_back(event); }
-
 AnaEvent* AnaSample::GetEvent(const unsigned int evnum)
 {
 #ifndef NDEBUG
@@ -95,7 +59,7 @@ AnaEvent* AnaSample::GetEvent(const unsigned int evnum)
 void AnaSample::ResetWeights()
 {
     for(auto& event : m_events)
-        event.SetEvWght(1.0);
+        event.SetEvWght(event.GetEvWghtMC());
 }
 
 void AnaSample::PrintStats() const
@@ -118,19 +82,6 @@ void AnaSample::MakeHistos()
         delete m_hdata;
     m_hdata = new TH1D(Form("%s_data", m_name.c_str()), Form("%s_data", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hdata->SetDirectory(0);
-}
-
-int AnaSample::GetBinIndex(const double D1, const double D2) const
-{
-    for(int i = 0; i < m_bin_edges.size(); ++i)
-    {
-        if(D1 >= m_bin_edges[i].D1low && D1 < m_bin_edges[i].D1high && D2 >= m_bin_edges[i].D2low
-           && D2 < m_bin_edges[i].D2high)
-        {
-            return i;
-        }
-    }
-    return -1;
 }
 
 void AnaSample::InitEventMap()
@@ -206,18 +157,13 @@ void AnaSample::FillDataHist(int datatype, bool stat_fluc)
     {
         m_hdata->Reset();
 
-        //float D1_rec_tree, D2_rec_tree, wght;
-        //int cut_branch;
-
-        int sample = -1;
+        int sample = -99;
         float weight = 1.0;
         std::vector<double>* reco_var = 0;
 
         m_data_tree->SetBranchAddress("cut_branch", &sample);
         m_data_tree->SetBranchAddress("weight", &weight);
         m_data_tree->SetBranchAddress("reco_var", &reco_var);
-        //m_data_tree->SetBranchAddress("D1Reco", &D1_rec_tree);
-        //m_data_tree->SetBranchAddress("D2Reco", &D2_rec_tree);
 
         long int n_entries = m_data_tree->GetEntries();
         for(std::size_t i = 0; i < n_entries; ++i)
@@ -226,7 +172,6 @@ void AnaSample::FillDataHist(int datatype, bool stat_fluc)
             if(sample != m_sample_id)
                 continue;
 
-            //int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree);
             const int bin = bm.GetBinIndex(*reco_var);
             if(bin > -1)
             {
@@ -249,7 +194,7 @@ void AnaSample::FillDataHist(int datatype, bool stat_fluc)
             std::cout << TAG << "Applying statistical fluctuations..." << std::endl;
             for(unsigned int i = 1; i <= m_hdata->GetNbinsX(); ++i)
             {
-                double val = gRandom->Poisson(m_hdata->GetBinContent(i));
+                const double val = gRandom->Poisson(m_hdata->GetBinContent(i));
                 m_hdata->SetBinContent(i, val);
             }
         }
