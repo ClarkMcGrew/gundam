@@ -28,6 +28,21 @@ foreach(mod ${MODULETargets})
   target_link_libraries(xsllhDetVar ${mod})
 endforeach()
 
+#xsllhIngridDet
+add_executable(xsllhIngridDet xsllhIngridDet.cxx)
+
+set_target_properties(xsllhIngridDet PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
+
+foreach(mod ${MODULES})
+    target_include_directories(xsllhIngridDet PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
+    target_include_directories(xsllhIngridDet PUBLIC ${CMAKE_SOURCE_DIR}/include)
+endforeach()
+
+foreach(mod ${MODULETargets})
+    cmessage(STATUS "Linking with: ${mod}")
+    target_link_libraries(xsllhIngridDet ${mod})
+endforeach()
+
 #xsllhFit
 add_executable(xsllhFit xsllhFit.cxx)
 
@@ -104,4 +119,4 @@ foreach(mod ${MODULETargets})
 endforeach()
 
 #install targets
-install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhPlot xsllhTreeConvert xsllhUnitTest xsllhXsecCov DESTINATION bin)
+install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhIngridDet xsllhPlot xsllhTreeConvert xsllhUnitTest xsllhXsecCov DESTINATION bin)
