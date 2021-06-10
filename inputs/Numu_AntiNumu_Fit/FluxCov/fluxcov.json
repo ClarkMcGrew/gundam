@@ -1,0 +1,13 @@
+{
+    "output" : {
+        "fname" : "/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/FluxCov/xsllh_fluxcovmat.root",
+        "matrix" : "flux_numu_cov",
+        "binning" : "flux_binning"
+    },
+
+    "input" : {
+        "fname" : "/afs/cern.ch/work/c/cschloes/T2K/xsLLhFitter_fluxpar/caspar_run_fits/flux_covariance_matrix/flux_covariance_run1-9d_v2.root",
+        "matrix" : "total_flux_cov",
+        "binning" : "nd5_numode_numu_bins"
+    }
+}
