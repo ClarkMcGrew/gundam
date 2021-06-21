@@ -44,8 +44,6 @@ const std::string ERR = RED + "[ERROR]: " + RESET;
 
 int RenameHLReaction(int code);
 int RenameHLTopology(int code);
-int RenameHLReaction_anti(int code);
-int RenameHLTopology_anti(int code);
 
 int main(int argc, char** argv)
 {
@@ -60,8 +58,7 @@ int main(int argc, char** argv)
     double nominal = 0;
     double error_neg = 0;
     double error_pos = 0;
-    std::string fname_input_numu;
-    std::string fname_input_antinumu;
+    std::string fname_input;
     std::string fname_output;
     std::string fname_dials;
     std::string dial_name;
@@ -69,19 +66,14 @@ int main(int argc, char** argv)
 
     const int num_samples = 12;
     const int cut_level[num_samples] = {7, 9, 8, 10, 9, 6, 4, 7, 7, 8, 10, 9};
-    const int num_samples_anti = 12;
-    const int cut_level_anti[num_samples_anti] = {8, 10, 7, 8, 10, 7, 8, 10, 7, 8, 10, 7};
 
     char option;
-    while((option = getopt(argc, argv, "i:a:o:r:n:d:LTDh")) != -1)
+    while((option = getopt(argc, argv, "i:o:r:n:d:LTDh")) != -1)
     {
         switch(option)
         {
             case 'i':
-                fname_input_numu = optarg;
-                break;
-            case 'a':
-                fname_input_antinumu = optarg;
+                fname_input = optarg;
                 break;
             case 'o':
                 fname_output = optarg;
@@ -107,7 +99,6 @@ int main(int argc, char** argv)
             case 'h':
                 std::cout << "USAGE: " << argv[0] << "\nOPTIONS\n"
                           << "-i : Input list of Highland trees (.txt)\n"
-                          << "-a : Input list of antinumu Highland trees (.txt)\n"
                           << "-o : Output ROOT filename\n"
                           << "-r : Systematic parameter to reweight\n"
                           << "-n : Number of dial steps\n"
@@ -121,14 +112,13 @@ int main(int argc, char** argv)
         }
     }
 
-    if(fname_input_numu.empty() || fname_input_antinumu.empty() || fname_output.empty() || dial_name.empty())
+    if(fname_input.empty() || fname_output.empty() || dial_name.empty())
     {
         std::cout << ERR << "Missing necessary command line arguments.\n" << std::endl;
         return 1;
     }
 
-    std::cout << TAG << "Input numu Highland list: " << fname_input_numu << std::endl
-              << TAG << "Input antinumu Highland list: " << fname_input_antinumu << std::endl
+    std::cout << TAG << "Input Highland list: " << fname_input << std::endl
               << TAG << "Output weights file: " << fname_output << std::endl
               << TAG << "Reading tree: " << (use_truth_tree ? "truth" : "default") << std::endl
               << TAG << "Input dial value file: " << fname_dials << std::endl
@@ -183,11 +173,11 @@ int main(int argc, char** argv)
               << "\n" << TAG << (limits ? "Limit +: " : "Error +: ") << error_pos << std::endl;
 
     std::vector<std::string> hl_filenames;
-    std::ifstream fin(fname_input_numu, std::ios::in);
+    std::ifstream fin(fname_input, std::ios::in);
     std::cout << TAG << "Reading list of Highland files." << std::endl;
     if(!fin.is_open())
     {
-        std::cerr << ERR << "Failed to open " << fname_input_numu << std::endl;
+        std::cerr << ERR << "Failed to open " << fname_input << std::endl;
         return 1;
     }
     else
@@ -198,25 +188,6 @@ int main(int argc, char** argv)
             hl_filenames.emplace_back(name);
         }
         for(const auto& fname : hl_filenames)
-            std::cout << TAG << "Input: " << fname << std::endl;
-    }
-
-    std::vector<std::string> hl_filenames_anti;
-    std::ifstream fin_anti(fname_input_antinumu, std::ios::in);
-    std::cout << TAG << "Reading list of antinumu Highland files." << std::endl;
-    if(!fin_anti.is_open())
-    {
-        std::cerr << ERR << "Failed to open " << fname_input_antinumu << std::endl;
-        return 1;
-    }
-    else
-    {
-        std::string name;
-        while(std::getline(fin_anti, name))
-        {
-            hl_filenames_anti.emplace_back(name);
-        }
-        for(const auto& fname : hl_filenames_anti)
             std::cout << TAG << "Input: " << fname << std::endl;
     }
 
@@ -286,9 +257,17 @@ int main(int argc, char** argv)
     std::cout << TAG << "Initializing T2KReWeight and reweight engines." << std::endl;
     t2krew::T2KNeutUtils::SetCardFile("/afs/cern.ch/work/c/cschloes/T2K_final_for_real/t2kreweight/T2KReWeight/neut.d.card");
     t2krew::T2KReWeight rw;
+
+    std::cout << "Caspar 0" << std::endl;
+
     t2krew::T2KSyst_t t2ksyst = t2krew::T2KSyst::FromString(dial_name_enum);
+
+    std::cout << "Caspar 1" << std::endl;
+
     rw.AdoptWghtEngine("niwg_rw", new t2krew::T2KNIWGReWeight());
     rw.AdoptWghtEngine("neut_rw", new t2krew::T2KNeutReWeight());
+
+    std::cout << "Caspar 2 " << t2ksyst << std::endl;
 
     if(dial_name == "MACCQE")
     {
@@ -297,8 +276,13 @@ int main(int argc, char** argv)
     }
 
     rw.Systematics().Include(t2ksyst);
+
+    std::cout << "Caspar 2.1 " << t2ksyst << std::endl;
+
     rw.Systematics().SetAbsTwk(t2ksyst);
     rw.Systematics().PrintSummary();
+
+    std::cout << "Caspar 3" << std::endl;
 
     for(unsigned int f = 0; f < hl_filenames.size(); ++f)
     {
@@ -450,165 +434,6 @@ int main(int argc, char** argv)
         delete nRooVtxs;
         file_input -> Close();
     }
-
-
-
-
-for(unsigned int f = 0; f < hl_filenames_anti.size(); ++f)
-    {
-        TFile* file_input = TFile::Open(hl_filenames_anti.at(f).c_str(), "READ");
-
-        TTree* tree_RooVtx = (TTree*)file_input -> Get("NRooTrackerVtx");
-        TClonesArray* nRooVtxs = new TClonesArray("ND::NRooTrackerVtx");
-        int NRooVtx = 0;
-
-        tree_RooVtx -> SetBranchAddress("Vtx", &nRooVtxs);
-        tree_RooVtx -> SetBranchAddress("NVtx", &NRooVtx);
-
-        std::string tree_name = use_truth_tree ? "truth" : "default";
-        TTree* tree_input = (TTree*)file_input -> Get(tree_name.c_str());
-        std::cout << TAG << "Reading file: " << hl_filenames_anti.at(f) << std::endl;
-
-        if(use_truth_tree)
-        {
-            tree_input->SetBranchAddress("topology", &topology);
-            tree_input->SetBranchAddress("reaction", &reaction);
-            tree_input->SetBranchAddress("target", &target);
-            tree_input->SetBranchAddress("truelepton_mom", &s_mu_true_mom);
-            tree_input->SetBranchAddress("truelepton_costheta", &s_mu_true_costheta);
-            tree_input->SetBranchAddress("accum_level", accum_level);
-            tree_input->SetBranchAddress("nu_trueE", &enu_true);
-            tree_input->SetBranchAddress("weight", &input_weight);
-            tree_input->SetBranchAddress("RooVtxIndex", &input_RooVtxIndex);
-            tree_input->SetBranchAddress("RooVtxEntry", &input_RooVtxEntry);
-            tree_input->SetBranchAddress("TruthVertexID", &TruthVertexID);
-        }
-
-        else
-        {
-            tree_input->SetBranchAddress("topology", &topology);
-            tree_input->SetBranchAddress("reaction", &reaction);
-            tree_input->SetBranchAddress("target", &target);
-            tree_input->SetBranchAddress("Truemu_mom", &s_mu_true_mom);
-            tree_input->SetBranchAddress("Truemu_costheta", &s_mu_true_costheta);
-            tree_input->SetBranchAddress("selmu_truemom", &s_selmu_true_mom);
-            tree_input->SetBranchAddress("selmu_truedir", s_selmu_true_dir);
-            tree_input->SetBranchAddress("selmu_mom", &pmu_reco);
-            tree_input->SetBranchAddress("selmu_costheta", &cosmu_reco);
-            tree_input->SetBranchAddress("selmu_MomRangeMuon", &pmu_range);
-            tree_input->SetBranchAddress("accum_level", accum_level);
-            tree_input->SetBranchAddress("true_Q2", &enu_reco);
-            tree_input->SetBranchAddress("nu_trueE", &enu_true);
-            tree_input->SetBranchAddress("weight_corr_total", &input_weight);
-            tree_input->SetBranchAddress("RooVtxIndex", &input_RooVtxIndex);
-            tree_input->SetBranchAddress("RooVtxEntry", &input_RooVtxEntry);
-            tree_input->SetBranchAddress("TruthVertexID", &TruthVertexID);
-        }
-
-        unsigned int roovtx_events = tree_RooVtx->GetEntries();
-        unsigned int select_events = tree_input->GetEntries();
-        std::cout << TAG << "Default Tree Events  : " << select_events << std::endl
-                  << TAG << "NRooTrackerVtx Events: " << roovtx_events << std::endl;
-
-        for(unsigned int i = 0; i < select_events; ++i)
-        {
-            bool event_pass = false;
-            tree_input -> GetEntry(i);
-            tree_RooVtx -> LoadTree(input_RooVtxEntry);
-            tree_RooVtx -> GetEntry(input_RooVtxEntry);
-
-            #ifdef OA_FAST
-            ND::NRooTrackerVtx* vtx = (ND::NRooTrackerVtx*)nRooVtxs->At(input_RooVtxIndex);
-            #else
-            ND::NRooTrackerVtx* vtx = nullptr;
-            for(int v = 0; v < NRooVtx; ++v)
-            {
-                vtx = (ND::NRooTrackerVtx*)nRooVtxs->At(v);
-                if(vtx->TruthVertexID == TruthVertexID)
-                {
-                    #ifdef DEBUG_MSG
-                    std::cout << "NVtx = " << NRooVtx << std::endl;
-                    std::cout << "Vtx->" << vtx->TruthVertexID << " vs. " << TruthVertexID << std::endl;
-                    std::cout << "RooVtxIdx: " << input_RooVtxIndex << " vs. " << v << std::endl;
-                    #endif
-                    break;
-                }
-            }
-            #endif
-
-            if(i % 1000 == 0)
-                std::cout << TAG << "Processing event " << i << std::endl;
-
-            for(unsigned int s = 0; s < num_samples_anti; ++s)
-            {
-                if(accum_level[0][s] > cut_level_anti[s])
-                {
-                    event_pass = true;
-                    sample = s;
-                    break;
-                }
-            }
-
-            event_pass = event_pass || use_truth_tree;
-
-            if(pmu_reco < 0 || pmu_reco > 30000 || event_pass == false)
-                continue;
-
-            weight_nom = input_weight;
-
-            if(s_mu_true_mom > 0 && s_mu_true_costheta > -2)
-            {
-                pmu_true = s_mu_true_mom;
-                cosmu_true = s_mu_true_costheta;
-            }
-            else
-            {
-                pmu_true = s_selmu_true_mom;
-                cosmu_true = s_selmu_true_dir[2]
-                             / (std::sqrt(s_selmu_true_dir[0] * s_selmu_true_dir[0]
-                                          + s_selmu_true_dir[1] * s_selmu_true_dir[1]
-                                          + s_selmu_true_dir[2] * s_selmu_true_dir[2]));
-            }
-
-            for(unsigned int step = 0; step < dial_steps; ++step)
-            {
-                rw.Systematics().SetTwkDial(t2ksyst, v_dial_val.at(step));
-                rw.Reconfigure();
-
-                if(!vtx)
-                {
-                    if(step == 0)
-                    {
-                        std::cout << TAG << "No vertex for event " << i << std::endl;
-                        std::cout << TAG << "NVtx = " << NRooVtx << std::endl;
-                        std::cout << TAG << "RooVtxIndex = " << input_RooVtxIndex << std::endl;
-                    }
-
-                    continue;
-                }
-                else
-                {
-                    weight_syst[step] = do_dummy_splines ? 1.0 : rw.CalcWeight(vtx);
-                    v_hists.at(step).Fill(pmu_reco, weight_nom * weight_syst[step]);
-                }
-            }
-
-            reaction_mod = RenameHLReaction_anti(reaction);
-            topology_mod = RenameHLTopology_anti(topology);
-
-            tree_output -> Fill();
-        }
-
-        delete tree_input;
-        delete tree_RooVtx;
-        delete nRooVtxs;
-        file_input -> Close();
-    }
-
-
-
-
-
     file_output -> cd();
     tree_output -> Write();
 
@@ -666,51 +491,6 @@ int RenameHLReaction(int code)
     return reaction;
 }
 
-int RenameHLReaction_anti(int code)
-{
-    int reaction;
-    switch(code)
-    {
-        case 0: // CCQE
-            reaction = 11;
-            break;
-        case 1: // RES
-            reaction = 12;
-            break;
-        case 2: // DIS
-            reaction = 13;
-            break;
-        case 3: // COH
-            reaction = 14;
-            break;
-        case 4: // NC
-            reaction = 15;
-            break;
-        case 5: // CC Numubar
-            reaction = 16;
-            break;
-        case 6: // CC Nuebar
-            reaction = 17;
-            break;
-        case 7: // CC Nue
-            reaction = 18;
-            break;
-        case 777: // Sand muon
-            reaction = 19;
-            break;
-        case 9: // 2p2h
-            reaction = 20;
-            break;
-        case 999: // other
-            reaction = 21;
-            break;
-        default: // other
-            reaction = 21;
-            break;
-    }
-    return reaction;
-}
-
 int RenameHLTopology(int code)
 {
     int topology;
@@ -736,36 +516,6 @@ int RenameHLTopology(int code)
             break;
         default: // BKG
             topology = 3;
-            break;
-    }
-    return topology;
-}
-
-int RenameHLTopology_anti(int code)
-{
-    int topology;
-    switch(code)
-    {
-        case 0: // CC0pi
-            topology = 6;
-            break;
-        case 1: // CC1pi
-            topology = 7;
-            break;
-        case 2: // CCOther
-            topology = 8;
-            break;
-        case 3: // BKG
-            topology = 9;
-            break;
-        case 7: // OOFV
-            topology = 10;
-            break;
-        case 777: // Sand muon
-            topology = 11;
-            break;
-        default: // BKG
-            topology = 9;
             break;
     }
     return topology;
