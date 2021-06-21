@@ -38,8 +38,8 @@ int main(int argc, char** argv)
 
     unsigned int nbins = 0;
     unsigned int dsteps = 7;
-    unsigned int ntopo = 8;
-    unsigned int nreac = 10;
+    unsigned int ntopo = 12;
+    unsigned int nreac = 22;
     unsigned int nsamp = 10;
 
     bool limits = false;
@@ -141,12 +141,19 @@ int main(int argc, char** argv)
               << TAG << "Error -: " << error_neg << std::endl
               << TAG << "Error +: " << error_pos << std::endl;
 
+
     BinManager bin_manager(fname_binning);
+
+
     bin_manager.Print();
+
+
     nbins = bin_manager.GetNbins();
+
 
     TH1F* h_dial_weights[ntopo][nreac][dsteps];
     TH1F* hist_nominal[ntopo][nreac];
+
 
     for(unsigned int t = 0; t < ntopo; t++)
     {
@@ -173,6 +180,7 @@ int main(int argc, char** argv)
 
     std::cout << TAG << "Histograms initialized." << std::endl;
 
+
     int bin_index{0};
     int topology{0}, reaction{0}, sample{0};
     float enu{0}, emu{0};
@@ -181,8 +189,10 @@ int main(int argc, char** argv)
     float weight_syst[dsteps];
     const double mu_mass{105.6583745};
 
+
     TFile* file_input = TFile::Open(fname_input.c_str(), "READ");
     TTree* tree_event = (TTree*)file_input -> Get("selectedEvents");
+
 
     tree_event -> SetBranchAddress("Enutrue", &enu);
     tree_event -> SetBranchAddress("Pmutrue", &pmu);
@@ -193,6 +203,7 @@ int main(int argc, char** argv)
     tree_event -> SetBranchAddress("weight", &weight_nom);
     tree_event -> SetBranchAddress("weight_syst", weight_syst);
 
+
     std::cout << TAG << "Tree opened and branches set; reading events." << std::endl;
 
     unsigned int num_events = tree_event -> GetEntries();
@@ -200,18 +211,27 @@ int main(int argc, char** argv)
     {
         tree_event -> GetEntry(i);
 
+
         emu = std::sqrt(pmu*pmu + mu_mass*mu_mass);
         q2 = 2.0 * enu * (emu - pmu * cosmu) - mu_mass * mu_mass;
         q2 = q2 / 1.0E6;
 
+
         //bin_index = bin_manager.GetBinIndex(std::vector<double>{q2});
         bin_index = bin_manager.GetBinIndex(std::vector<double>{cosmu, pmu});
 
-        hist_nominal[topology][reaction] -> Fill(bin_index + 0.5, weight_nom);
-        for(unsigned int w = 0; w < dsteps; ++w)
+        //std::cout << "topology: " << topology << ", reaction: " << reaction << ", bin_i: " << bin_index << ", weight: " << weight_nom << std::endl;
+        if (reaction <= nreac)
         {
-            h_dial_weights[topology][reaction][w] -> Fill(bin_index + 0.5, weight_nom * weight_syst[w]);
+            //std::cout << "reaction: " << reaction << ", nreac: " << nreac << std::endl;
+            hist_nominal[topology][reaction] -> Fill(bin_index + 0.5, weight_nom);
+        
+            for(unsigned int w = 0; w < dsteps; ++w)
+            {
+                h_dial_weights[topology][reaction][w] -> Fill(bin_index + 0.5, weight_nom * weight_syst[w]);
+            }
         }
+
 
         /*
         std::cout << "Q2 (MeV): " << q2 << std::endl
@@ -221,6 +241,7 @@ int main(int argc, char** argv)
         */
     }
     file_input -> Close();
+
 
     std::cout << TAG << "Histograms filled." << std::endl;
 

@@ -7,7 +7,7 @@ MEC_O_SHAPE    1.00    0.00   2.00  NIWGMEC_PDDWeight_O16
 PF_C           217     5      16    NIWG2014a_pF_C12
 PF_O           225     8      15    NIWG2014a_pF_O16
 CA5            1.01    0.12   0.12  NXSec_CA5RES
-MARES          0.95    0.13   0.15  NXSec_MaNFFRES
+MARES          0.95    0.13   0.15  NXSec_MaRES
 I12RES         1.30    0.20   0.20  NXSec_BgSclRES
 CCNUE          1.00    0.03   0.03  NIWG2012a_ccnueE0
 CCCOH          1.00    0.15   0.15  NIWG2012a_cccohE0

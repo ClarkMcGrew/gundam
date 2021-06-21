@@ -9,12 +9,17 @@ DEFS =
 #
 include $(T2KREWEIGHT)/make/Make.include
 
-all: xsllh_weights xsllh_splines xsllh_validate
+all: xsllh_weights xsllh_splines xsllh_validate xsllh_ingrid_weights
 
 xsllh_weights:
 	@echo -e "\n Compiling xsllh_response_functions\n"
 	$(CXX) $(CXXFLAGS) $(DEFS) -std=c++11 -c xsllh_response_functions.cxx $(INCLUDES)
 	$(LD) $(LDFLAGS) xsllh_response_functions.o $(LIBRARIES) -o xsllh_response_functions.exe
+
+xsllh_ingrid_weights:
+	@echo -e "\n Compiling xsllh_ingrid_weights\n"
+	$(CXX) $(CXXFLAGS) $(DEFS) -std=c++11 -c xsllh_ingrid_weights.cxx $(INCLUDES)
+	$(LD) $(LDFLAGS) xsllh_ingrid_weights.o $(LIBRARIES) -o xsllh_ingrid_weights.exe
 
 xsllh_splines:
 	@echo -e "\n Compiling xsllh_generate_splines\n"
