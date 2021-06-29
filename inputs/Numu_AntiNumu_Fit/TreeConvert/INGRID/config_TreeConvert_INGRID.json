@@ -10,16 +10,18 @@
             "fname" : "/eos/home-c/cschloes/INGRID/final_INGRID_files/MCSelected_PM_ana_noIngHit_Systematics0_0_forAndrew_20200610.root",
             "file_id" : 0,
             "event_tree" : "wtree",
+            "beammode" : 1,
             "sample" : 0,
-            "branch" : 10,
+            "branch" : 15,
             "use" : true
         },
         {
             "fname" : "/eos/home-c/cschloes/INGRID/final_INGRID_files/MCSideBand_PM_ana_noIngHit_Systematics0_0_forAndrew_20200608.root",
             "file_id" : 1,
             "event_tree" : "wtree",
+            "beammode" : 1,
             "sample" : 1,
-            "branch" : 11,
+            "branch" : 16,
             "use" : true
         }
     ]

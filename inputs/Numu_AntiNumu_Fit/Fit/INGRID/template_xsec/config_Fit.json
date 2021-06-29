@@ -2,18 +2,18 @@
     "data_file" : "Events_INGRID_Numu.root",
     "mc_file"   : "Events_INGRID_Numu.root",
     "output_file" : "ingrid_only_fit_result.root",
-    "input_dir" : "/inputs/Numu_AntiNumu_Fit/Fit/INGRID/",
+    "input_dir" : "/inputs/Numu_AntiNumu_Fit/Fit/INGRID/template_xsec/",
     "fit_type"  : 0,
     "stat_fluc" : false,
-    "zero_syst" : true,
+    "zero_syst" : false,
     "rng_template" : true,
     "save_events" : false,
     "data_POT"  : 3.14E20,
     "mc_POT"    : 3.14E21,
     "rng_seed"  : 1234,
     "num_threads" : 16,
-    "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "null", "OOFV"],
-    "topology_HL_code" : [0, 1, 2, 3, 7, -1, 777],
+    "sample_topology" : ["cc0pi0p", "cc0pi1p", "cc0pinp", "cc1pi+", "ccother", "bkg", "truth"],
+    "topology_HL_code" : [0, 1, 2, 3, 4, 5, -1],
     "min_settings" : {
         "minimizer" : "Minuit2",
         "algorithm" : "Migrad",
@@ -42,12 +42,12 @@
         "fit_par" : false
     },
     "xsec_cov" : {
-        "file" : "xsec_cov_nd280.root",
+        "file" : "xsec_cov_numu.root",
         "matrix" : "xsec_cov",
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : false
+        "fit_par" : true
     },
     "regularisation" : {
         "enable" : false,
@@ -58,12 +58,12 @@
         {
             "name" : "INGRID",
             "xsec_config" : "ptheta_dials.json",
-            "binning" : "ingrid_analysis_binning.txt",
+            "binning" : "analysis_binning_ingrid.txt",
             "template_par" : [
                 {
                     "name" : "INGRID_CC0pi_template",
-                    "binning" : "ingrid_analysis_binning.txt",
-                    "signal" : {"sample" : [-10,10,11], "topology" : [0,1,2]},
+                    "binning" : "binning/analysis_binning_ingrid.txt",
+                    "signal" : {"topology" : [0,1,2]},
                     "use" : true
                 }
             ],
@@ -71,29 +71,29 @@
         }
     ],
     "samples" : [
-        {
-            "cut_branch" : 10,
-            "name": "INGRID_CC0pi",
-            "detector" : "INGRID",
-            "binning" : "ingrid_sample_binning.txt",
-            "use_pot" : false,
-            "use_sample" : true
-        },
-        {
-            "cut_branch" : 11,
-            "name": "INGRID_CC1pi",
-            "detector" : "INGRID",
-            "binning" : "ingrid_sample_binning.txt",
-            "use_pot" : false,
-            "use_sample" : true
-        },
-        {
-            "cut_branch" : -10,
-            "name": "ingrid_truth",
-            "detector" : "INGRID",
-            "binning" : "ingrid_sample_binning.txt",
-            "use_pot" : false,
-            "use_sample" : true
-        }
+    {
+        "cut_branch" : 15,
+        "name": "INGRID_CC0pi",
+        "detector" : "INGRID",
+        "binning" : "binning/ingrid_sample_15_bins.txt",
+        "use_pot" : false,
+        "use_sample" : true
+    },
+    {
+        "cut_branch" : 16,
+        "name": "INGRID_CC1pi",
+        "detector" : "INGRID",
+        "binning" : "binning/ingrid_sample_16_bins.txt",
+        "use_pot" : false,
+        "use_sample" : true
+    },
+    {
+        "cut_branch" : -10,
+        "name": "ingrid_truth",
+        "detector" : "INGRID",
+        "binning" : "ingrid_sample_binning.txt",
+        "use_pot" : false,
+        "use_sample" : false
+    }
     ]
 }

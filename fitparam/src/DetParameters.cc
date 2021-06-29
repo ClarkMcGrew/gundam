@@ -84,12 +84,14 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             double D2 = ev->GetRecoD2();
             int bin   = GetBinIndex(sample[s]->GetSampleID(), D1, D2);
 #ifndef NDEBUG
+            /*
             if(bin == BADBIN)
             {
                 std::cout << WAR << m_name << ", Event: " << i << std::endl
                           << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", falls outside bin ranges." << std::endl
                           << WAR << "This event will be ignored in the analysis." << std::endl;
             }
+            */
 #endif
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())

@@ -74,12 +74,12 @@ void AnaFitParameters::SetCovarianceMatrix(const TMatrixDSym& covmat, bool decom
 
     std::cout << TAG << "Covariance matrix size: " << covariance->GetNrows()
               << " x " << covariance->GetNrows() << " for " << this->m_name << std::endl;
-    /*
-    std::cout << "[SetCovarianceMatrix]: Inverted Cov mat: " << std::endl;
-    covarianceI->Print();
-    std::cout << "[SetCovarianceMatrix]: Cov mat: " << std::endl;
-    covariance->Print();
-    */
+    
+    //std::cout << "[SetCovarianceMatrix]: Inverted Cov mat: " << std::endl;
+    //covarianceI->Print();
+    //std::cout << "[SetCovarianceMatrix]: Cov mat: " << std::endl;
+    //covariance->Print();
+    
 }
 
 double AnaFitParameters::GetChi2(const std::vector<double>& params) const

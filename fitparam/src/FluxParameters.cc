@@ -53,12 +53,14 @@ void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             //int bin      = GetBinIndex(sample[s]->GetDetector(), enu);
             int bin      = m_det_bm.at(sample[s]->GetDetector()).GetBinIndex(std::vector<double>{enu}, nutype, beammode);
 
+            /*
             if(bin == BADBIN)
             {
                 std::cout << WAR << "Event Enu " << enu << " falls outside bin range.\n"
                           << WAR << "This event will be ignored in the analysis." << std::endl;
                 ev->Print();
             }
+            */
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())
                 bin = PASSEVENT;
@@ -125,7 +127,17 @@ void FluxParameters::InitParameters()
         std::cout << TAG << "Detector: " << det << std::endl;
         m_det_offset.insert(std::make_pair(det, offset));
         //const int nbins = m_det_bins.at(det).size() - 1;
-        const int nbins = m_det_bm.at(det).GetNbins();
+        int nbins = m_det_bm.at(det).GetNbins();
+        /*
+        if (det == "INGRIDxxx")
+        {
+            nbins = 20;
+        }
+        else if(det == "ND280xxx")
+        {
+            nbins = 80;
+        }
+        */
         for(int i = 0; i < nbins; ++i)
         {
             pars_name.push_back(Form("%s_%s_%d", m_name.c_str(), det.c_str(), i));

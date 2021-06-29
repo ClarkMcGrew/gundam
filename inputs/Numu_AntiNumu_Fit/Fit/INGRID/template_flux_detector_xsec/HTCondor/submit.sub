@@ -1,0 +1,21 @@
+notification            = Never
+universe                = vanilla
+executable              = /afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/INGRID/template_flux_detector_xsec/HTCondor/run_Fitter.sh
+output                  = Copy.$(ClusterId).$(ProcId).out
+error                   = Copy.$(ClusterId).$(ProcId).error
+log                     = Copy.$(ClusterId).$(ProcId).log
+getenv                  = True
+should_transfer_files	= NO
+initialdir              = /afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/INGRID/template_flux_detector_xsec/HTCondor/HTCondor_OutErrLog_files
+requirements            = (OpSysAndVer =?= "CentOS7")
+
+stream_output = True
+stream_error = True
+
+priority                = 20
+request_cpus            = 8
+request_memory          = 4 GB
+request_disk            = 10 GB
++MaxRuntime             = 250000
+
+queue

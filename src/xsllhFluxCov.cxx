@@ -88,34 +88,59 @@ int main(int argc, char** argv)
 
     std::string input_mat_name  = j["input"]["matrix"];
     std::string output_mat_name = j["output"]["matrix"];
-    std::string input_bin_name  = j["input"]["binning"];
-    std::string output_bin_name = j["output"]["binning"];
+    //std::string input_bin_name  = j["input"]["binning"];
+    //std::string output_bin_name = j["output"]["binning"];
 
 
     // Get binning from file
-    TAxis *axis_bins = (TAxis*)in_file -> Get(input_bin_name.c_str());
-    const unsigned int nbins = axis_bins -> GetNbins();
+    //TAxis *axis_bins = (TAxis*)in_file -> Get(input_bin_name.c_str());
+    //const unsigned int nbins = axis_bins -> GetNbins();
     
-    std::cout << TAG << "Number of bins : " << nbins << std::endl;
+    //std::cout << TAG << "Number of bins : " << nbins << std::endl;
 
     // Get bin edges and store them into an array
-    TArrayD root_array = *(axis_bins -> GetXbins());
-    double* bin_array = root_array.GetArray();
+    //TArrayD root_array = *(axis_bins -> GetXbins());
+    //double* bin_array = root_array.GetArray();
     
-    for(int i = 1; i <= nbins; i++)
-        std::cout << "bin_array["<<i<<"] = " << bin_array[i] << std::endl;
+    //for(int i = 1; i <= nbins; i++)
+    //    std::cout << "bin_array["<<i<<"] = " << bin_array[i] << std::endl;
 
-    TH1D *h_binning = new TH1D(output_bin_name.c_str(), output_bin_name.c_str(), nbins, bin_array);
+    //TH1D *h_binning = new TH1D(output_bin_name.c_str(), output_bin_name.c_str(), nbins, bin_array);
 
 
     // Get flux covariance matrix from file
     TMatrixDSym *flux_cov_tot = (TMatrixDSym*)in_file -> Get(input_mat_name.c_str());
-    TMatrixDSym flux_cov(80);
 
-    for(int i=0; i<40; i++)
-        for(int j=0; j<40; j++)
+
+
+    /*
+    // INGRID only:
+    TMatrixDSym flux_cov(20);
+    for(int i=0; i<20; i++)
+        for(int j=0; j<20; j++)
             flux_cov(i,j) = (*flux_cov_tot)(i,j);
-    
+    */
+    /*
+    // ND280 only:
+    TMatrixDSym flux_cov(80);
+    for(int i=160; i<240; i++)
+        for(int j=160; j<240; j++)
+            flux_cov(i-160,j-160) = (*flux_cov_tot)(i,j);
+    */
+    // ND280 + INGRID:
+    TMatrixDSym flux_cov(100);
+    for(int i=0; i<20; i++)
+        for(int j=0; j<20; j++)
+            flux_cov(i,j) = (*flux_cov_tot)(i,j);
+    for(int i=160; i<240; i++)
+        for(int j=160; j<240; j++)
+            flux_cov(i-140,j-140) = (*flux_cov_tot)(i,j);
+
+
+
+
+
+    /*
     for(int i=80; i<120; i++)
         for(int j=80; j<120; j++)
             flux_cov(i-40,j-40) = (*flux_cov_tot)(i,j);
@@ -123,7 +148,7 @@ int main(int argc, char** argv)
     for(int i=0; i<40; i++)
         for(int j=80; j<120; j++)
             flux_cov(i,j-40) = (*flux_cov_tot)(i,j);
-    
+    */
     std::cout << TAG << "Total covariance matrix dimension : " << flux_cov_tot -> GetNcols() <<"x" << flux_cov_tot -> GetNcols() << std::endl;
     std::cout << TAG << "Covariance submatrix dimension : " << flux_cov.GetNcols() <<"x" << flux_cov.GetNcols() << std::endl;
 
@@ -132,7 +157,7 @@ int main(int argc, char** argv)
     // Write matrix and binning into file
     out_file -> cd();
     flux_cov.Write(output_mat_name.c_str());
-    h_binning -> Write(output_bin_name.c_str());
+    //h_binning -> Write(output_bin_name.c_str());
 
     out_file -> Close();
     in_file  -> Close();

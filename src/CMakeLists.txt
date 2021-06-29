@@ -88,6 +88,21 @@ foreach(mod ${MODULETargets})
   target_link_libraries(xsllhTreeConvert ${mod})
 endforeach()
 
+#xsllhTreeConvertINGRID
+add_executable(xsllhTreeConvertINGRID xsllhTreeConvertINGRID.cxx)
+
+set_target_properties(xsllhTreeConvertINGRID PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
+
+foreach(mod ${MODULES})
+ target_include_directories(xsllhTreeConvertINGRID PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
+ target_include_directories(xsllhTreeConvertINGRID PUBLIC ${CMAKE_SOURCE_DIR}/include)
+endforeach()
+
+foreach(mod ${MODULETargets})
+  cmessage(STATUS "Linking with: ${mod}")
+  target_link_libraries(xsllhTreeConvertINGRID ${mod})
+endforeach()
+
 #xsllhFluxCov
 add_executable(xsllhFluxCov xsllhFluxCov.cxx)
 
@@ -134,4 +149,4 @@ foreach(mod ${MODULETargets})
 endforeach()
 
 #install targets
-install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhIngridDet xsllhPlot xsllhTreeConvert xsllhFluxCov xsllhUnitTest xsllhXsecCov DESTINATION bin)
+install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhIngridDet xsllhPlot xsllhTreeConvert xsllhTreeConvertINGRID xsllhFluxCov xsllhUnitTest xsllhXsecCov DESTINATION bin)

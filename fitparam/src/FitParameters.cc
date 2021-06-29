@@ -107,12 +107,14 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
                 //int bin = GetBinIndex(sample[s] -> GetDetector(), D1, D2);
                 int bin = GetBinIndex(ev -> GetSignalType(), D1, D2);
 #ifndef NDEBUG
+                /*
                 if(bin == BADBIN)
                 {
                     std::cout << WAR << m_name << ", Event: " << i << std::endl
                               << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", falls outside bin ranges." << std::endl
                               << WAR << "This event will be ignored in the analysis." << std::endl;
                 }
+                */
 #endif
                 sample_map.push_back(bin);
             }

@@ -73,7 +73,9 @@ int GetIngridReaction(int code);
 int GetIngridTopology(int code);
 
 int RenameHLReaction(int code);
+int RenameHLReaction_anti(int code);
 int RenameHLTopology(int code);
+int RenameHLTopology_anti(int code);
 
 //double GetTestEnuWeight(double enu);
 //double GetBeRPAWeight(double q2);
@@ -386,8 +388,17 @@ int main(int argc, char** argv)
             q2_reco = 2.0 * enu_reco * (emu_reco - selmu_mom * selmu_cos)
                 - mu_mass * mu_mass;
 
-            reaction_mod = RenameHLReaction(reaction);
-            topology_mod = RenameHLTopology(topology);
+            // Rename topology and reaction based on beammode (FHC/RHC):
+            if(beammode == -1)
+            {
+                reaction_mod = RenameHLReaction_anti(reaction);
+                topology_mod = RenameHLTopology_anti(topology);
+            }
+            else
+            {
+                reaction_mod = RenameHLReaction(reaction);
+                topology_mod = RenameHLTopology(topology);
+            }
 
             weight *= file.pot_norm;
 
@@ -801,6 +812,51 @@ int RenameHLReaction(int code)
     return reaction;
 }
 
+int RenameHLReaction_anti(int code)
+{
+    int reaction;
+    switch(code)
+    {
+        case 0: // CCQE
+            reaction = 11;
+            break;
+        case 1: // RES
+            reaction = 12;
+            break;
+        case 2: // DIS
+            reaction = 13;
+            break;
+        case 3: // COH
+            reaction = 14;
+            break;
+        case 4: // NC
+            reaction = 15;
+            break;
+        case 5: // CC Numubar
+            reaction = 16;
+            break;
+        case 6: // CC Nuebar
+            reaction = 17;
+            break;
+        case 7: // CC Nue
+            reaction = 18;
+            break;
+        case 777: // Sand muon
+            reaction = 19;
+            break;
+        case 9: // 2p2h
+            reaction = 20;
+            break;
+        case 999: // other
+            reaction = 21;
+            break;
+        default: // other
+            reaction = 21;
+            break;
+    }
+    return reaction;
+}
+
 int RenameHLTopology(int code)
 {
     int topology;
@@ -826,6 +882,36 @@ int RenameHLTopology(int code)
             break;
         default: // BKG
             topology = 3;
+            break;
+    }
+    return topology;
+}
+
+int RenameHLTopology_anti(int code)
+{
+    int topology;
+    switch(code)
+    {
+        case 0: // CC0pi
+            topology = 6;
+            break;
+        case 1: // CC1pi
+            topology = 7;
+            break;
+        case 2: // CCOther
+            topology = 8;
+            break;
+        case 3: // BKG
+            topology = 9;
+            break;
+        case 7: // OOFV
+            topology = 10;
+            break;
+        case 777: // Sand muon
+            topology = 11;
+            break;
+        default: // BKG
+            topology = 9;
             break;
     }
     return topology;
