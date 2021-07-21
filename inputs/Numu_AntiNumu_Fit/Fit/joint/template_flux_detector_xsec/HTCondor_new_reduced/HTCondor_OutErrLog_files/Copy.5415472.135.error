@@ -1,0 +1,22 @@
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+
+ *** Break *** bus error
+
+Thread 1 (process 74):
+cp: cannot create regular file ‘/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/joint/template_flux_detector_xsec/HTCondor_new_reduced/output/fit_result_joint_135.root’: Permission denied

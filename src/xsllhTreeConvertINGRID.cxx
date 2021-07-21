@@ -200,7 +200,7 @@ int main(int argc, char** argv)
     int topology, topology_true;
     int target, target_true;
     int cut_branch;
-    int beammode;
+    int beammode = 2;
     float enu_true, enu_reco;
     float q2_true, q2_reco;
     float D1True, D1Reco;

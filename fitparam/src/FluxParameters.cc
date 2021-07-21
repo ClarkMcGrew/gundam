@@ -126,8 +126,8 @@ void FluxParameters::InitParameters()
     {
         std::cout << TAG << "Detector: " << det << std::endl;
         m_det_offset.insert(std::make_pair(det, offset));
-        //const int nbins = m_det_bins.at(det).size() - 1;
-        int nbins = m_det_bm.at(det).GetNbins();
+        const int nbins = m_det_bins.at(det).size() - 1;
+        //int nbins = m_det_bm.at(det).GetNbins();
         /*
         if (det == "INGRIDxxx")
         {
@@ -147,11 +147,11 @@ void FluxParameters::InitParameters()
             pars_limhigh.push_back(5.0);
             pars_fixed.push_back(false);
 
-            //std::cout << i << ": " << m_det_bins.at(det).at(i) << std::endl;
+            std::cout << i << ": " << m_det_bins.at(det).at(i) << std::endl;
         }
-        //std::cout << nbins << ": " << m_det_bins.at(det).back() << std::endl;
+        std::cout << nbins << ": " << m_det_bins.at(det).back() << std::endl;
 
-        m_det_bm.at(det).Print();
+        //m_det_bm.at(det).Print();
         std::cout << TAG << "Total " << nbins << " parameters at "
                   << offset << " for " << det << std::endl;
         offset += nbins;

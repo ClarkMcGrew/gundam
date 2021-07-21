@@ -1,0 +1,144 @@
+000 (5415472.092.000) 07/11 14:02:29 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.092.000) 07/11 14:10:20 Started transferring input files
+	Transferring to host: <128.142.67.41:9618?addrs=128.142.67.41-9618+[2001-1458-301-4c--100-30b]-9618&alias=b7s09n1055.cern.ch&noUDP&sock=slot1_6_16897_3708_45330>
+...
+040 (5415472.092.000) 07/11 14:10:20 Finished transferring input files
+...
+001 (5415472.092.000) 07/11 14:10:21 Job executing on host: <128.142.67.41:9618?addrs=128.142.67.41-9618+[2001-1458-301-4c--100-30b]-9618&alias=b7s09n1055.cern.ch&noUDP&sock=startd_16749_ffd5>
+...
+006 (5415472.092.000) 07/11 14:10:30 Image size of job updated: 570628
+	49  -  MemoryUsage of job (MB)
+	49436  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/11 14:15:30 Image size of job updated: 1590892
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/13 18:42:58 Image size of job updated: 1591876
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/13 19:48:03 Image size of job updated: 1592780
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/13 20:58:11 Image size of job updated: 1593688
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/13 22:03:16 Image size of job updated: 1594592
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/13 23:18:27 Image size of job updated: 1595496
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 00:28:35 Image size of job updated: 1596404
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 01:33:41 Image size of job updated: 1597308
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 02:38:47 Image size of job updated: 1598216
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 03:43:57 Image size of job updated: 1599120
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 04:44:01 Image size of job updated: 1600024
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 05:44:08 Image size of job updated: 1600932
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 06:49:13 Image size of job updated: 1601836
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 07:49:20 Image size of job updated: 1602744
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 08:54:25 Image size of job updated: 1603648
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 09:54:30 Image size of job updated: 1604552
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 10:54:36 Image size of job updated: 1605460
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 11:59:41 Image size of job updated: 1606364
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 12:59:44 Image size of job updated: 1607272
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 14:09:48 Image size of job updated: 1608176
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 15:14:54 Image size of job updated: 1609084
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 16:19:59 Image size of job updated: 1609988
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 16:50:02 Image size of job updated: 1613060
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 18:25:12 Image size of job updated: 1613964
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 19:30:21 Image size of job updated: 1614872
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+006 (5415472.092.000) 07/14 20:25:27 Image size of job updated: 1615776
+	1004  -  MemoryUsage of job (MB)
+	1027328  -  ResidentSetSize of job (KB)
+...
+007 (5415472.092.000) 07/14 21:00:03 Shadow exception!
+	Assertion ERROR on (result)
+	0  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+...
+040 (5415472.092.000) 07/14 21:21:32 Started transferring input files
+	Transferring to host: <128.142.161.136:9618?addrs=128.142.161.136-9618&alias=b7g03p6931.cern.ch&noUDP&sock=slot1_20_4508_0b30_74320>
+...
+040 (5415472.092.000) 07/14 21:21:33 Finished transferring input files
+...
+001 (5415472.092.000) 07/14 21:21:34 Job executing on host: <128.142.161.136:9618?addrs=128.142.161.136-9618&alias=b7g03p6931.cern.ch&noUDP&sock=startd_3457_cafd>
+...
+040 (5415472.092.000) 07/18 17:53:40 Started transferring output files
+...
+040 (5415472.092.000) 07/18 17:53:40 Finished transferring output files
+...
+004 (5415472.092.000) 07/18 17:53:40 Job was evicted.
+	(0) CPU times
+		Usr 11 18:52:15, Sys 0 00:29:30  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	96403  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     3.02        4         4 
+	   Disk (KB)            :   122    10485760  11227131 
+	   Memory (MB)          :  1221        8000      8000 
+...

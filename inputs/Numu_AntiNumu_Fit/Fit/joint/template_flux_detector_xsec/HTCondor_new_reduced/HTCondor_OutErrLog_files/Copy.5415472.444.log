@@ -1,0 +1,78 @@
+000 (5415472.444.000) 07/11 14:02:30 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.444.000) 07/12 05:57:45 Started transferring input files
+	Transferring to host: <128.142.77.128:9618?addrs=128.142.77.128-9618+[2001-1458-301-f4--100-2f]-9618&alias=b7s12n2725.cern.ch&noUDP&sock=slot1_2_5544_ffdb_61670>
+...
+040 (5415472.444.000) 07/12 05:57:45 Finished transferring input files
+...
+001 (5415472.444.000) 07/12 05:57:46 Job executing on host: <128.142.77.128:9618?addrs=128.142.77.128-9618+[2001-1458-301-f4--100-2f]-9618&alias=b7s12n2725.cern.ch&noUDP&sock=startd_4425_c2aa>
+...
+006 (5415472.444.000) 07/12 05:57:54 Image size of job updated: 456284
+	38  -  MemoryUsage of job (MB)
+	38524  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/12 06:02:54 Image size of job updated: 1591092
+	1004  -  MemoryUsage of job (MB)
+	1027532  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 08:56:20 Image size of job updated: 1592072
+	1005  -  MemoryUsage of job (MB)
+	1028436  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 09:56:25 Image size of job updated: 1592980
+	1006  -  MemoryUsage of job (MB)
+	1029344  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 10:51:33 Image size of job updated: 1593884
+	1007  -  MemoryUsage of job (MB)
+	1030248  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 11:46:39 Image size of job updated: 1594788
+	1007  -  MemoryUsage of job (MB)
+	1031152  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 12:51:47 Image size of job updated: 1595696
+	1008  -  MemoryUsage of job (MB)
+	1032060  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 14:01:54 Image size of job updated: 1596600
+	1009  -  MemoryUsage of job (MB)
+	1032964  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 15:07:00 Image size of job updated: 1597508
+	1010  -  MemoryUsage of job (MB)
+	1033872  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 16:17:03 Image size of job updated: 1598412
+	1011  -  MemoryUsage of job (MB)
+	1034776  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 17:22:06 Image size of job updated: 1599316
+	1012  -  MemoryUsage of job (MB)
+	1035680  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 18:32:12 Image size of job updated: 1600224
+	1013  -  MemoryUsage of job (MB)
+	1036588  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 19:42:19 Image size of job updated: 1601128
+	1014  -  MemoryUsage of job (MB)
+	1037492  -  ResidentSetSize of job (KB)
+...
+006 (5415472.444.000) 07/14 20:52:58 Image size of job updated: 1602036
+	1015  -  MemoryUsage of job (MB)
+	1038400  -  ResidentSetSize of job (KB)
+...
+022 (5415472.444.000) 07/14 21:02:53 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_2@b7s12n2725.cern.ch <128.142.77.128:9618?addrs=128.142.77.128-9618+[2001-1458-301-f4--100-2f]-9618&alias=b7s12n2725.cern.ch&noUDP&sock=startd_4425_c2aa>
+...
+023 (5415472.444.000) 07/14 21:02:53 Job reconnected to slot1_2@b7s12n2725.cern.ch
+    startd address: <128.142.77.128:9618?addrs=128.142.77.128-9618+[2001-1458-301-f4--100-2f]-9618&alias=b7s12n2725.cern.ch&noUDP&sock=startd_4425_c2aa>
+    starter address: <128.142.77.128:9618?addrs=128.142.77.128-9618+[2001-1458-301-f4--100-2f]-9618&alias=b7s12n2725.cern.ch&noUDP&sock=slot1_2_5544_ffdb_61670>
+...
+007 (5415472.444.000) 07/14 21:10:52 Shadow exception!
+	Assertion ERROR on (result)
+	0  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+...

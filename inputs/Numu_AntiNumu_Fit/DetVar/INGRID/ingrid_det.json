@@ -4,7 +4,7 @@
     "covariance_file" : "pm_detector_errors.root",
     "covariance_name" : "CovarianceDetector",
     "true_binning" : "binning/analysis_binning_ingrid.txt",
-    "reco_binning" : "binning/ingrid_sample_15_bins.txt",
+    "reco_binning" : "binning/ingrid_sample_15_bins_reduced.txt",
     "cov_offset" : 1E-6,
     "num_toys" : 20000,
     "mc_stat_error" : false

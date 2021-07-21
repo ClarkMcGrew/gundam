@@ -40,7 +40,7 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
                 int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
                                                        std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
 
-                /*
+                
                 if(idx == BADBIN)
                 {
                     std::cout << WAR << "Event falls outside spline range.\n"
@@ -48,7 +48,7 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
                               << std::endl;
                     ev -> AddEvWght(0.0);
                 }
-                */
+                
 
                 if(mode == 1 && ev -> isSignalEvent())
                     idx = PASSEVENT;

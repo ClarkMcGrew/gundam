@@ -88,24 +88,71 @@ int main(int argc, char** argv)
 
     std::string input_mat_name  = j["input"]["matrix"];
     std::string output_mat_name = j["output"]["matrix"];
-    //std::string input_bin_name  = j["input"]["binning"];
-    //std::string output_bin_name = j["output"]["binning"];
+    std::string input_bin_name  = j["input"]["binning"];
+    std::string output_bin_name = j["output"]["binning"];
 
 
     // Get binning from file
     //TAxis *axis_bins = (TAxis*)in_file -> Get(input_bin_name.c_str());
     //const unsigned int nbins = axis_bins -> GetNbins();
+    const unsigned int nbins = 20;
     
-    //std::cout << TAG << "Number of bins : " << nbins << std::endl;
+    std::cout << TAG << "Number of bins : " << nbins << std::endl;
 
     // Get bin edges and store them into an array
     //TArrayD root_array = *(axis_bins -> GetXbins());
     //double* bin_array = root_array.GetArray();
-    
-    //for(int i = 1; i <= nbins; i++)
-    //    std::cout << "bin_array["<<i<<"] = " << bin_array[i] << std::endl;
+    double bin_array[nbins];
+    bin_array[0] = 0;
+    bin_array[1] = 100;
+    bin_array[2] = 200;
+    bin_array[3] = 300;
+    bin_array[4] = 400;
+    bin_array[5] = 500;
+    bin_array[6] = 600;
+    bin_array[7] = 700;
+    bin_array[8] = 800;
+    bin_array[9] = 1000;
+    bin_array[10] = 1200;
+    bin_array[11] = 1500;
+    bin_array[12] = 2000;
+    bin_array[13] = 2500;
+    bin_array[14] = 3000;
+    bin_array[15] = 3500;
+    bin_array[16] = 4000;
+    bin_array[17] = 5000;
+    bin_array[18] = 7000;
+    bin_array[19] = 10000;
+    bin_array[20] = 30000;
 
-    //TH1D *h_binning = new TH1D(output_bin_name.c_str(), output_bin_name.c_str(), nbins, bin_array);
+    /*
+    bin_array.push_back(0);
+    bin_array.push_back(100);
+    bin_array.push_back(200);
+    bin_array.push_back(300);
+    bin_array.push_back(400);
+    bin_array.push_back(500);
+    bin_array.push_back(600);
+    bin_array.push_back(700);
+    bin_array.push_back(800);
+    bin_array.push_back(1000);
+    bin_array.push_back(1200);
+    bin_array.push_back(1500);
+    bin_array.push_back(2000);
+    bin_array.push_back(2500);
+    bin_array.push_back(3000);
+    bin_array.push_back(3500);
+    bin_array.push_back(4000);
+    bin_array.push_back(5000);
+    bin_array.push_back(7000);
+    bin_array.push_back(10000);
+    bin_array.push_back(30000);
+    */
+    
+    for(int i = 0; i <= nbins; ++i)
+        std::cout << "bin_array["<<i<<"] = " << bin_array[i] << std::endl;
+
+    TH1D *h_binning = new TH1D(output_bin_name.c_str(), output_bin_name.c_str(), nbins, bin_array);
 
 
     // Get flux covariance matrix from file
@@ -113,13 +160,13 @@ int main(int argc, char** argv)
 
 
 
-    /*
+    
     // INGRID only:
     TMatrixDSym flux_cov(20);
     for(int i=0; i<20; i++)
         for(int j=0; j<20; j++)
             flux_cov(i,j) = (*flux_cov_tot)(i,j);
-    */
+    
     /*
     // ND280 only:
     TMatrixDSym flux_cov(80);
@@ -127,6 +174,7 @@ int main(int argc, char** argv)
         for(int j=160; j<240; j++)
             flux_cov(i-160,j-160) = (*flux_cov_tot)(i,j);
     */
+    /*
     // ND280 + INGRID:
     TMatrixDSym flux_cov(100);
     for(int i=0; i<20; i++)
@@ -135,6 +183,7 @@ int main(int argc, char** argv)
     for(int i=160; i<240; i++)
         for(int j=160; j<240; j++)
             flux_cov(i-140,j-140) = (*flux_cov_tot)(i,j);
+    */
 
 
 
@@ -157,7 +206,7 @@ int main(int argc, char** argv)
     // Write matrix and binning into file
     out_file -> cd();
     flux_cov.Write(output_mat_name.c_str());
-    //h_binning -> Write(output_bin_name.c_str());
+    h_binning -> Write(output_bin_name.c_str());
 
     out_file -> Close();
     in_file  -> Close();

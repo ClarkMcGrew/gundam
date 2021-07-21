@@ -1,0 +1,100 @@
+000 (5415472.114.000) 07/11 14:02:29 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.114.000) 07/11 14:13:21 Started transferring input files
+	Transferring to host: <128.142.75.156:9618?addrs=128.142.75.156-9618+[2001-1458-301-75--100-2c2]-9618&alias=b7s11n2841.cern.ch&noUDP&sock=slot1_5_3336_4381_65932>
+...
+040 (5415472.114.000) 07/11 14:13:21 Finished transferring input files
+...
+001 (5415472.114.000) 07/11 14:13:22 Job executing on host: <128.142.75.156:9618?addrs=128.142.75.156-9618+[2001-1458-301-75--100-2c2]-9618&alias=b7s11n2841.cern.ch&noUDP&sock=startd_2859_9d5b>
+...
+006 (5415472.114.000) 07/11 14:13:31 Image size of job updated: 457772
+	25  -  MemoryUsage of job (MB)
+	25360  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/11 14:18:31 Image size of job updated: 1590900
+	1004  -  MemoryUsage of job (MB)
+	1027344  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 16:30:13 Image size of job updated: 1591880
+	1005  -  MemoryUsage of job (MB)
+	1028208  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 17:38:01 Image size of job updated: 1592788
+	1005  -  MemoryUsage of job (MB)
+	1029116  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 18:30:03 Image size of job updated: 1593692
+	1006  -  MemoryUsage of job (MB)
+	1030020  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 19:30:11 Image size of job updated: 1594600
+	1007  -  MemoryUsage of job (MB)
+	1030928  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 20:20:16 Image size of job updated: 1595504
+	1008  -  MemoryUsage of job (MB)
+	1031832  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 21:10:24 Image size of job updated: 1596408
+	1009  -  MemoryUsage of job (MB)
+	1032736  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 22:05:31 Image size of job updated: 1597316
+	1010  -  MemoryUsage of job (MB)
+	1033644  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/13 23:05:39 Image size of job updated: 1598220
+	1011  -  MemoryUsage of job (MB)
+	1034548  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 00:05:42 Image size of job updated: 1599128
+	1012  -  MemoryUsage of job (MB)
+	1035456  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 01:15:48 Image size of job updated: 1600032
+	1013  -  MemoryUsage of job (MB)
+	1036360  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 02:15:55 Image size of job updated: 1600940
+	1013  -  MemoryUsage of job (MB)
+	1037268  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 03:21:00 Image size of job updated: 1601844
+	1014  -  MemoryUsage of job (MB)
+	1038172  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 04:31:06 Image size of job updated: 1602748
+	1015  -  MemoryUsage of job (MB)
+	1039076  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 05:26:12 Image size of job updated: 1603656
+	1016  -  MemoryUsage of job (MB)
+	1039984  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 06:21:18 Image size of job updated: 1604560
+	1017  -  MemoryUsage of job (MB)
+	1040888  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 07:21:23 Image size of job updated: 1609088
+	1021  -  MemoryUsage of job (MB)
+	1045416  -  ResidentSetSize of job (KB)
+...
+006 (5415472.114.000) 07/14 12:26:48 Image size of job updated: 1612160
+	1021  -  MemoryUsage of job (MB)
+	1045416  -  ResidentSetSize of job (KB)
+...
+040 (5415472.114.000) 07/14 14:03:23 Started transferring output files
+...
+040 (5415472.114.000) 07/14 14:03:23 Finished transferring output files
+...
+004 (5415472.114.000) 07/14 14:03:23 Job was evicted.
+	(0) CPU times
+		Usr 8 15:39:07, Sys 0 00:01:50  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	96187  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     2.93        4         4 
+	   Disk (KB)            :   120    10485760  10716125 
+	   Memory (MB)          :  1021        8000      8000 
+...

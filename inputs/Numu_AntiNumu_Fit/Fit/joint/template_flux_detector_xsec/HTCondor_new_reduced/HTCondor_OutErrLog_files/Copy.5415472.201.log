@@ -1,0 +1,133 @@
+000 (5415472.201.000) 07/11 14:02:29 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.201.000) 07/11 14:18:14 Started transferring input files
+	Transferring to host: <128.142.83.28:9618?addrs=128.142.83.28-9618+[2001-1458-301-f5--100-389]-9618&alias=b7s13n4432.cern.ch&noUDP&sock=slot1_3_5569_9d3c_70956>
+...
+040 (5415472.201.000) 07/11 14:18:14 Finished transferring input files
+...
+001 (5415472.201.000) 07/11 14:18:15 Job executing on host: <128.142.83.28:9618?addrs=128.142.83.28-9618+[2001-1458-301-f5--100-389]-9618&alias=b7s13n4432.cern.ch&noUDP&sock=startd_4516_2dc9>
+...
+006 (5415472.201.000) 07/11 14:18:24 Image size of job updated: 111736
+	50  -  MemoryUsage of job (MB)
+	50728  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/11 14:23:24 Image size of job updated: 1590988
+	1004  -  MemoryUsage of job (MB)
+	1027436  -  ResidentSetSize of job (KB)
+...
+022 (5415472.201.000) 07/13 11:29:47 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_3@b7s13n4432.cern.ch <128.142.83.28:9618?addrs=128.142.83.28-9618+[2001-1458-301-f5--100-389]-9618&alias=b7s13n4432.cern.ch&noUDP&sock=startd_4516_2dc9>
+...
+023 (5415472.201.000) 07/13 11:29:47 Job reconnected to slot1_3@b7s13n4432.cern.ch
+    startd address: <128.142.83.28:9618?addrs=128.142.83.28-9618+[2001-1458-301-f5--100-389]-9618&alias=b7s13n4432.cern.ch&noUDP&sock=startd_4516_2dc9>
+    starter address: <128.142.83.28:9618?addrs=128.142.83.28-9618+[2001-1458-301-f5--100-389]-9618&alias=b7s13n4432.cern.ch&noUDP&sock=slot1_3_5569_9d3c_70956>
+...
+006 (5415472.201.000) 07/13 22:00:58 Image size of job updated: 1591968
+	1005  -  MemoryUsage of job (MB)
+	1028340  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/13 23:11:06 Image size of job updated: 1592876
+	1006  -  MemoryUsage of job (MB)
+	1029248  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 00:26:15 Image size of job updated: 1593780
+	1007  -  MemoryUsage of job (MB)
+	1030152  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 01:41:23 Image size of job updated: 1594684
+	1007  -  MemoryUsage of job (MB)
+	1031056  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 02:51:30 Image size of job updated: 1595592
+	1008  -  MemoryUsage of job (MB)
+	1031964  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 04:06:38 Image size of job updated: 1596496
+	1009  -  MemoryUsage of job (MB)
+	1032824  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 05:06:43 Image size of job updated: 1597404
+	1010  -  MemoryUsage of job (MB)
+	1033496  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 06:11:46 Image size of job updated: 1598308
+	1011  -  MemoryUsage of job (MB)
+	1034396  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 07:11:51 Image size of job updated: 1599216
+	1012  -  MemoryUsage of job (MB)
+	1035304  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 08:06:57 Image size of job updated: 1600120
+	1012  -  MemoryUsage of job (MB)
+	1036208  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 09:07:04 Image size of job updated: 1601024
+	1013  -  MemoryUsage of job (MB)
+	1037092  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 10:02:10 Image size of job updated: 1601932
+	1014  -  MemoryUsage of job (MB)
+	1037904  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 11:02:15 Image size of job updated: 1602836
+	1015  -  MemoryUsage of job (MB)
+	1038808  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 11:57:23 Image size of job updated: 1603744
+	1016  -  MemoryUsage of job (MB)
+	1039460  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 12:52:32 Image size of job updated: 1604648
+	1016  -  MemoryUsage of job (MB)
+	1040364  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 13:57:38 Image size of job updated: 1605552
+	1017  -  MemoryUsage of job (MB)
+	1041268  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 14:57:42 Image size of job updated: 1606460
+	1018  -  MemoryUsage of job (MB)
+	1042176  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 16:02:50 Image size of job updated: 1607364
+	1019  -  MemoryUsage of job (MB)
+	1043068  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 17:07:57 Image size of job updated: 1608272
+	1020  -  MemoryUsage of job (MB)
+	1043976  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 18:14:11 Image size of job updated: 1609176
+	1021  -  MemoryUsage of job (MB)
+	1044880  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 19:21:19 Image size of job updated: 1610080
+	1022  -  MemoryUsage of job (MB)
+	1045784  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 19:51:23 Image size of job updated: 1613152
+	1023  -  MemoryUsage of job (MB)
+	1047336  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 19:56:24 Image size of job updated: 1613152
+	1023  -  MemoryUsage of job (MB)
+	1047344  -  ResidentSetSize of job (KB)
+...
+006 (5415472.201.000) 07/14 20:31:27 Image size of job updated: 1613152
+	1023  -  MemoryUsage of job (MB)
+	1047356  -  ResidentSetSize of job (KB)
+...
+007 (5415472.201.000) 07/14 21:07:01 Shadow exception!
+	Assertion ERROR on (result)
+	0  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+...
+040 (5415472.201.000) 07/14 21:26:13 Started transferring input files
+	Transferring to host: <128.142.75.192:9618?addrs=128.142.75.192-9618+[2001-1458-301-75--100-a3]-9618&alias=b7s11n7790.cern.ch&noUDP&sock=slot1_3_6024_33ee_63298>
+...
+040 (5415472.201.000) 07/14 21:26:27 Finished transferring input files
+...
+001 (5415472.201.000) 07/14 21:26:48 Job executing on host: <128.142.75.192:9618?addrs=128.142.75.192-9618+[2001-1458-301-75--100-a3]-9618&alias=b7s11n7790.cern.ch&noUDP&sock=startd_4865_9056>
+...

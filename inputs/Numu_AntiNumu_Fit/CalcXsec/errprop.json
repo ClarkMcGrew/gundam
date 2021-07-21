@@ -1,0 +1,30 @@
+{
+    "input_dir" : "/inputs/Numu_AntiNumu_Fit/CalcXsec/",
+    "input_fit_file" : "template_flux_detector_xsec/ingrid_only_fit_result.root",
+    "output_file" : "xsec.root",
+    "extra_hists" : "",
+    "num_toys" : 2000,
+    "rng_seed" : 0,
+    "sel_config" : "template_flux_detector_xsec/config_Fit.json",
+    "tru_config" : "template_flux_detector_xsec/config_Fit.json",
+    "read_data_events" : true,
+    "decomposition" : {
+        "do_force_posdef" : true,
+        "force_posdef_val" : 1E-6,
+        "incomplete_chol" : false,
+        "drop_tolerance" : 1E-9
+    },
+    "sig_norm" : {
+        "INGRID" : {
+            "pot_norm" : 1.0,
+            "flux_file" : "xsllh_fluxcovmat_only_INGRID.root",
+            "flux_hist" : "flux_binning",
+            "flux_int"  : 3.01E13,
+            "flux_err"  : 0.099,
+            "use_flux_fit" : true,
+            "num_targets_val" : 1.76E29,
+            "num_targets_err" : 0.0038,
+            "relative_err" : true
+        }
+    }
+}

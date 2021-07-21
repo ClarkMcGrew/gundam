@@ -1,0 +1,58 @@
+000 (5415472.498.000) 07/11 14:02:30 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.498.000) 07/12 09:10:22 Started transferring input files
+	Transferring to host: <128.142.80.157:9618?addrs=128.142.80.157-9618+[2001-1458-301-f5--100-511]-9618&alias=b7s13n5607.cern.ch&noUDP&sock=slot1_2_7026_33d7_109356>
+...
+040 (5415472.498.000) 07/12 09:10:22 Finished transferring input files
+...
+001 (5415472.498.000) 07/12 09:10:23 Job executing on host: <128.142.80.157:9618?addrs=128.142.80.157-9618+[2001-1458-301-f5--100-511]-9618&alias=b7s13n5607.cern.ch&noUDP&sock=startd_16245_4c1a>
+...
+006 (5415472.498.000) 07/12 09:10:32 Image size of job updated: 500464
+	38  -  MemoryUsage of job (MB)
+	38536  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/12 09:15:32 Image size of job updated: 1590952
+	1004  -  MemoryUsage of job (MB)
+	1027392  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 12:32:43 Image size of job updated: 1591936
+	1005  -  MemoryUsage of job (MB)
+	1028124  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 13:32:46 Image size of job updated: 1592840
+	1005  -  MemoryUsage of job (MB)
+	1029028  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 14:37:51 Image size of job updated: 1593748
+	1006  -  MemoryUsage of job (MB)
+	1029932  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 15:37:59 Image size of job updated: 1594652
+	1007  -  MemoryUsage of job (MB)
+	1030840  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 16:43:05 Image size of job updated: 1595556
+	1008  -  MemoryUsage of job (MB)
+	1031744  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 17:43:11 Image size of job updated: 1596464
+	1009  -  MemoryUsage of job (MB)
+	1032652  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 18:48:18 Image size of job updated: 1597368
+	1010  -  MemoryUsage of job (MB)
+	1033556  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 19:48:23 Image size of job updated: 1598276
+	1011  -  MemoryUsage of job (MB)
+	1034464  -  ResidentSetSize of job (KB)
+...
+006 (5415472.498.000) 07/14 20:48:28 Image size of job updated: 1599180
+	1012  -  MemoryUsage of job (MB)
+	1035368  -  ResidentSetSize of job (KB)
+...
+007 (5415472.498.000) 07/14 21:06:41 Shadow exception!
+	Assertion ERROR on (result)
+	0  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+...

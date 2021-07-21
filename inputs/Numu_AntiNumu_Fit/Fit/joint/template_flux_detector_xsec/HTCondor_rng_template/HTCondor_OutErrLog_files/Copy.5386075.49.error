@@ -1,0 +1,28 @@
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+Info in MnHesse: 2nd derivative zero for Parameter  : name = par_fit_sig1_0
+Info: MnHesse fails and will return diagonal matrix 
+Info in Minuit2Minimizer::Hesse : Hesse failed - matrix is not valid
+Info in MInuit2Minimizer::Hesse : hstatus = 3
+
+ *** Break *** bus error
+
+Thread 1 (process 74):
+#0  0xfbfb1549 in ?? ()
+#1  0x00000030 in ?? ()
+#2  0x00000000 in ?? ()

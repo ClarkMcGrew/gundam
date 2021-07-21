@@ -1,0 +1,159 @@
+000 (5415472.049.000) 07/11 14:02:29 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.049.000) 07/11 14:03:32 Started transferring input files
+	Transferring to host: <128.142.59.66:9618?addrs=128.142.59.66-9618+[2001-1458-301-21--100-41]-9618&alias=b7s04p7188.cern.ch&noUDP&sock=slot1_11_4798_5ffc_2279>
+...
+040 (5415472.049.000) 07/11 14:03:32 Finished transferring input files
+...
+001 (5415472.049.000) 07/11 14:03:33 Job executing on host: <128.142.59.66:9618?addrs=128.142.59.66-9618+[2001-1458-301-21--100-41]-9618&alias=b7s04p7188.cern.ch&noUDP&sock=startd_4200_6ddb>
+...
+006 (5415472.049.000) 07/11 14:03:42 Image size of job updated: 106600
+	45  -  MemoryUsage of job (MB)
+	45616  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/11 14:08:43 Image size of job updated: 1591012
+	1004  -  MemoryUsage of job (MB)
+	1027456  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 19:26:48 Image size of job updated: 1591992
+	1005  -  MemoryUsage of job (MB)
+	1028360  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 20:06:52 Image size of job updated: 1592900
+	1006  -  MemoryUsage of job (MB)
+	1029268  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 20:46:56 Image size of job updated: 1593804
+	1007  -  MemoryUsage of job (MB)
+	1030172  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 21:27:00 Image size of job updated: 1594712
+	1007  -  MemoryUsage of job (MB)
+	1031080  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 22:07:06 Image size of job updated: 1595616
+	1008  -  MemoryUsage of job (MB)
+	1031984  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 22:47:08 Image size of job updated: 1596520
+	1009  -  MemoryUsage of job (MB)
+	1032888  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/12 23:27:11 Image size of job updated: 1597428
+	1010  -  MemoryUsage of job (MB)
+	1033796  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 00:07:14 Image size of job updated: 1598332
+	1011  -  MemoryUsage of job (MB)
+	1034700  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 00:47:18 Image size of job updated: 1599240
+	1012  -  MemoryUsage of job (MB)
+	1035608  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 01:27:22 Image size of job updated: 1600144
+	1013  -  MemoryUsage of job (MB)
+	1036512  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 02:07:27 Image size of job updated: 1600144
+	1014  -  MemoryUsage of job (MB)
+	1037416  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 02:12:27 Image size of job updated: 1601048
+	1014  -  MemoryUsage of job (MB)
+	1037416  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 02:52:32 Image size of job updated: 1601956
+	1014  -  MemoryUsage of job (MB)
+	1038324  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 03:37:36 Image size of job updated: 1602860
+	1015  -  MemoryUsage of job (MB)
+	1039228  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 04:17:39 Image size of job updated: 1603768
+	1016  -  MemoryUsage of job (MB)
+	1040136  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 05:02:45 Image size of job updated: 1604672
+	1017  -  MemoryUsage of job (MB)
+	1041040  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 05:42:48 Image size of job updated: 1605576
+	1018  -  MemoryUsage of job (MB)
+	1041944  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 06:27:55 Image size of job updated: 1606484
+	1019  -  MemoryUsage of job (MB)
+	1042852  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 07:07:58 Image size of job updated: 1607388
+	1020  -  MemoryUsage of job (MB)
+	1043756  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 07:53:02 Image size of job updated: 1608296
+	1021  -  MemoryUsage of job (MB)
+	1044664  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 08:38:08 Image size of job updated: 1609200
+	1022  -  MemoryUsage of job (MB)
+	1045568  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 09:18:15 Image size of job updated: 1610108
+	1022  -  MemoryUsage of job (MB)
+	1046476  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 09:38:17 Image size of job updated: 1613180
+	1024  -  MemoryUsage of job (MB)
+	1048024  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 09:58:18 Image size of job updated: 1613180
+	1024  -  MemoryUsage of job (MB)
+	1048036  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 10:23:21 Image size of job updated: 1613180
+	1024  -  MemoryUsage of job (MB)
+	1048048  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 10:38:29 Image size of job updated: 1614084
+	1025  -  MemoryUsage of job (MB)
+	1048952  -  ResidentSetSize of job (KB)
+...
+006 (5415472.049.000) 07/13 10:43:30 Image size of job updated: 1614084
+	1025  -  MemoryUsage of job (MB)
+	1048964  -  ResidentSetSize of job (KB)
+...
+007 (5415472.049.000) 07/13 10:53:46 Shadow exception!
+	Error from slot1_11@b7s04p7188.cern.ch: dprintf hit fatal errors
+	0  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+...
+040 (5415472.049.000) 07/14 21:21:22 Started transferring input files
+	Transferring to host: <128.142.79.200:9618?addrs=128.142.79.200-9618+[2001-1458-301-f4--100-372]-9618&alias=b7s12n0716.cern.ch&noUDP&sock=slot1_1_18283_c701_133162>
+...
+040 (5415472.049.000) 07/14 21:21:22 Finished transferring input files
+...
+001 (5415472.049.000) 07/14 21:21:23 Job executing on host: <128.142.79.200:9618?addrs=128.142.79.200-9618+[2001-1458-301-f4--100-372]-9618&alias=b7s12n0716.cern.ch&noUDP&sock=startd_16812_364d>
+...
+040 (5415472.049.000) 07/18 19:10:41 Started transferring output files
+...
+040 (5415472.049.000) 07/18 19:10:41 Finished transferring output files
+...
+004 (5415472.049.000) 07/18 19:10:41 Job was evicted.
+	(0) CPU times
+		Usr 11 07:41:30, Sys 0 00:02:59  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	96430  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     2.97        4         4 
+	   Disk (KB)            :   122    10485760  10876518 
+	   Memory (MB)          :  1221        8000      8000 
+...
+040 (5415472.049.000) 07/18 21:38:36 Started transferring input files
+	Transferring to host: <188.184.211.73:9618?addrs=188.184.211.73-9618+[2001-1458-301-10b--100-147]-9618&alias=b7g23n3737.cern.ch&noUDP&sock=slot1_2_4806_02fd_62518>
+...
+040 (5415472.049.000) 07/18 21:38:36 Finished transferring input files
+...
+001 (5415472.049.000) 07/18 21:38:37 Job executing on host: <188.184.211.73:9618?addrs=188.184.211.73-9618+[2001-1458-301-10b--100-147]-9618&alias=b7g23n3737.cern.ch&noUDP&sock=startd_3889_1be7>
+...

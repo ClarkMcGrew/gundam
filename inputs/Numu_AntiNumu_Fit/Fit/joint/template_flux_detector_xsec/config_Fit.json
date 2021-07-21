@@ -6,11 +6,11 @@
     "fit_type"  : 0,
     "stat_fluc" : false,
     "zero_syst" : false,
-    "rng_template" : true,
-    "save_events" : false,
+    "rng_template" : false,
+    "save_events" : true,
     "data_POT"  : 3.14E21,
     "mc_POT"    : 3.14E21,
-    "rng_seed"  : 1234,
+    "rng_seed"  : 123456,
     "num_threads" : 16,
     "sample_topology" : ["CC-0Pi", "CC-1Pi", "CC-Other", "BKG", "out FV", "sand #mu", "aCC-0Pi", "aCC-1Pi", "aCC-Other", "aBKG", "a out FV", "a sand #mu", "no truth"],
     "topology_HL_code" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1],
@@ -19,7 +19,7 @@
         "algorithm" : "Migrad",
         "likelihood" : "Poisson",
         "print_level" : 2,
-        "tolerance" : 1E-4,
+        "tolerance" : 1E-1,
         "strategy" : 1,
         "max_iter" : 1E6,
         "max_fcn" : 1E9
@@ -31,23 +31,23 @@
         "throw"  : false,
         "decomp" : false,
         "variance" : 0.95,
-        "fit_par" : true
+        "fit_par" : false
     },
     "det_cov" : {
-        "file" : "detcov_joint.root",
+        "file" : "detcov_joint_reduced_bins.root",
         "matrix" : "cov_reco",
         "throw"  : false,
-        "decomp" : false,
+        "decomp" : true,
         "variance" : 0.95,
-        "fit_par" : true
+        "fit_par" : false
     },
     "xsec_cov" : {
-        "file" : "xsec_cov_numu.root",
+        "file" : "xsec_cov_numu_numu_antinumu.root",
         "matrix" : "xsec_cov",
         "throw"  : false,
         "decomp" : false,
         "variance" : 1.00,
-        "fit_par" : true
+        "fit_par" : false
     },
     "regularisation" : {
         "enable" : false,
@@ -63,7 +63,7 @@
                 {
                     "name" : "INGRID_CC0pi_template",
                     "binning" : "binning/analysis_binning_ingrid.txt",
-                    "signal" : {"topology" : [0,1,2], "beammode" : [1]},
+                    "signal" : {"topology" : [0,1,2], "beammode" : [2]},
                     "use" : true
                 }
             ],
@@ -96,7 +96,7 @@
             "name" : "truth",
             "detector" : "ND280xxx",
             "binning" : "binning/analysis_binning.txt",
-            "use_sample" : true
+            "use_sample" : false
         },
         {
             "cut_branch" : 0,
@@ -208,7 +208,6 @@
             "name": "INGRID_CC0pi",
             "detector" : "INGRIDxxx",
             "binning" : "binning/ingrid_sample_15_bins.txt",
-            "use_pot" : false,
             "use_sample" : true
         },
         {
@@ -216,7 +215,6 @@
             "name": "INGRID_CC1pi",
             "detector" : "INGRIDxxx",
             "binning" : "binning/ingrid_sample_16_bins.txt",
-            "use_pot" : false,
             "use_sample" : true
         }
     ]

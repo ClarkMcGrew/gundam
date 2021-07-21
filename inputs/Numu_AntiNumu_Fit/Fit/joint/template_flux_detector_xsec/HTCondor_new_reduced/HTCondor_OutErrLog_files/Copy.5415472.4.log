@@ -1,0 +1,460 @@
+000 (5415472.004.000) 07/11 14:02:28 Job submitted from host: <137.138.156.150:9618?addrs=137.138.156.150-9618+[2001-1458-d00-14--9a]-9618&alias=bigbird13.cern.ch&noUDP&sock=schedd_1788_ff6c>
+...
+040 (5415472.004.000) 07/11 14:03:16 Started transferring input files
+	Transferring to host: <188.184.169.201:9618?addrs=188.184.169.201-9618+[2001-1458-301-c0--100-129]-9618&alias=b7g52n4840.cern.ch&noUDP&sock=slot1_12_22915_70bd_114415>
+...
+040 (5415472.004.000) 07/11 14:03:16 Finished transferring input files
+...
+001 (5415472.004.000) 07/11 14:03:17 Job executing on host: <188.184.169.201:9618?addrs=188.184.169.201-9618+[2001-1458-301-c0--100-129]-9618&alias=b7g52n4840.cern.ch&noUDP&sock=startd_16345_e392>
+...
+006 (5415472.004.000) 07/11 14:03:25 Image size of job updated: 455576
+	85  -  MemoryUsage of job (MB)
+	86276  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/11 14:08:25 Image size of job updated: 1590996
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 15:20:48 Image size of job updated: 1591976
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 16:35:55 Image size of job updated: 1592884
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 17:46:09 Image size of job updated: 1593788
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 19:01:19 Image size of job updated: 1594692
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 20:16:28 Image size of job updated: 1595600
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 21:26:36 Image size of job updated: 1596504
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 22:46:44 Image size of job updated: 1597412
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/13 23:56:49 Image size of job updated: 1598316
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 01:06:54 Image size of job updated: 1599220
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 02:12:00 Image size of job updated: 1600128
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 03:17:05 Image size of job updated: 1601032
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 04:17:11 Image size of job updated: 1601940
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 05:17:16 Image size of job updated: 1602844
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 06:17:23 Image size of job updated: 1603748
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 07:12:28 Image size of job updated: 1604656
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 08:07:34 Image size of job updated: 1605560
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 08:57:39 Image size of job updated: 1606468
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 09:42:44 Image size of job updated: 1607372
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 10:27:49 Image size of job updated: 1608276
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 11:12:55 Image size of job updated: 1609184
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 12:08:00 Image size of job updated: 1610088
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 12:38:02 Image size of job updated: 1613160
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 14:18:13 Image size of job updated: 1614068
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+006 (5415472.004.000) 07/14 15:28:19 Image size of job updated: 1614972
+	1004  -  MemoryUsage of job (MB)
+	1027432  -  ResidentSetSize of job (KB)
+...
+040 (5415472.004.000) 07/14 16:21:11 Started transferring output files
+...
+040 (5415472.004.000) 07/14 16:21:11 Finished transferring output files
+...
+004 (5415472.004.000) 07/14 16:21:11 Job was evicted.
+	(0) CPU times
+		Usr 9 00:27:20, Sys 0 00:02:12  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	96202  -  Run Bytes Sent By Job
+	803  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     2.95        4         4 
+	   Disk (KB)            :   121    10485760  10747654 
+	   Memory (MB)          :  1004        8000      8000 
+...
+040 (5415472.004.000) 07/14 21:16:18 Started transferring input files
+	Transferring to host: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+040 (5415472.004.000) 07/14 21:16:18 Finished transferring input files
+...
+001 (5415472.004.000) 07/14 21:16:22 Job executing on host: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+022 (5415472.004.000) 07/15 03:45:41 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/15 03:46:10 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/15 04:49:19 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/15 05:10:44 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/15 05:17:10 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/15 05:17:41 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/15 05:26:41 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/15 05:28:01 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/15 07:31:54 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/15 08:19:41 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/16 03:53:55 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/16 03:53:56 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/16 04:00:21 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/16 04:10:46 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/16 16:57:17 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/16 17:07:42 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/17 10:45:27 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/17 10:55:52 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/17 16:34:34 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/17 16:40:37 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/17 18:30:36 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/17 18:30:43 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/17 18:41:29 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/17 18:41:31 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 01:23:27 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 01:23:27 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 01:37:29 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 01:39:26 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 15:42:03 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 15:42:03 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 16:44:22 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 16:50:11 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 17:14:24 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 17:14:24 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 19:01:00 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 19:11:25 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 19:37:00 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 19:37:00 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 19:43:26 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 19:49:44 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 20:39:24 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 20:39:24 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 20:46:31 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 20:47:00 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 21:24:16 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 21:24:23 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 21:58:05 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 22:09:05 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 22:59:57 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 23:00:32 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 23:10:09 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 23:10:18 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/18 23:25:32 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/18 23:25:32 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/19 00:02:01 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/19 00:12:26 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/19 00:33:20 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/19 00:39:38 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/19 00:55:55 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/19 01:01:44 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/19 01:42:18 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/19 01:42:46 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/20 00:19:45 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/20 00:20:13 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/20 01:33:24 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/20 01:33:24 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/20 02:48:12 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/20 02:48:13 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/20 06:21:07 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/20 06:32:06 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/21 11:32:58 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/21 11:44:22 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/21 12:14:32 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/21 12:14:36 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+022 (5415472.004.000) 07/21 12:48:34 Job disconnected, attempting to reconnect
+    Socket between submit and execute hosts closed unexpectedly
+    Trying to reconnect to slot1_1@b7s14n9545.cern.ch <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+...
+023 (5415472.004.000) 07/21 12:54:43 Job reconnected to slot1_1@b7s14n9545.cern.ch
+    startd address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=startd_26475_39f4>
+    starter address: <128.142.85.222:9618?addrs=128.142.85.222-9618+[2001-1458-301-f6--100-211]-9618&alias=b7s14n9545.cern.ch&noUDP&sock=slot1_1_32362_b4dd_2930>
+...
+040 (5415472.004.000) 07/21 13:42:41 Started transferring output files
+...
+040 (5415472.004.000) 07/21 13:42:42 Finished transferring output files
+...
+005 (5415472.004.000) 07/21 13:42:43 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 18 23:21:15, Sys 0 00:08:27  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 27 23:48:35, Sys 0 00:10:39  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	96430  -  Run Bytes Sent By Job
+	97005  -  Run Bytes Received By Job
+	192632  -  Total Bytes Sent By Job
+	97808  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :     3.06        4         4 
+	   Disk (KB)            :   123    10485760  10874649 
+	   Memory (MB)          :  1221        8000      8000 
+
+	Job terminated of its own accord at 2021-07-21T11:42:29Z.
+...

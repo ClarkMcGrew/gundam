@@ -227,8 +227,23 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         for(int j = 1; j <= m_hpred->GetNbinsX(); ++j)
         {
             double val = m_hpred->GetBinContent(j);
+            if (val < 30.0)
+                std::cout << m_name << " bin " << j << " has " << val << " entries." << std::endl;
             if(stat_fluc)
-                val = gRandom->Poisson(val);
+            {
+                bool val_is_zero = true;
+                double val_original = val;
+                while (val_is_zero)
+                {
+                    val = gRandom->Poisson(val_original);
+                    if (val != 0.0)
+                    {
+                        val_is_zero = false;
+                    }
+                }
+                std::cout << TAG << m_name << " bin " << j << " was set to " << val << " entries." << std::endl;
+                //val = gRandom->Poisson(val);
+            }
 #ifndef NDEBUG
             if(val == 0.0)
             {

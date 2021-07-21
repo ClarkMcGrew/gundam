@@ -1,0 +1,20 @@
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+[32m[AnaSample]: [0mBad line format: 2
+
+ *** Break *** bus error
+condor_exec.exe: line 16:    74 Bus error               xsllhFit -j config_Fit.json -s $1
