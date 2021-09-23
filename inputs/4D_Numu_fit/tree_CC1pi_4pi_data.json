@@ -1,0 +1,43 @@
+{
+    "output" : {
+        "fname" : "xsllh_nominal_4pi_4D_data.root",
+        "sel_tree" : "selectedEvents",
+        "tru_tree" : "trueEvents"
+    },
+    "highland_files" : [
+        {
+            "flist" : "filelist_NumuCC4piMP_data.txt",
+            "file_id" : 0,
+            "sel_tree" : "default",
+            "tru_tree" : "truth",
+            "beammode" : 1,
+            "pot_norm" : 1.0,
+            "num_branches" : 20,
+            "cut_level" : [8, 8, 7, 8, 9, 7, 8, 8, 7, 8, 9, 7, 8, 8, 8, 8, 7, 7, 7, 7],
+            "samples" : {"0": [1,4,7,10], "1": [12,13,14,15,16,17,18,19]},
+            "use" : true,
+            "sel_var" : {
+                "reaction" : "reaction",
+                "topology" : "topology",
+                "target"   : "target",
+                "nutype"   : "nutype",
+                "enu_true" : "nu_trueE",
+                "weight"   : "weight_syst_total",
+                "D1True"   : "Truemu_mom",
+                "D1Reco"   : {"selmu_mom": [0,1,2,3,4,5,12,13,16,17], "selmu_mom_range_oarecon": [6,7,7,9,10,11,14,15,18,19]},
+                "D2True"   : "Truemu_costheta",
+                "D2Reco"   : "selmu_costheta"
+            },
+            "tru_var" : {
+                "reaction" : "reaction",
+                "topology" : "topology",
+                "target"   : "target",
+                "nutype"   : "nutype",
+                "enu_true" : "nu_trueE",
+                "weight"   : "weight",
+                "D1True"   : "Truemu_mom",
+                "D2True"   : "Truemu_costheta"
+            }
+        }
+    ]
+}

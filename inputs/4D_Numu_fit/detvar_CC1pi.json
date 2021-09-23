@@ -1,0 +1,56 @@
+{
+    "files" : [        
+	    {
+            "flist" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/filelist_NumuCC4piMP_mc.txt",
+            "tree_name" : "all_syst",
+            "detector": "FGD1",
+            "num_toys" : 800,
+            "num_syst" : 26,
+            "num_samples" : 20,
+            "samples" : {"0": [1,4,7,10], "1": [12,13,14,15,16,17,18,19]},
+            "variable_mapping" : [
+                {"selmu_costheta": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}, 
+                {"selmu_mom": [0,1,2,3,4,5,12,13,16,17], "selmu_mom_range_oarecon": [6,7,7,9,10,11,14,15,18,19]},
+                {"selpi_costheta": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}, 
+                {"selpi_mom": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}
+            ],
+            "cuts" : [8, 8, 7, 8, 9, 7, 8, 8, 7, 8, 9, 7, 8, 8, 8, 8, 7, 7, 7, 7],
+            "use" : true
+        },
+        {
+            "flist" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/filelist_NumuCC4piMP_sand.txt",
+            "tree_name" : "all_syst",
+            "detector": "FGD1",
+            "num_toys" : 800,
+            "num_syst" : 1,
+            "num_samples" : 20,
+            "samples" : {"0": [1,4,7,10], "1": [12,13,14,15,16,17,18,19]},
+            "variable_mapping" : [
+                {"selmu_costheta": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}, 
+                {"selmu_mom": [0,1,2,3,4,5,12,13,16,17], "selmu_mom_range_oarecon": [6,7,7,9,10,11,14,15,18,19]},
+                {"selpi_costheta": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}, 
+                {"selpi_mom": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}
+            ],
+            "cuts" : [8, 8, 7, 8, 9, 7, 8, 8, 7, 8, 9, 7, 8, 8, 8, 8, 7, 7, 7, 7],
+            "use" : true
+        }
+    ],
+
+    "cov_sample_binning" : {
+        "0" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/4pi_4D_binning_reco_CC1pi.txt",
+        "1" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/4pi_4D_binning_reco_SB.txt"
+    },
+    
+    "fname_output" : "xsllh_detcovmat_output_4pi_4D.root",
+    "single_syst" : false,
+    "syst_idx" : 0,
+    "var_names" : ["selmu_costheta", "selmu_mom", "selpi_costheta", "selpi_mom"],
+    "mc_stat_error" : true,
+    "projection" : false,
+    "plot_variable" : "selmu_mom",
+    "pdf_print" : false,
+    "weight_cut" : 10,
+    "covariance" : true,
+    "covariance_name" : "detector_covariance_matrix",
+    "correlation_name": "detector_correlation_matrix"
+}

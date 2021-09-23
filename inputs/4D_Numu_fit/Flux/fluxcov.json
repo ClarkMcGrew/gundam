@@ -1,0 +1,13 @@
+{
+    "output" : {
+        "fname" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/xsllh_fluxcovmat_output.root",
+        "matrix" : "flux_numu_cov",
+        "binning" : "flux_binning"
+    },
+
+    "input" : {
+        "fname" : "/afs/cern.ch/work/d/dvargas/public/xsLLhFitter/inputs/4D_Numu_fit/Flux/flux_covariance_fine_13av1.1.root",
+        "matrix" : "total_flux_cov",
+        "binning" : "nd5_numode_numu_bins"
+    }
+}

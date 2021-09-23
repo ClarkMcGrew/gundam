@@ -1,0 +1,96 @@
+{
+    "data_file" : "xsllh_nominal_4pi_4D.root",
+    "mc_file"   : "xsllh_nominal_4pi_4D.root",
+    "output_file" : "xsllh_output_4pi_4D_fit_tp.root",
+    "input_dir" : "/inputs/4D_Numu_fit/",
+    "fit_type"  : 0,
+    "stat_fluc" : false,
+    "zero_syst" : false,
+    "rng_template" : true,
+    "save_events" : false,
+    "data_POT"  : 1.0,
+    "mc_POT"    : 1.0,
+    "rng_seed"  : 12345,
+    "num_threads" : 8,
+    "sample_topology" : ["CC0pi","CC1pi","CCother","BKG","OOFV"],
+    "topology_HL_code" : [0,1,2,3,7],
+    "min_settings" : {
+        "minimizer" : "Minuit2",
+        "algorithm" : "Migrad",
+        "likelihood" : "Poisson",
+        "print_level" : 2,
+        "tolerance" : 1E-4,
+        "strategy" : 1,
+        "max_iter" : 1E6,
+        "max_fcn" : 1E9
+    },
+    "flux_cov" : {
+        "file" : "xsllh_fluxcovmat_output.root",
+        "matrix" : "flux_numu_cov",
+        "binning" : "flux_binning.txt",
+        "throw"  : false,
+        "decomp" : true,
+        "variance" : 0.95,
+        "fit_par" : false
+    },
+    "det_cov" : {
+        "file" : "xsllh_detcovmat_output_4pi_4D.root",
+        "matrix" : "detector_covariance_matrix",
+        "throw"  : false,
+        "decomp" : true,
+        "variance" : 0.95,
+        "fit_par" : false
+    },
+    "xsec_cov" : {
+        "file" : "xsllh_xseccovmat_output_4pi_4D.root",
+        "matrix" : "xsec_cov",
+        "throw"  : false,
+        "decomp" : false,
+        "variance" : 1.00,
+        "fit_par" : false
+    },
+    "regularisation" : {
+        "enable" : false,
+        "strength" : 0.011,
+        "method" : "kL2Reg"
+    },
+    "detectors" : [
+        {
+            "name" : "ND280",
+            "xsec_config" : "pthetaMuPi_dials.json",
+            "binning" : "4pi_4D_binning_true.txt",
+            "template_par" : [
+                {
+                    "name" : "nd280CC1pi",
+                    "binning" : "4pi_4D_binning_true.txt",
+                    "signal" : {"topology" : [1], "target" : [6], "beammode" : [1], "flavor" : [14]},
+                    "use" : true
+                }
+            ],
+            "use_detector" : true
+        }
+    ],
+    "samples" : [
+        {
+            "cut_branch" : -1,
+            "name" : "truth",
+            "detector" : "ND280",
+            "binning" : "4pi_4D_binning_true.txt",
+            "use_sample" : true
+        },
+        {
+            "cut_branch" : 0,
+            "name" : "CC1pi",
+            "detector" : "ND280",
+            "binning" : "4pi_4D_binning_reco_CC1pi.txt",
+            "use_sample" : true
+        },
+        {
+            "cut_branch" : 1,
+            "name" : "CC1pi1pi",
+            "detector" : "ND280",
+            "binning" : "4pi_4D_binning_reco_SB.txt",
+            "use_sample" : true
+        }
+    ]
+}
