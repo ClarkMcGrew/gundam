@@ -21,6 +21,7 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
     for(const auto& bin : m_bin_edges)
     {
         std::cout << bin.D2low << " " << bin.D2high << " " << bin.D1low << " " << bin.D1high
+                  << " " << bin.D4low << " " << bin.D4high << " " << bin.D3low << " " << bin.D3high
                   << std::endl;
     }
 
@@ -68,13 +69,13 @@ void AnaSample::SetBinning(const std::string& binning)
         while(std::getline(fin, line))
         {
             std::stringstream ss(line);
-            double D1_1, D1_2, D2_1, D2_2;
-            if(!(ss >> D2_1 >> D2_2 >> D1_1 >> D1_2))
+            double D1_1, D1_2, D2_1, D2_2, D3_1, D3_2, D4_1, D4_2;
+            if(!(ss >> D2_1 >> D2_2 >> D1_1 >> D1_2 >> D4_1 >> D4_2 >> D3_1 >> D3_2))
             {
                 std::cerr << TAG << "Bad line format: " << line << std::endl;
                 continue;
             }
-            m_bin_edges.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2));
+            m_bin_edges.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2, D3_1, D3_2, D4_1, D4_2));
         }
         m_nbins = m_bin_edges.size();
     }
@@ -133,20 +134,20 @@ void AnaSample::MakeHistos()
 {
     if(m_hpred != nullptr)
         delete m_hpred;
-    m_hpred = new TH1D(Form("%s_pred_recD1D2", m_name.c_str()),
-                       Form("%s_pred_recD1D2", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hpred = new TH1D(Form("%s_pred_recD1D2D3D4", m_name.c_str()),
+                       Form("%s_pred_recD1D2D3D4", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hpred->SetDirectory(0);
 
     if(m_hmc != nullptr)
         delete m_hmc;
-    m_hmc = new TH1D(Form("%s_mc_recD1D2", m_name.c_str()), Form("%s_mc_recD1D2", m_name.c_str()),
+    m_hmc = new TH1D(Form("%s_mc_recD1D2D3D4", m_name.c_str()), Form("%s_mc_recD1D2D3D4", m_name.c_str()),
                      m_nbins, 0, m_nbins);
     m_hmc->SetDirectory(0);
 
     if(m_hmc_true != nullptr)
         delete m_hmc_true;
-    m_hmc_true = new TH1D(Form("%s_mc_trueD1D2", m_name.c_str()),
-                          Form("%s_mc_trueD1D2", m_name.c_str()), m_nbins, 0, m_nbins);
+    m_hmc_true = new TH1D(Form("%s_mc_trueD1D2D3D4", m_name.c_str()),
+                          Form("%s_mc_trueD1D2D3D4", m_name.c_str()), m_nbins, 0, m_nbins);
     m_hmc_true->SetDirectory(0);
 
     if(m_hsig != nullptr)
@@ -166,12 +167,13 @@ void AnaSample::SetData(TObject* hdata)
     m_hdata->SetDirectory(0);
 }
 
-int AnaSample::GetBinIndex(const double D1, const double D2) const
+int AnaSample::GetBinIndex(const double D1, const double D2, const double D3, const double D4) const
 {
     for(int i = 0; i < m_bin_edges.size(); ++i)
     {
         if(D1 >= m_bin_edges[i].D1low && D1 < m_bin_edges[i].D1high && D2 >= m_bin_edges[i].D2low
-           && D2 < m_bin_edges[i].D2high)
+           && D2 < m_bin_edges[i].D2high && D3 >= m_bin_edges[i].D3low && D3 < m_bin_edges[i].D3high
+           && D4 >= m_bin_edges[i].D4low && D4 < m_bin_edges[i].D4high)
         {
             return i;
         }
@@ -194,12 +196,16 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
     {
         double D1_rec  = m_events[i].GetRecoD1();
         double D2_rec  = m_events[i].GetRecoD2();
+        double D3_rec  = m_events[i].GetRecoD3();
+        double D4_rec  = m_events[i].GetRecoD4();
         double D1_true = m_events[i].GetTrueD1();
         double D2_true = m_events[i].GetTrueD2();
+        double D3_true = m_events[i].GetTrueD3();
+        double D4_true = m_events[i].GetTrueD4();
         double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
 
-        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
-        int anybin_index_true = GetBinIndex(D1_true, D2_true);
+        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec, D3_rec, D4_rec);
+        int anybin_index_true = GetBinIndex(D1_true, D2_true, D3_true, D4_true);
 
         m_hpred->Fill(anybin_index_rec + 0.5, wght);
         m_hmc->Fill(anybin_index_rec + 0.5, wght);
@@ -227,26 +233,13 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         for(int j = 1; j <= m_hpred->GetNbinsX(); ++j)
         {
             double val = m_hpred->GetBinContent(j);
-            if (val < 30.0)
-                std::cout << m_name << " bin " << j << " has " << val << " entries." << std::endl;
+            //std::cout << j << "    val =" << val << std::endl;
             if(stat_fluc)
-            {
-                bool val_is_zero = true;
-                double val_original = val;
-                while (val_is_zero)
-                {
-                    val = gRandom->Poisson(val_original);
-                    if (val != 0.0)
-                    {
-                        val_is_zero = false;
-                    }
-                }
-                std::cout << TAG << m_name << " bin " << j << " was set to " << val << " entries." << std::endl;
-                //val = gRandom->Poisson(val);
-            }
+                val = gRandom->Poisson(val);
 #ifndef NDEBUG
             if(val == 0.0)
-            {
+            {   
+                std::cout << j << "    val =" << val << std::endl;
                 std::cout << "[WARNING] In AnaSample::FillEventHist()\n"
                           << "[WARNING] " << m_name << " bin " << j
                           << " has 0 entries. This may cause a problem with chi2 computations."
@@ -263,13 +256,15 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         SetData(m_hpred);
         m_hdata->Reset();
 
-        float D1_rec_tree, D2_rec_tree, wght;
+        float D1_rec_tree, D2_rec_tree, D3_rec_tree, D4_rec_tree, wght;
         int cut_branch;
 
         m_data_tree->SetBranchAddress("cut_branch", &cut_branch);
         m_data_tree->SetBranchAddress("weight", &wght);
         m_data_tree->SetBranchAddress("D1Reco", &D1_rec_tree);
         m_data_tree->SetBranchAddress("D2Reco", &D2_rec_tree);
+        m_data_tree->SetBranchAddress("D3Reco", &D3_rec_tree);
+        m_data_tree->SetBranchAddress("D4Reco", &D4_rec_tree);
 
         long int n_entries = m_data_tree->GetEntries();
         for(std::size_t i = 0; i < n_entries; ++i)
@@ -278,7 +273,7 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
             if(cut_branch != m_sample_id)
                 continue;
 
-            int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree);
+            int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree, D3_rec_tree, D4_rec_tree);
             if(anybin_index != -1)
             {
                 m_hdata->Fill(anybin_index + 0.5, wght);
@@ -289,7 +284,9 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
                 std::cout << "[WARNING] In AnaSample::FillEventHist()\n"
                           << "[WARNING] No bin for current data event.\n"
                           << "[WARNING] D1 Reco: " << D1_rec_tree << std::endl
-                          << "[WARNING] D2 Reco: " << D2_rec_tree << std::endl;
+                          << "[WARNING] D2 Reco: " << D2_rec_tree << std::endl
+                          << "[WARNING] D3 Reco: " << D3_rec_tree << std::endl
+                          << "[WARNING] D4 Reco: " << D4_rec_tree << std::endl;
             }
 #endif
         }
@@ -511,14 +508,18 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
     {
         double D1_rec    = m_events[i].GetRecoD1();
         double D2_rec    = m_events[i].GetRecoD2();
+        double D3_rec    = m_events[i].GetRecoD3();
+        double D4_rec    = m_events[i].GetRecoD4();
         double D1_true   = m_events[i].GetTrueD1();
         double D2_true   = m_events[i].GetTrueD2();
+        double D3_true   = m_events[i].GetTrueD3();
+        double D4_true   = m_events[i].GetTrueD4();
         double wght      = m_events[i].GetEvWght();
         int evt_topology = m_events[i].GetTopology();
 
         compos[evt_topology]++;
-        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec);
-        int anybin_index_true = GetBinIndex(D1_true, D2_true);
+        int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec, D3_rec, D4_rec);
+        int anybin_index_true = GetBinIndex(D1_true, D2_true, D3_true, D4_true);
 
         // Fill histogram for this topolgy with the current event:
         hAnybin_rec[topology_HL_code[evt_topology]].Fill(anybin_index_rec + 0.5, wght);

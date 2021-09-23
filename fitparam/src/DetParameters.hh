@@ -16,7 +16,7 @@ public:
 
     void InitParameters();
     void InitEventMap(std::vector<AnaSample*>& sample, int mode);
-    int GetBinIndex(const int sam, double D1, double D2) const;
+    int GetBinIndex(const int sam, double D1, double D2, double D3, double D4) const;
     void ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent, std::vector<double>& params);
     bool SetBinning(const std::string& file_name, std::vector<xsllh::FitBin>& bins);
     void AddDetector(const std::string& det, std::vector<AnaSample*>& v_sample, bool match_bins);

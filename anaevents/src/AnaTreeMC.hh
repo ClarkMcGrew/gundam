@@ -35,10 +35,11 @@ private:
     float D1Reco;
     float D2True;
     float D2Reco;
-    float q2_true;
-    float q2_reco;
+    float D3True;
+    float D3Reco;
+    float D4True;
+    float D4Reco;
     float enu_true;
-    float enu_reco;
     float weight;
 
     bool read_extra_var;

@@ -23,13 +23,14 @@ class AnaEvent
             m_sig_type = -1;
             m_true_evt = false;
             m_enu_true = -999.0;
-            m_enu_reco = -999.0;
             m_trueD1   = -999.0;
             m_trueD2   = -999.0;
+            m_trueD3   = -999.0;
+            m_trueD4   = -999.0;
             m_recoD1   = -999.0;
             m_recoD2   = -999.0;
-            m_q2_true  = -999.0;
-            m_q2_reco  = -999.0;
+            m_recoD3   = -999.0;
+            m_recoD4   = -999.0;
             m_wght     = 1.0;
             m_wghtMC   = 1.0;
         }
@@ -67,9 +68,6 @@ class AnaEvent
         void SetTrueEnu(double val) {m_enu_true = val;}
         double GetTrueEnu(){ return m_enu_true; }
 
-        void SetRecoEnu(double val){ m_enu_reco = val; }
-        double GetRecoEnu(){ return m_enu_reco; }
-
         void SetTrueD1(double val){ m_trueD1 = val; }
         double GetTrueD1(){ return m_trueD1; }
 
@@ -82,6 +80,18 @@ class AnaEvent
         void SetRecoD2(double val){ m_recoD2 = val; }
         double GetRecoD2(){ return m_recoD2; }
 
+        void SetTrueD3(double val){ m_trueD3 = val; }
+        double GetTrueD3(){ return m_trueD3; }
+
+        void SetRecoD3(double val){ m_recoD3 = val; }
+        double GetRecoD3(){ return m_recoD3; }
+
+        void SetTrueD4(double val){ m_trueD4 = val; }
+        double GetTrueD4(){ return m_trueD4; }
+
+        void SetRecoD4(double val){ m_recoD4 = val; }
+        double GetRecoD4(){ return m_recoD4; }
+
         void SetEvWght(double val){ m_wght  = val; }
         void SetEvWghtMC(double val){ m_wghtMC  = val; }
 
@@ -92,12 +102,6 @@ class AnaEvent
         double GetEvWghtMC(){ return m_wghtMC; }
 
         void ResetEvWght(){ m_wght = m_wghtMC; }
-
-        void SetQ2Reco(double val){m_q2_reco = val;}
-        double GetQ2Reco() const { return m_q2_reco; }
-
-        void SetQ2True(double val){m_q2_true = val;}
-        double GetQ2True() const { return m_q2_true; }
 
         void Print()
         {
@@ -110,11 +114,14 @@ class AnaEvent
                       << "Sample      " << GetSampleType() << std::endl
                       << "Signal      " << GetSignalType() << std::endl
                       << "True energy " << GetTrueEnu() << std::endl
-                      << "Reco energy " << GetRecoEnu() << std::endl
                       << "True D1     " << GetTrueD1() << std::endl
                       << "Reco D1     " << GetRecoD1() << std::endl
                       << "True D2     " << GetTrueD2() << std::endl
                       << "Reco D2     " << GetRecoD2() << std::endl
+                      << "True D3     " << GetTrueD3() << std::endl
+                      << "Reco D3     " << GetRecoD3() << std::endl
+                      << "True D4     " << GetTrueD4() << std::endl
+                      << "Reco D4     " << GetRecoD4() << std::endl
                       << "Weight      " << GetEvWght() << std::endl
                       << "Weight MC   " << GetEvWghtMC() << std::endl;
         }
@@ -151,13 +158,14 @@ class AnaEvent
         bool m_signal;     //flag if signal event
         bool m_true_evt;   //flag if true event
         double m_enu_true; //true nu energy
-        double m_enu_reco; //recon nu energy
         double m_trueD1;   //true D1
         double m_trueD2;   //true D2
+        double m_trueD3;   //true D3
+        double m_trueD4;   //true D4
         double m_recoD1;   //reco D1
         double m_recoD2;   //reco D2
-        double m_q2_true;
-        double m_q2_reco;
+        double m_recoD3;   //reco D3
+        double m_recoD4;   //reco D4
         double m_wght;     //event weight
         double m_wghtMC;   //event weight from original MC
 };

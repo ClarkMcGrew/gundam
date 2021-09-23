@@ -32,15 +32,31 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 
             for(int d = 0; d < num_dials; ++d)
             {
+                /*
                 double q2 = ev -> GetQ2True() / 1.0E6; //MeV to GeV conversion.
-                //int idx = v_dials.at(d).GetSplineIndex(ev -> GetTopology(), ev -> GetReaction(), q2);
+                int idx = v_dials.at(d).GetSplineIndex(ev -> GetTopology(), ev -> GetReaction(), q2);
 
-                //int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev -> GetTopology(), ev -> GetReaction()},
-                //                                       std::vector<double>{q2});
+                int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev -> GetTopology(), ev -> GetReaction()},
+                                                       std::vector<double>{q2});
                 int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
                                                        std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
-
-                
+                */
+                int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
+                                                       std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), 
+                                                       ev->GetTrueD4(), ev->GetTrueD3()});
+                /*
+                if(idx >= 1550) 
+                {
+                    std::cout << TAG << "------------ idx< 1550 ---------------.\n"
+                              << TAG << "idx = " << idx << std::endl
+                              << TAG << "ev->GetTopology() = " << ev->GetTopology() << std::endl
+                              << TAG << "ev->GetReaction() = " << ev->GetReaction() << std::endl
+                              << TAG << "ev->GetTrueD2() = " << ev->GetTrueD2() << std::endl
+                              << TAG << "ev->GetTrueD1() = " << ev->GetTrueD1() << std::endl
+                              << TAG << "ev->GetTrueD4() = " << ev->GetTrueD4() << std::endl
+                              << TAG << "ev->GetTrueD3() = " << ev->GetTrueD3() << std::endl;
+                }
+                */
                 if(idx == BADBIN)
                 {
                     std::cout << WAR << "Event falls outside spline range.\n"
@@ -48,18 +64,20 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
                               << std::endl;
                     ev -> AddEvWght(0.0);
                 }
-                
 
                 if(mode == 1 && ev -> isSignalEvent())
                     idx = PASSEVENT;
 
                 dial_index_map.push_back(idx);
+                //std::cout << TAG << "dial_index_map = " << dial_index_map.size() << std::endl;
             }
 
             sample_map.emplace_back(dial_index_map);
+            //std::cout << TAG << "sample_map = " << sample_map.size() << std::endl;
         }
 
         m_dial_evtmap.emplace_back(sample_map);
+        //std::cout << TAG << "m_dial_evtmap = " << m_dial_evtmap.size() << std::endl;
     }
 }
 
@@ -68,11 +86,6 @@ void XsecParameters::InitParameters()
     unsigned int offset = 0;
     for(const auto& det : v_detectors)
     {
-        if(det == "ND280xxx")
-        {
-            m_offset.insert(std::make_pair(det, 0));
-            break;
-        }
         m_offset.insert(std::make_pair(det, offset));
         for(const auto& d : m_dials.at(det))
         {
@@ -132,25 +145,23 @@ void XsecParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
         double dial_weight = v_dials[d].GetBoundedValue(idx, params[d + m_offset.at(det)]);
         weight *= dial_weight;
 
-        /*
-        if(dial_weight > 3.0)
+        /*if(dial_weight > 3.0)
         {
             std::cout << "--------------" << std::endl;
             std::cout << "Ev T: " << event -> GetTopology() << std::endl
                       << "Ev R: " << event -> GetReaction() << std::endl
-                      << "Ev Q: " << event -> GetQ2() << std::endl;
-            std::cout << "Ev I: " << idx << std::endl;
-            std::cout << "Ev W: " << dial_weight << std::endl;
-            std::cout << "Dl V: " << params[d + m_offset.at(det)] << std::endl;
-            std::cout << "Dl N: " << det << "_" << v_dials[d].GetName() << std::endl;
-            std::cout << "Sp N: " << v_dials[d].GetSplineName(idx) << std::endl;
-        }
-        */
+                      << "Ev Q: " << event -> GetQ2() << std::endl
+                      << "Ev I: " << idx << std::endl
+                      << "Ev W: " << dial_weight << std::endl
+                      << "Dl V: " << params[d + m_offset.at(det)] << std::endl
+                      << "Dl N: " << det << "_" << v_dials[d].GetName() << std::endl
+                      << "Sp N: " << v_dials[d].GetSplineName(idx) << std::endl;
+        }*/
     }
 
     if(m_do_cap_weights)
         weight = weight > m_weight_cap ? m_weight_cap : weight;
-
+    
     event -> AddEvWght(weight);
 }
 

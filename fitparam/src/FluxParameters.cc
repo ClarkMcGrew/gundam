@@ -30,9 +30,9 @@ void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
         //if(m_det_bins.count(s->GetDetector()) == 0)
         if(m_det_bm.count(s->GetDetector()) == 0)
         {
-            std::cerr << ERR << "In FluxParameters::InitEventMap\n"
-                      << ERR << "Detector " << s->GetDetector() << " not part of fit parameters.\n"
-                      << ERR << "Not building event map." << std::endl;
+            std::cerr << TAG << ERR << "In FluxParameters::InitEventMap\n"
+                      << TAG << ERR << "Detector " << s->GetDetector() << " not part of fit parameters.\n"
+                      << TAG << ERR << "Not building event map." << std::endl;
             return;
         }
     }
@@ -47,20 +47,17 @@ void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
         {
             AnaEvent* ev = sample[s]->GetEvent(i);
             //double enu   = ev->GetTrueEnu() / 1000.0; //MeV -> GeV
+            //int bin      = GetBinIndex(sample[s]->GetDetector(), enu);
             double enu   = ev->GetTrueEnu();
             int nutype   = ev->GetFlavor();
             int beammode = ev->GetBeamMode();
-            //int bin      = GetBinIndex(sample[s]->GetDetector(), enu);
             int bin      = m_det_bm.at(sample[s]->GetDetector()).GetBinIndex(std::vector<double>{enu}, nutype, beammode);
-
-            /*
             if(bin == BADBIN)
             {
-                std::cout << WAR << "Event Enu " << enu << " falls outside bin range.\n"
-                          << WAR << "This event will be ignored in the analysis." << std::endl;
+                std::cout << TAG << WAR << "Event Enu " << enu << " falls outside bin range.\n"
+                          << TAG << WAR << "This event will be ignored in the analysis." << std::endl;
                 ev->Print();
             }
-            */
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())
                 bin = PASSEVENT;
@@ -78,8 +75,8 @@ void FluxParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
     // m_evmap is a vector containing vectors of which bin an event falls in for all samples. This event map needs to be built first, otherwise an error is thrown:
     if(m_evmap.empty())
     {
-        std::cerr << ERR << "In FluxParameters::ReWeight()\n"
-                  << ERR << "Need to build event map index for " << m_name << std::endl;
+        std::cerr << TAG << ERR << "In FluxParameters::ReWeight()\n"
+                  << TAG << ERR << "Need to build event map index for " << m_name << std::endl;
         return;
     }
 
@@ -100,10 +97,10 @@ void FluxParameters::ReWeight(AnaEvent* event, const std::string& det, int nsamp
         // If the bin number is larger than the number of parameters, we set the event weight to zero (this should not happen):
         if(bin > params.size())
         {
-            std::cout << WAR << "In FluxParameters::ReWeight()\n"
-                      << WAR << "Number of bins in " << m_name
-                      << " does not match num of parameters.\n"
-                      << WAR << "Setting event weight to zero." << std::endl;
+            std::cout << TAG << WAR << "In FluxParameters::ReWeight()\n"
+                      << TAG << WAR << "Number of bins in " << m_name
+                      << TAG << WAR << "does not match num of parameters.\n"
+                      << TAG << WAR << "Setting event weight to zero." << std::endl;
             event->AddEvWght(0.0);
         }
 
@@ -126,18 +123,8 @@ void FluxParameters::InitParameters()
     {
         std::cout << TAG << "Detector: " << det << std::endl;
         m_det_offset.insert(std::make_pair(det, offset));
-        const int nbins = m_det_bins.at(det).size() - 1;
-        //int nbins = m_det_bm.at(det).GetNbins();
-        /*
-        if (det == "INGRIDxxx")
-        {
-            nbins = 20;
-        }
-        else if(det == "ND280xxx")
-        {
-            nbins = 80;
-        }
-        */
+        //const int nbins = m_det_bins.at(det).size() - 1;
+        const int nbins = m_det_bm.at(det).GetNbins();
         for(int i = 0; i < nbins; ++i)
         {
             pars_name.push_back(Form("%s_%s_%d", m_name.c_str(), det.c_str(), i));
@@ -147,11 +134,11 @@ void FluxParameters::InitParameters()
             pars_limhigh.push_back(5.0);
             pars_fixed.push_back(false);
 
-            std::cout << i << ": " << m_det_bins.at(det).at(i) << std::endl;
+            //std::cout << i << ": " << m_det_bins.at(det).at(i) << std::endl;
         }
-        std::cout << nbins << ": " << m_det_bins.at(det).back() << std::endl;
+        //std::cout << nbins << ": " << m_det_bins.at(det).back() << std::endl;
 
-        //m_det_bm.at(det).Print();
+        m_det_bm.at(det).Print();
         std::cout << TAG << "Total " << nbins << " parameters at "
                   << offset << " for " << det << std::endl;
         offset += nbins;

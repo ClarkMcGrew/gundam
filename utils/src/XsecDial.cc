@@ -48,10 +48,12 @@ int XsecDial::GetSplineIndex(const std::vector<int>& var, const std::vector<doub
 {
     if(var.size() != m_dimensions.size())
         return -1;
-
+    
+    //std::cout << "dimension =" << m_dimensions.size() << "  var ="<< var.size() << std::endl;
     int idx = bin_manager.GetBinIndex(bin);
     for(int i = 0; i < var.size(); ++i)
         idx += var[i] * m_dimensions[i];
+    
     return idx;
 }
 
@@ -65,17 +67,21 @@ double XsecDial::GetSplineValue(int index, double dial_value) const
 
 double XsecDial::GetBoundedValue(int index, double dial_value) const
 {
-    if(index >= 0)
+    //if(index >= 0 )
+    if(index >= 0 && index <= 1550)
     {
         if(dial_value < m_limit_lo)
             return v_splines.at(index).Eval(m_limit_lo);
+
         else if(dial_value > m_limit_hi)
             return v_splines.at(index).Eval(m_limit_hi);
+
         else
             return v_splines.at(index).Eval(dial_value);
     }
     else
         return 1.0;
+
 }
 
 std::string XsecDial::GetSplineName(int index) const

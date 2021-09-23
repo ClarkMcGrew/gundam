@@ -1,3 +1,0 @@
-config_Fit_noFLUC_noRNG
-config_Fit_noFLUC_RNG
-config_Fit_FLUC

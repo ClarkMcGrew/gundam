@@ -23,7 +23,7 @@ int BinManager::SetBinning(const std::string& filename, bool UseNutypeBeammode)
     // Throw an error message if file cannot be opened and return 0:
     if(!fin.is_open())
     {
-        std::cerr << "[ERROR]: Failed to open " << filename << std::endl;
+        std::cerr << "[Error]: Failed to open " << filename << std::endl;
         return 0;
     }
 
@@ -60,7 +60,7 @@ int BinManager::SetBinning(const std::string& filename, bool UseNutypeBeammode)
                     // If we cannot extract the bin edges from the next pair of numbers, an error message is printed but we continue with the rest of the file:
                     if(!(ss >> bin_low >> bin_high))
                     {
-                        std::cerr << "[ERROR]: Bad line format: " << std::endl
+                        std::cerr << "[Error]: Bad line format: " << std::endl
                                   << line << std::endl;
                         continue;
                     }
@@ -100,7 +100,7 @@ int BinManager::SetBinning(const std::string& filename, bool UseNutypeBeammode)
                 // If we cannot extract the bin edges from this line, an error message is printed but we continue with the rest of the file:
                 if(!(ss >> bin_low >> bin_high >> nutype >> beammode))
                 {
-                    std::cerr << "[ERROR]: Bad line format: " << std::endl
+                    std::cerr << "[Error]: Bad line format: " << std::endl
                               << line << std::endl;
                     continue;
                 }
@@ -133,12 +133,12 @@ int BinManager::GetBinIndex(const std::vector<double>& val) const
 {
     if(val.size() != dimension)
     {
-        std::cout << "[ERROR]: Number of parameters does not match dimension!" << std::endl;
+        std::cout << "[Error]: funtion 1: Number of parameters does not match dimension!   dimension =" << dimension << "   parameters ="<< val.size() << std::endl;
         return -1;
     }
 
     for(int i = 0; i < nbins; ++i)
-    {
+    {   
         bool flag = true;
         for(int d = 0; d < dimension; ++d)
         {
@@ -158,7 +158,7 @@ int BinManager::GetBinIndex(const std::vector<double>& val, const int val_nutype
 {
     if(val.size() != dimension)
     {
-        std::cout << "[ERROR]: Number of parameters does not match dimension!" << std::endl;
+        std::cout << "[Error]: funtion 2: Number of parameters does not match dimension!   dimension =" << dimension << "   parameters ="<< val.size() << std::endl;
         return -1;
     }
 
@@ -197,7 +197,7 @@ double BinManager::GetBinWidth(const int i) const
 {
     if(i >= nbins)
     {
-        std::cout << "[WARNING]: Index " << i << " out of bounds." << std::endl;
+        std::cout << "[Warning]: Index " << i << " out of bounds." << std::endl;
         return 1.0;
     }
 

@@ -24,14 +24,14 @@ bool DetParameters::SetBinning(const std::string& file_name, std::vector<FitBin>
         while(getline(fin, line))
         {
             std::stringstream ss(line);
-            double D1_1, D1_2, D2_1, D2_2;
-            if(!(ss>>D2_1>>D2_2>>D1_1>>D1_2))
+            double D1_1, D1_2, D2_1, D2_2, D3_1, D3_2, D4_1, D4_2;
+            if(!(ss>>D2_1>>D2_2>>D1_1>>D1_2>>D4_1>>D4_2>>D3_1>>D3_2))
             {
                 std::cout << WAR << "In DetParameters::SetBinning()\n"
                           << WAR << "Bad line format: " << line << std::endl;
                 continue;
             }
-            bins.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2));
+            bins.emplace_back(FitBin(D1_1, D1_2, D2_1, D2_2, D3_1, D3_2, D4_1, D4_2));
         }
         fin.close();
 
@@ -42,14 +42,18 @@ bool DetParameters::SetBinning(const std::string& file_name, std::vector<FitBin>
                       << std::setw(5) << bins[i].D2low
                       << std::setw(5) << bins[i].D2high
                       << std::setw(5) << bins[i].D1low
-                      << std::setw(5) << bins[i].D1high << std::endl;
+                      << std::setw(5) << bins[i].D1high
+                      << std::setw(5) << bins[i].D4low
+                      << std::setw(5) << bins[i].D4high
+                      << std::setw(5) << bins[i].D3low
+                      << std::setw(5) << bins[i].D3high << std::endl;
         }
 
         return true;
     }
 }
 
-int DetParameters::GetBinIndex(const int sam, double D1, double D2) const
+int DetParameters::GetBinIndex(const int sam, double D1, double D2, double D3, double D4) const
 {
     int bin = BADBIN;
     const std::vector<FitBin> &temp_bins = m_sample_bins.at(sam);
@@ -57,7 +61,9 @@ int DetParameters::GetBinIndex(const int sam, double D1, double D2) const
     for(int i = 0; i < temp_bins.size(); ++i)
     {
         if(D1 >= temp_bins[i].D1low && D1 < temp_bins[i].D1high &&
-           D2 >= temp_bins[i].D2low && D2 < temp_bins[i].D2high)
+           D2 >= temp_bins[i].D2low && D2 < temp_bins[i].D2high &&
+           D3 >= temp_bins[i].D3low && D3 < temp_bins[i].D3high &&
+           D4 >= temp_bins[i].D4low && D4 < temp_bins[i].D4high)
         {
             bin = i;
             break;
@@ -82,13 +88,15 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             AnaEvent* ev = sample[s]->GetEvent(i);
             double D1 = ev->GetRecoD1();
             double D2 = ev->GetRecoD2();
-            int bin   = GetBinIndex(sample[s]->GetSampleID(), D1, D2);
+            double D3 = ev->GetRecoD3();
+            double D4 = ev->GetRecoD4();
+            int bin   = GetBinIndex(sample[s]->GetSampleID(), D1, D2, D3, D4);
 #ifndef NDEBUG
             /*
             if(bin == BADBIN)
             {
                 std::cout << WAR << m_name << ", Event: " << i << std::endl
-                          << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", falls outside bin ranges." << std::endl
+                          << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", D3 = " << D3 << ", D4 = " << D4 << ", falls outside bin ranges." << std::endl
                           << WAR << "This event will be ignored in the analysis." << std::endl;
             }
             */

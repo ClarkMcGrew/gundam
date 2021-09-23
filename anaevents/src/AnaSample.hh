@@ -53,7 +53,7 @@ public:
     // Function to map the Highland topology codes to consecutive integers:
     void SetTopologyHLCode(const std::vector<int>& HLTopologyCodes);
 
-    int GetBinIndex(const double D1, const double D2) const;
+    int GetBinIndex(const double D1, const double D2, const double D3, const double D4) const;
     std::vector<FitBin> GetBinEdges() const { return m_bin_edges; }
 
     void SetLLHFunction(const std::string& func_name);

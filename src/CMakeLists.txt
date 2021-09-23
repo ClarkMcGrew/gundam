@@ -28,21 +28,6 @@ foreach(mod ${MODULETargets})
   target_link_libraries(xsllhDetVar ${mod})
 endforeach()
 
-#xsllhIngridDet
-add_executable(xsllhIngridDet xsllhIngridDet.cxx)
-
-set_target_properties(xsllhIngridDet PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
-
-foreach(mod ${MODULES})
-    target_include_directories(xsllhIngridDet PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
-    target_include_directories(xsllhIngridDet PUBLIC ${CMAKE_SOURCE_DIR}/include)
-endforeach()
-
-foreach(mod ${MODULETargets})
-    cmessage(STATUS "Linking with: ${mod}")
-    target_link_libraries(xsllhIngridDet ${mod})
-endforeach()
-
 #xsllhFit
 add_executable(xsllhFit xsllhFit.cxx)
 
@@ -88,36 +73,6 @@ foreach(mod ${MODULETargets})
   target_link_libraries(xsllhTreeConvert ${mod})
 endforeach()
 
-#xsllhTreeConvertINGRID
-add_executable(xsllhTreeConvertINGRID xsllhTreeConvertINGRID.cxx)
-
-set_target_properties(xsllhTreeConvertINGRID PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
-
-foreach(mod ${MODULES})
- target_include_directories(xsllhTreeConvertINGRID PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
- target_include_directories(xsllhTreeConvertINGRID PUBLIC ${CMAKE_SOURCE_DIR}/include)
-endforeach()
-
-foreach(mod ${MODULETargets})
-  cmessage(STATUS "Linking with: ${mod}")
-  target_link_libraries(xsllhTreeConvertINGRID ${mod})
-endforeach()
-
-#xsllhFluxCov
-add_executable(xsllhFluxCov xsllhFluxCov.cxx)
-
-set_target_properties(xsllhFluxCov PROPERTIES LINK_FLAGS ${ROOT_LD_FLAGS})
-
-foreach(mod ${MODULES})
- target_include_directories(xsllhFluxCov PUBLIC ${CMAKE_SOURCE_DIR}/${mod}/src)
- target_include_directories(xsllhFluxCov PUBLIC ${CMAKE_SOURCE_DIR}/include)
-endforeach()
-
-foreach(mod ${MODULETargets})
-  cmessage(STATUS "Linking with: ${mod}")
-  target_link_libraries(xsllhFluxCov ${mod})
-endforeach()
-
 #xsllhUnitTests
 add_executable(xsllhUnitTest xsllhUnitTests.cxx)
 
@@ -149,4 +104,4 @@ foreach(mod ${MODULETargets})
 endforeach()
 
 #install targets
-install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhIngridDet xsllhPlot xsllhTreeConvert xsllhTreeConvertINGRID xsllhFluxCov xsllhUnitTest xsllhXsecCov DESTINATION bin)
+install(TARGETS xsllhCalcXsec xsllhFit xsllhDetVar xsllhPlot xsllhTreeConvert xsllhUnitTest xsllhXsecCov DESTINATION bin)

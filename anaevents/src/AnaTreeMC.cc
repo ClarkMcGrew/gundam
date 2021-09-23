@@ -39,10 +39,11 @@ void AnaTreeMC::SetBranches()
     fChain->SetBranchAddress("D1Reco", &D1Reco);
     fChain->SetBranchAddress("D2True", &D2True);
     fChain->SetBranchAddress("D2Reco", &D2Reco);
-    fChain->SetBranchAddress("q2_true", &q2_true);
-    fChain->SetBranchAddress("q2_reco", &q2_reco);
+    fChain->SetBranchAddress("D3True", &D3True);
+    fChain->SetBranchAddress("D3Reco", &D3Reco);
+    fChain->SetBranchAddress("D4True", &D4True);
+    fChain->SetBranchAddress("D4Reco", &D4Reco);
     fChain->SetBranchAddress("enu_true", &enu_true);
-    fChain->SetBranchAddress("enu_reco", &enu_reco);
     fChain->SetBranchAddress("weight", &weight);
 
     if(read_extra_var)
@@ -79,15 +80,16 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
         ev.SetReaction(reaction); // reaction (i.e. CCQE,CCRES etc)
         ev.SetTarget(target);
         ev.SetTrueEnu(enu_true);
-        ev.SetRecoEnu(enu_reco);
         ev.SetTrueD1(D1True);
         ev.SetRecoD1(D1Reco);
         ev.SetTrueD2(D2True);
         ev.SetRecoD2(D2Reco);
+        ev.SetTrueD3(D3True);
+        ev.SetRecoD3(D3Reco);
+        ev.SetTrueD4(D4True);
+        ev.SetRecoD4(D4Reco);
         ev.SetEvWght(weight);
         ev.SetEvWghtMC(weight);
-        ev.SetQ2True(q2_true);
-        ev.SetQ2Reco(q2_reco);
 
         if(read_extra_var)
         {

@@ -716,20 +716,18 @@ int main(int argc, char** argv)
         {
             // Number of bins in current sample s:
             const unsigned int nbins = cov_bin_manager[s].GetNbins();
-
+            
             // Array of the bin content (sum of all weights of events that fall into this bin) for current sample s (v_mc_stat was filled from the default tree):
             float* w  = v_mc_stat[s].GetArray();
-
+            
             // Array of the sum of squares of the bin content for current sample s (v_mc_stat was filled from the default tree):
             double* w2 = v_mc_stat[s].GetSumw2()->GetArray();
             //std::cout << "Sample " << s << std::endl;
-
             // Loop over all bins in current sample:
             for(unsigned int b = 0; b < nbins; ++b)
             {
                 //std::cout << "Bin : " << w[b+1] << std::endl;
                 //std::cout << "W2  : " << w2[b+1] << std::endl;
-
                 // Compute the relative error for current sample s and current bin b:
                 float rel_error = w2[b+1] / (w[b+1] * w[b+1]);
 

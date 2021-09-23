@@ -209,30 +209,7 @@ int main(int argc, char** argv)
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-            {
-                //std::string flux_binning_file_tmp = parser.flux_cov.binning;
-                //std::string flux_binning_file_tmp;
-
-                // Hotfix:
-                if (opt.name == "INGRIDxxx")
-                {
-                    //flux_binning_file_tmp = "/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/joint/template_flux_detector_xsec/binning/flux_binning_INGRID.txt";
-                    std::cout << "Using flux binning file flux_binning_INGRID.txt for detector " << opt.name << std::endl;
-                    fluxpara.AddDetector(opt.name, "/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/joint/template_flux_detector_xsec/binning/flux_binning_INGRID.txt");
-                }
-                else if(opt.name == "ND280xxx")
-                {
-                    //flux_binning_file_tmp = "/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/joint/template_flux_detector_xsec/binning/flux_binning_ND280.txt";
-                    std::cout << "Using flux binning file flux_binning_ND280.txt for detector " << opt.name << std::endl;
-                    fluxpara.AddDetector(opt.name, "/afs/cern.ch/work/c/cschloes/T2K_final_for_real/Fitter/xsLLhFitter/inputs/Numu_AntiNumu_Fit/Fit/joint/template_flux_detector_xsec/binning/flux_binning_ND280.txt");
-                }
-                else
-                {
-                    fluxpara.AddDetector(opt.name, parser.flux_cov.binning);
-                }
-            }
-
-                
+                fluxpara.AddDetector(opt.name, parser.flux_cov.binning);
         }
         fluxpara.InitEventMap(samples, 0);
         fitpara.push_back(&fluxpara);
@@ -321,7 +298,7 @@ int main(int argc, char** argv)
 
         if(!did_converge)
             std::cout << TAG << "Fit did not coverge." << std::endl;
-
+        
         std::vector<int> par_scans = parser.par_scan_list;
         if(!par_scans.empty())
             xsecfit.ParameterScans(par_scans, parser.par_scan_steps);

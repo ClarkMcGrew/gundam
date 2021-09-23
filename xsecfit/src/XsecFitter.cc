@@ -148,7 +148,6 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     std::cout << "===========================================" << std::endl;
     std::cout << "           Initializing fitter             " << std::endl;
     std::cout << "===========================================" << std::endl;
-
     std::cout << TAG << "Minimizer settings..." << std::endl
               << TAG << "Minimizer: " << min_settings.minimizer << std::endl
               << TAG << "Algorithm: " << min_settings.algorithm << std::endl
@@ -175,7 +174,7 @@ void XsecFitter::InitFitter(std::vector<AnaFitParameters*>& fitpara)
     for(int i = 0; i < m_npar; ++i)
     {
         m_fitter->SetVariable(i, par_names[i], par_prefit[i], par_step[i]);
-        m_fitter->SetVariableLimits(i, par_low[i], par_high[i]);
+        //m_fitter->SetVariableLimits(i, par_low[i], par_high[i]);
 
         if(par_fixed[i] == true)
             m_fitter->FixVariable(i);
@@ -411,6 +410,7 @@ void XsecFitter::GenerateToyData(int toy_type, bool stat_fluc)
     {
         const unsigned int N  = m_samples[s]->GetN();
         const std::string det = m_samples[s]->GetDetector();
+        
 #pragma omp parallel for num_threads(m_threads)
         for(unsigned int i = 0; i < N; ++i)
         {
@@ -442,8 +442,8 @@ double XsecFitter::FillSamples(std::vector<std::vector<double>>& new_pars, int d
     bool output_chi2 = false;
 
     // Print chi2 contributions for the first 19 function calls then for every 100th function call for the first 1000 function calls and then every 1000th function call:
-    if((m_calls < 1001 && (m_calls % 20 == 0 || m_calls < 20))
-       || (m_calls > 1001 && m_calls % 100 == 0))
+    if((m_calls < 1001 && (m_calls % 100 == 0 || m_calls < 20))
+       || (m_calls > 1001 && m_calls % 1000 == 0))
         output_chi2 = true;
 
     // par_offset stores the number of fit parameters for all parameter types:
@@ -461,7 +461,7 @@ double XsecFitter::FillSamples(std::vector<std::vector<double>>& new_pars, int d
         // Update number of fit parameters as we loop through the different parameter types:
         par_offset += m_fitpara[i]->GetNpar();
     }
-
+    
     // Loop over the different selection samples defined in the .json config file:
     for(int s = 0; s < m_samples.size(); ++s)
     {
@@ -475,6 +475,9 @@ double XsecFitter::FillSamples(std::vector<std::vector<double>>& new_pars, int d
 #pragma omp parallel for num_threads(m_threads)
         for(unsigned int i = 0; i < num_events; ++i)
         {
+            //std::cout << "m_samples = " << m_samples.size() << std::endl;
+            //std::cout << "num_events = " << num_events << std::endl;
+            //std::cout << "m_fitpara = " << m_fitpara.size() << std::endl;
             // Get ith event (which contains the event information such as topology, reaction, truth/reco variables, event weights, etc.):
             AnaEvent* ev = m_samples[s]->GetEvent(i);
 
@@ -522,8 +525,8 @@ double XsecFitter::CalcLikelihood(const double* par)
     bool output_chi2 = false;
 
     // Print chi2 contributions for the first 19 function calls then for every 100th function call for the first 1000 function calls and then every 1000th function call:
-    if((m_calls < 1001 && (m_calls % 20 == 0 || m_calls < 20))
-       || (m_calls > 1001 && m_calls % 100 == 0))
+    if((m_calls < 1001 && (m_calls % 100 == 0 || m_calls < 20))
+       || (m_calls > 1001 && m_calls % 1000 == 0))
         output_chi2 = true;
 
     // Index for looping over fit parameters of this parameter type:
@@ -545,29 +548,16 @@ double XsecFitter::CalcLikelihood(const double* par)
         // vec stores the parameter values of this iteration for this parameter type:
         std::vector<double> vec;
 
-        //std::cout << m_fitpara[i]->GetName() << ": " << std::endl;
-
         // Loop over fit parameters for this parameter type:
         for(int j = 0; j < npar; ++j)
         {
             //if(output_chi2)
-            //if(true)
-            //{
-                //std::cout << "Parameter " << j << " for " << m_fitpara[i]->GetName()
-                //          << " has value " << par[k] << std::endl;
-
-                //std::cout << j << ": " << par[k] << ",   ";
-                //if(j % 10 == 0 && j != 0)
-                //{
-                //    std::cout << std::endl;
-                //}
-                //std::printf("%03d: %.6f,  ", j, par[k]);
-            //}
+            //    std::cout << "Parameter " << j << " for " << m_fitpara[i]->GetName()
+            //              << " has value " << par[k] << std::endl;
             
             // Fill vec with the parameter values of this iteration for this parameter type:
             vec.push_back(par[k++]);
         }
-        //std::cout << std::endl;
 
         // If we are not using zero systematics, the systematic chi2 value is computed with AnaFitParameters::GetChi2 for this parameter type and added to chi2_sys:
         if(!m_zerosyst)
@@ -587,11 +577,8 @@ double XsecFitter::CalcLikelihood(const double* par)
                       << m_fitpara[i]->GetChi2(vec) << std::endl;
         }
     }
-    //std::cout << std::endl;
-
     // Reset event weights based on current fit parameter values, update m_hpred, m_hmc, m_hmc_true and m_hsig histograms accordingly and compute the chi2_stat value:
     double chi2_stat = FillSamples(new_pars, kMC);
-
     // The different chi2 values for the current iteration of the fitter are stored in the corresponding vectors:
     vec_chi2_stat.push_back(chi2_stat);
     vec_chi2_sys.push_back(chi2_sys);

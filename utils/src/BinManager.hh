@@ -37,6 +37,7 @@ class BinManager
         std::vector<std::vector<std::pair<double, double>>> bin_edges;
         std::vector<std::vector<int>> bin_nutype;
         std::vector<std::vector<int>> bin_beammode;
+
 };
 
 #endif
