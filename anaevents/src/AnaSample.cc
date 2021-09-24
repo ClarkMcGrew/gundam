@@ -203,7 +203,6 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
         double D3_true = m_events[i].GetTrueD3();
         double D4_true = m_events[i].GetTrueD4();
         double wght    = datatype >= 0 ? m_events[i].GetEvWght() : m_events[i].GetEvWghtMC();
-
         int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec, D3_rec, D4_rec);
         int anybin_index_true = GetBinIndex(D1_true, D2_true, D3_true, D4_true);
 
@@ -272,7 +271,6 @@ void AnaSample::FillEventHist(int datatype, bool stat_fluc)
             m_data_tree->GetEntry(i);
             if(cut_branch != m_sample_id)
                 continue;
-
             int anybin_index = GetBinIndex(D1_rec_tree, D2_rec_tree, D3_rec_tree, D4_rec_tree);
             if(anybin_index != -1)
             {
@@ -520,7 +518,6 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
         compos[evt_topology]++;
         int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec, D3_rec, D4_rec);
         int anybin_index_true = GetBinIndex(D1_true, D2_true, D3_true, D4_true);
-
         // Fill histogram for this topolgy with the current event:
         hAnybin_rec[topology_HL_code[evt_topology]].Fill(anybin_index_rec + 0.5, wght);
         hAnybin_true[topology_HL_code[evt_topology]].Fill(anybin_index_true + 0.5, wght);

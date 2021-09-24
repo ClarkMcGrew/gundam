@@ -52,19 +52,24 @@ void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             int nutype   = ev->GetFlavor();
             int beammode = ev->GetBeamMode();
             int bin      = m_det_bm.at(sample[s]->GetDetector()).GetBinIndex(std::vector<double>{enu}, nutype, beammode);
+            /*
             if(bin == BADBIN)
             {
                 std::cout << TAG << WAR << "Event Enu " << enu << " falls outside bin range.\n"
                           << TAG << WAR << "This event will be ignored in the analysis." << std::endl;
                 ev->Print();
             }
+            */
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())
                 bin = PASSEVENT;
 
             sample_map.push_back(bin);
+            std::cout << TAG << "bin = " << bin << std::endl;
+            std::cout << TAG << "sample_map = " << sample_map.size() << std::endl;
         } // event loop
         m_evmap.push_back(sample_map);
+        std::cout << TAG << "m_evmap = " << m_evmap.size() << std::endl;
     } // sample loop
 }
 

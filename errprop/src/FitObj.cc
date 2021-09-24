@@ -275,8 +275,8 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
             if(ev->isSignalEvent())
             {
                 int signal_id = ev->GetSignalType();
-                int bin_idx = signal_bins[signal_id].GetBinIndex(
-                    std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
+                //int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
+                int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), ev->GetTrueD4(), ev->GetTrueD3()});
                 signal_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWght());
             }
         }
@@ -299,8 +299,8 @@ void FitObj::ReweightNominal()
             if(ev->isSignalEvent())
             {
                 int signal_id = ev->GetSignalType();
-                int bin_idx = signal_bins[signal_id].GetBinIndex(
-                    std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
+                //int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
+                int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), ev->GetTrueD4(), ev->GetTrueD3()});
                 signal_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWghtMC());
             }
         }
@@ -356,9 +356,12 @@ double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux
         {
             const double enu = flux_hist.GetBinCenter(i);
             const double val = flux_hist.GetBinContent(i);
-            const int idx = m_flux_par->GetBinIndex(det, enu)
-                            + m_flux_par->GetDetectorOffset(det);
+            std::cout << TAG << "fuck u FitObj before" << std::endl;
+            const int idx = m_flux_par->GetBinIndex(det, enu) 
+                          + m_flux_par->GetDetectorOffset(det);
+            std::cout << TAG << "fuck u FitObj after" << std::endl;
             flux_int += val * flux_par[idx];
+            
         }
     }
 
