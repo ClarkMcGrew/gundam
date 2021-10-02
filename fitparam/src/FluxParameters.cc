@@ -25,6 +25,7 @@ int FluxParameters::GetBinIndex(const std::string& det, double enu)
 
 void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 {
+    // Loop over samples and check if the detector is part of the fit parameters:
     for(const auto& s : sample)
     {
         //if(m_det_bins.count(s->GetDetector()) == 0)
@@ -65,11 +66,8 @@ void FluxParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
                 bin = PASSEVENT;
 
             sample_map.push_back(bin);
-            std::cout << TAG << "bin = " << bin << std::endl;
-            std::cout << TAG << "sample_map = " << sample_map.size() << std::endl;
         } // event loop
         m_evmap.push_back(sample_map);
-        std::cout << TAG << "m_evmap = " << m_evmap.size() << std::endl;
     } // sample loop
 }
 
@@ -168,7 +166,7 @@ void FluxParameters::InitParameters()
                   << "\% total variance.\n";
     }
 }
-
+/*
 void FluxParameters::AddDetector(const std::string& det, const std::vector<double>& bins)
 {
     std::cout << TAG << "Adding detector " << det << " for " << this->m_name
@@ -176,7 +174,7 @@ void FluxParameters::AddDetector(const std::string& det, const std::vector<doubl
     m_det_bins.emplace(std::make_pair(det, bins));
     v_detectors.emplace_back(det);
 }
-
+*/
 void FluxParameters::AddDetector(const std::string& det, const std::string& binning_file)
 {
     std::cout << TAG << "Adding detector " << det << " for " << this->m_name

@@ -10,6 +10,7 @@ FitParameters::FitParameters(const std::string& par_name)
 FitParameters::~FitParameters()
 {;}
 
+// Checks if binning file exists. If it does, it fills the given bins argument with the binning from the given text file:
 bool FitParameters::SetBinning(const std::string& file_name, std::vector<FitBin>& bins)
 {
     std::ifstream fin(file_name, std::ios::in);
@@ -40,15 +41,15 @@ bool FitParameters::SetBinning(const std::string& file_name, std::vector<FitBin>
         std::cout << TAG << "Fit binning: \n";
         for(std::size_t i = 0; i < bins.size(); ++i)
         {
-            std::cout << std::setw(3) << i
-                      << std::setw(5) << bins[i].D2low
-                      << std::setw(5) << bins[i].D2high
-                      << std::setw(5) << bins[i].D1low
-                      << std::setw(5) << bins[i].D1high
-                      << std::setw(5) << bins[i].D4low
-                      << std::setw(5) << bins[i].D4high
-                      << std::setw(5) << bins[i].D3low
-                      << std::setw(5) << bins[i].D3high << std::endl;
+            std::cout << std::setw(5) << i
+                      << std::setw(8) << bins[i].D2low
+                      << std::setw(8) << bins[i].D2high
+                      << std::setw(8) << bins[i].D1low
+                      << std::setw(8) << bins[i].D1high
+                      << std::setw(8) << bins[i].D4low
+                      << std::setw(8) << bins[i].D4high
+                      << std::setw(8) << bins[i].D3low
+                      << std::setw(8) << bins[i].D3high << std::endl;
         }
 
         return true;
@@ -75,9 +76,10 @@ int FitParameters::GetBinIndex(const int sig, double D1, double D2, double D3, d
 }
 
 
-// initEventMap
+// Determines which truth bin each signal events falls into:
 void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
 {
+    // Loop over samples and check if the detector is part of the fit parameters:
     for(const auto& s : sample)
     {
         if(!std::any_of(v_detectors.begin(), v_detectors.end(),
@@ -90,12 +92,20 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
         }
     }
 
+    // Set up signal (template) parameters (one per signal bin):
     InitParameters();
+
     m_evmap.clear();
 
+    // Loop over all samples:
     for(std::size_t s=0; s < sample.size(); s++)
     {
+        // Map which will be filled with the bin index of each event (-1 if event is not signal and -2 if event is signal but does not fall into bins):
         std::vector<int> sample_map;
+
+        int N_badbins = 0;
+
+        // Loop over all events in current sample:
         for(int i=0; i < sample[s] -> GetN(); i++)
         {
             AnaEvent* ev = sample[s] -> GetEvent(i);
@@ -113,22 +123,27 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
                 double D3 = ev -> GetTrueD3();
                 double D4 = ev -> GetTrueD4();
 
-                ///std::cout << "El Casparo:   " << D1 << ",  " << D2 << ",  " << D3 << ",  " << D4 << std::endl;
-
                 //int bin = GetBinIndex(sample[s] -> GetDetector(), D1, D2);
+                // Check which truth bin the event fall into:
                 int bin = GetBinIndex(ev -> GetSignalType(), D1, D2, D3, D4);
 #ifndef NDEBUG
-                /*
+                
                 if(bin == BADBIN)
                 {
+                    ++N_badbins;
+                    /*
                     std::cout << WAR << m_name << ", Event: " << i << std::endl
                               << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", D3 = " << D3 << ", D4 = " << D4 << ", falls outside bin ranges." << std::endl
                               << WAR << "This event will be ignored in the analysis." << std::endl;
+                    */
                 }
-                */
+                
 #endif
+                // If event is signal and falls into binning we append the bin index to sample_map:
                 sample_map.push_back(bin);
             }
+
+            // If the event is not signal, we append -1 to the sample_map:
             else
             {
                 sample_map.push_back(PASSEVENT);
@@ -136,6 +151,8 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
             }
 
         }
+        std::cout << TAG << "Number of signal events that fall outside bin ranges for sample " << sample.at(s)->GetName() << ": " << N_badbins << std::endl;
+
         m_evmap.push_back(sample_map);
     }
 }
@@ -190,6 +207,7 @@ void FitParameters::ReWeight(AnaEvent* event, const std::string& det, int nsampl
     }
 }
 
+// Set up fit parameters for signal (template) params:
 void FitParameters::InitParameters()
 {
     unsigned int offset = 0;
@@ -215,7 +233,7 @@ void FitParameters::InitParameters()
     Npar = pars_name.size();
     pars_original = pars_prior;
 }
-
+/*
 void FitParameters::AddDetector(const std::string& det, const std::string& f_binning)
 {
     std::cout << TAG << "Adding detector " << det << " for " << m_name << std::endl;
@@ -229,15 +247,18 @@ void FitParameters::AddDetector(const std::string& det, const std::string& f_bin
     else
         std::cout << WAR << "Adding detector failed." << std::endl;
 }
+*/
 
 void FitParameters::AddDetector(const std::string& det, const std::vector<SignalDef>& v_input)
 {
     std::cout << TAG << "Adding detector " << det << " for " << m_name << std::endl;
 
+    // Loop over all the signal definitions (defined as template_par in .json file):
     for(const auto& sig : v_input)
     {
-        if(sig.detector != det || sig.use_signal == false)
-            continue;
+        std::cout << "sig.detector: " << sig.detector << std::endl;
+        //if(sig.detector != det || sig.use_signal == false)
+        //    continue;
 
         v_signals.emplace_back(signal_id);
 
@@ -245,8 +266,11 @@ void FitParameters::AddDetector(const std::string& det, const std::vector<Signal
                   << " to fit." << std::endl;
 
         std::vector<FitBin> temp_vector;
+
+        // Checks if binning file exists. If yes, fills temp_vector with the binning from sig.binning file:
         if(SetBinning(sig.binning, temp_vector))
         {
+            // Fill m_signal_bins with signal ID and current binning:
             m_signal_bins.emplace(std::make_pair(signal_id, temp_vector));
             v_detectors.emplace_back(det);
             signal_id++;

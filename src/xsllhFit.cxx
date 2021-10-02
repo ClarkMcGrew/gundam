@@ -120,8 +120,10 @@ int main(int argc, char** argv)
     // Add analysis samples:
     std::vector<AnaSample*> samples;
 
+    // Loop over the samples for data samples:
     for(const auto& opt : parser.samples)
     {
+        // Make sure that it is not truth data (cut_branch = -1):
         if(opt.use_sample == true && opt.cut_branch >= 0)
         {
             std::cout << TAG << "Adding new sample to fit.\n"
@@ -138,8 +140,11 @@ int main(int argc, char** argv)
     }
 
     //read MC events
+
+    // AnaTreeMC object that will contain the MC variables read in from the MC file:
     AnaTreeMC selTree(fname_mc.c_str(), "selectedEvents");
     std::cout << TAG << "Reading and collecting events." << std::endl;
+    // Loops over all events, checks what sample they fall into and if they are signal (then prints statistics info):
     selTree.GetEvents(samples, parser.signal_definition, false);
 
     std::cout << TAG << "Getting sample breakdown by topology." << std::endl;
@@ -148,6 +153,8 @@ int main(int argc, char** argv)
     for(auto& sample : samples)
         {
             sample -> SetTopologyHLCode(topology_HL_codes);
+
+            // Loop over all events and check what topology they fall into (then prints statistics info):
             sample -> GetSampleBreakdown(fout, "nominal", topology, false);
         }
 
@@ -157,7 +164,9 @@ int main(int argc, char** argv)
     //For stats only just use fit params
     //**********************************************************
 
-    //define fit param classes
+    // Define fit param classes:
+
+    // Vector containing the different fit params (template, flux, xsec, detector):
     std::vector<AnaFitParameters*> fitpara;
 
     // Fit parameters (template parameters):
@@ -166,13 +175,19 @@ int main(int argc, char** argv)
         sigfitpara.SetRNGstart();
     if(parser.regularise)
         sigfitpara.SetRegularisation(parser.reg_strength, parser.reg_method);
+
+    // Loop over all detectors:
     for(const auto& opt : parser.detectors)
     {
         if(opt.use_detector)
             sigfitpara.AddDetector(opt.name, parser.signal_definition);
             //sigfitpara.AddDetector(opt.name, opt.binning);
     }
+
+    // Eventmap determines which truth bin each signal events falls into (second argument (0) has no meaning at all for sigfitpara):
     sigfitpara.InitEventMap(samples, 0);
+
+    // Add signal (template) parameters to vector of all fit parameters:
     fitpara.push_back(&sigfitpara);
 
     // Flux parameters:
@@ -209,12 +224,13 @@ int main(int argc, char** argv)
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
+            {
                 fluxpara.AddDetector(opt.name, parser.flux_cov.binning);
+            }
         }
         fluxpara.InitEventMap(samples, 0);
         fitpara.push_back(&fluxpara);
     }
-
 
     XsecParameters xsecpara("par_xsec");
     if(parser.xsec_cov.do_fit)

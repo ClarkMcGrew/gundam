@@ -96,8 +96,10 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
             //Put extra variables here.
         }
 
-        int signal_type = 0;
+        // Check for all events if they are signal events:
 
+        // Number of current signal type:
+        int signal_type = 0;
         // Loop over all sets of temlate parameters as defined in the .json config file in the "template_par" entry for this detector:
         for(const auto& sd : v_signal)
         {
@@ -125,16 +127,23 @@ void AnaTreeMC::GetEvents(std::vector<AnaSample*>& ana_samples,
             signal_type++;
         }
 
+        // Loop over all samples:
         for(auto& s : ana_samples)
         {
+            // Check if current event falls into current sample:
             if(s->GetSampleID() == sample)
+            {
+                //If yes, add event to current AnaSample:
                 s->AddEvent(ev);
+            }
         }
 
+        // Print current progress:
         if(jentry % 2000 == 0 || jentry == (nentries - 1))
             pbar.Print(jentry, nentries - 1);
     }
 
+    // Print out number of events for each sample and how much memory it uses:
     for(auto& sample : ana_samples)
         sample->PrintStats();
 }

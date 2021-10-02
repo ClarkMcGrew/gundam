@@ -16,12 +16,19 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
 
     std::cout << TAG << m_name << ", ID " << m_sample_id << std::endl
               << TAG << "Detector: " << m_detector << std::endl
+              << TAG << "Tree: " << m_data_tree << std::endl
               << TAG << "Bin edges: " << std::endl;
 
     for(const auto& bin : m_bin_edges)
     {
-        std::cout << bin.D2low << " " << bin.D2high << " " << bin.D1low << " " << bin.D1high
-                  << " " << bin.D4low << " " << bin.D4high << " " << bin.D3low << " " << bin.D3high
+        std::cout << std::setw(8) << bin.D2low
+                  << std::setw(8) << bin.D2high
+                  << std::setw(8) << bin.D1low
+                  << std::setw(8) << bin.D1high
+                  << std::setw(8) << bin.D4low
+                  << std::setw(8) << bin.D4high
+                  << std::setw(8) << bin.D3low
+                  << std::setw(8) << bin.D3high
                   << std::endl;
     }
 
@@ -33,6 +40,7 @@ AnaSample::AnaSample(int sample_id, const std::string& name, const std::string& 
 
     m_llh = new PoissonLLH;
 
+    // Initialize histograms (empty for now):
     MakeHistos(); // with default binning
 
     std::cout << TAG << "MakeHistos called." << std::endl;
@@ -171,8 +179,9 @@ int AnaSample::GetBinIndex(const double D1, const double D2, const double D3, co
 {
     for(int i = 0; i < m_bin_edges.size(); ++i)
     {
-        if(D1 >= m_bin_edges[i].D1low && D1 < m_bin_edges[i].D1high && D2 >= m_bin_edges[i].D2low
-           && D2 < m_bin_edges[i].D2high && D3 >= m_bin_edges[i].D3low && D3 < m_bin_edges[i].D3high
+        if(   D1 >= m_bin_edges[i].D1low && D1 < m_bin_edges[i].D1high
+           && D2 >= m_bin_edges[i].D2low && D2 < m_bin_edges[i].D2high
+           && D3 >= m_bin_edges[i].D3low && D3 < m_bin_edges[i].D3high
            && D4 >= m_bin_edges[i].D4low && D4 < m_bin_edges[i].D4high)
         {
             return i;
@@ -477,10 +486,15 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
                                    const std::vector<std::string>& topology, bool save)
 {
     const int ntopology = topology.size();
+
+    // compos will be filled with the number of events for each topology:
     int compos[ntopology];
+
+    // Vectors with ROOT histograms for each toplogy that will give number of events for each bin:
     std::vector<TH1D> hAnybin_rec;
     std::vector<TH1D> hAnybin_true;
 
+    // Loop over all topologies and initialize histograms:
     for(int i = 0; i < ntopology; ++i)
     {
         compos[i] = 0;
@@ -516,8 +530,11 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
         int evt_topology = m_events[i].GetTopology();
 
         compos[evt_topology]++;
+
+        // Check which bins the event falls into:
         int anybin_index_rec  = GetBinIndex(D1_rec, D2_rec, D3_rec, D4_rec);
         int anybin_index_true = GetBinIndex(D1_true, D2_true, D3_true, D4_true);
+
         // Fill histogram for this topolgy with the current event:
         hAnybin_rec[topology_HL_code[evt_topology]].Fill(anybin_index_rec + 0.5, wght);
         hAnybin_true[topology_HL_code[evt_topology]].Fill(anybin_index_true + 0.5, wght);
@@ -526,6 +543,7 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
     dirout->cd();
     for(int i = 0; i < ntopology; ++i)
     {
+        // Scale MC events to POT of data:
         hAnybin_true[i].Scale(m_norm);
         hAnybin_rec[i].Scale(m_norm);
 
@@ -541,10 +559,10 @@ void AnaSample::GetSampleBreakdown(TDirectory* dirout, const std::string& tag,
 
     for(int j = 0; j < ntopology; ++j)
     {
-        std::cout << std::setw(10) << topology[j] << std::setw(5) << j << std::setw(5) << compos[j]
+        std::cout << std::setw(10) << topology[j] << std::setw(10) << j << std::setw(10) << compos[j]
                   << std::setw(10) << ((1.0 * compos[j]) / Ntot) * 100.0 << "%" << std::endl;
     }
 
-    std::cout << std::setw(10) << "Total" << std::setw(5) << " " << std::setw(5) << Ntot
+    std::cout << std::setw(10) << "Total" << std::setw(10) << " " << std::setw(10) << Ntot
               << std::setw(10) << "100.00%" << std::endl;
 }
