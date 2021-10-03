@@ -387,8 +387,7 @@ void XsecCalc::ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::ve
 {
     if(v_normalization[signal_id].use_flux_fit)
     {
-        double flux_int = selected_events->ReweightFluxHist(
-            param, v_normalization[signal_id].flux_hist, v_normalization[signal_id].detector);
+        double flux_int = selected_events->ReweightFluxHist(param, v_normalization[signal_id].flux_hist, v_normalization[signal_id].detector);
         hist.Scale(1.0 / flux_int);
 
         if(is_toy)
@@ -399,8 +398,7 @@ void XsecCalc::ApplyFlux(const unsigned int signal_id, TH1D& hist, const std::ve
         double flux_int = 1.0;
         if(is_toy)
         {
-            flux_int = toy_thrower->ThrowSinglePar(v_normalization[signal_id].flux_int,
-                                                   v_normalization[signal_id].flux_err);
+            flux_int = toy_thrower->ThrowSinglePar(v_normalization[signal_id].flux_int, v_normalization[signal_id].flux_err);
             v_normalization[signal_id].flux_throws.Fill(flux_int);
         }
         else
@@ -717,6 +715,6 @@ void XsecCalc::SaveDataEvents(TFile* output)
     fake_data_concat.Write();
 
     SaveSignalHist(output, fake_data_hists, "data");
-
+    std::cout << TAG << "Closing data histograms." << std::endl;
     f.close();
 }

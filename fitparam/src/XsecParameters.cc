@@ -10,17 +10,24 @@ XsecParameters::~XsecParameters() { ; }
 
 void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 {
+    // Set up signal (xsec) parameters (one per signal bin):
     InitParameters();
+    
     if(Npar == 0)
     {
         std::cerr << ERR << "In XsecParameters::InitEventMap\n"
                   << ERR << "No parameters delcared. Not building event map."
                   << std::endl;
     }
+
     m_dial_evtmap.clear();
 
+    // Loop over events to build index map:
     for(std::size_t s = 0; s < sample.size(); ++s)
     {
+        int N_badbins = 0;
+        int N_idx_1550 = 0;
+
         std::vector<std::vector<int>> sample_map;
         for(int i = 0; i < sample[s] -> GetN(); i++)
         {
@@ -34,19 +41,17 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             {
                 /*
                 double q2 = ev -> GetQ2True() / 1.0E6; //MeV to GeV conversion.
-                int idx = v_dials.at(d).GetSplineIndex(ev -> GetTopology(), ev -> GetReaction(), q2);
-
                 int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev -> GetTopology(), ev -> GetReaction()},
                                                        std::vector<double>{q2});
-                int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
-                                                       std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
                 */
                 int idx = v_dials.at(d).GetSplineIndex(std::vector<int>{ev->GetTopology(), ev->GetReaction()},
                                                        std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), 
                                                        ev->GetTrueD4(), ev->GetTrueD3()});
-                /*
+                
                 if(idx >= 1550) 
                 {
+                    ++N_idx_1550;
+                    /*
                     std::cout << TAG << "------------ idx< 1550 ---------------.\n"
                               << TAG << "idx = " << idx << std::endl
                               << TAG << "ev->GetTopology() = " << ev->GetTopology() << std::endl
@@ -55,30 +60,38 @@ void XsecParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
                               << TAG << "ev->GetTrueD1() = " << ev->GetTrueD1() << std::endl
                               << TAG << "ev->GetTrueD4() = " << ev->GetTrueD4() << std::endl
                               << TAG << "ev->GetTrueD3() = " << ev->GetTrueD3() << std::endl;
+                    */
                 }
-                */
+                
                 if(idx == BADBIN)
                 {
+                    ++N_badbins;
+                    /*
                     std::cout << WAR << "Event falls outside spline range.\n"
                               << WAR << "This event will be ignored in the analysis."
                               << std::endl;
+                    */
                     ev -> AddEvWght(0.0);
                 }
 
+                // If event is signal let the c_i params handle the reweighting:
                 if(mode == 1 && ev -> isSignalEvent())
                     idx = PASSEVENT;
 
                 dial_index_map.push_back(idx);
-                //std::cout << TAG << "dial_index_map = " << dial_index_map.size() << std::endl;
-            }
+                
+            } // dials loop
 
             sample_map.emplace_back(dial_index_map);
-            //std::cout << TAG << "sample_map = " << sample_map.size() << std::endl;
-        }
+        } // event loop
+
+        std::cout << TAG << "Number of signal with bad bin info " << sample.at(s)->GetName() << ": " << N_badbins << std::endl;
+        std::cout << TAG << "Number of signal with idx >= 1550 " << sample.at(s)->GetName() << ": " << ++N_idx_1550 << std::endl;
 
         m_dial_evtmap.emplace_back(sample_map);
-        //std::cout << TAG << "m_dial_evtmap = " << m_dial_evtmap.size() << std::endl;
-    }
+    } // sample loop
+
+    
 }
 
 void XsecParameters::InitParameters()

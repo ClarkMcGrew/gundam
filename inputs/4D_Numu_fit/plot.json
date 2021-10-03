@@ -6,7 +6,7 @@
         {
             "name" : "CC0pi_all_bins",
             "save_as" : "CC0pi_all_bins",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_postfit",
@@ -63,7 +63,7 @@
         {
             "name" : "CC0pi_cos_bin0",
             "save_as" : "CC0pi_cos_bin0",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin0_postfit",
@@ -107,7 +107,7 @@
         {
             "name" : "CC0pi_cos_bin1",
             "save_as" : "CC0pi_cos_bin1",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin1_postfit",
@@ -151,7 +151,7 @@
         {
             "name" : "CC0pi_cos_bin2",
             "save_as" : "CC0pi_cos_bin2",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin2_postfit",
@@ -195,7 +195,7 @@
         {
             "name" : "CC0pi_cos_bin3",
             "save_as" : "CC0pi_cos_bin3",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin3_postfit",
@@ -239,7 +239,7 @@
         {
             "name" : "CC0pi_cos_bin4",
             "save_as" : "CC0pi_cos_bin4",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin4_postfit",
@@ -283,7 +283,7 @@
         {
             "name" : "CC0pi_cos_bin5",
             "save_as" : "CC0pi_cos_bin5",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin5_postfit",
@@ -327,7 +327,7 @@
         {
             "name" : "CC0pi_cos_bin6",
             "save_as" : "CC0pi_cos_bin6",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin6_postfit",
@@ -371,7 +371,7 @@
         {
             "name" : "CC0pi_cos_bin7",
             "save_as" : "CC0pi_cos_bin7",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin7_postfit",
@@ -415,7 +415,7 @@
         {
             "name" : "CC0pi_cos_bin8",
             "save_as" : "CC0pi_cos_bin8",
-            "root_file" : "xsec.root",
+            "root_file" : "xsllh_calcxsec.root",
             "hists" : [
                 {
                     "name" : "CC0pi_cos_bin8_postfit",

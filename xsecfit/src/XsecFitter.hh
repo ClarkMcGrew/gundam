@@ -65,8 +65,10 @@ public:
 
     // Declaration of leaf types
     Int_t sample;
-    Float_t D1true;
-    Float_t D2true;
+    Float_t D1True;
+    Float_t D2True;
+    //Float_t D3True;
+    //Float_t D4True;
     Int_t nutype;
     Int_t topology;
     Int_t reaction;
@@ -74,6 +76,8 @@ public:
     Int_t sigtype;
     Float_t D1Reco;
     Float_t D2Reco;
+    //Float_t D3Reco;
+    //Float_t D4Reco;
     Float_t weight;
     Float_t weightNom;
     Float_t weightMC;
@@ -86,10 +90,14 @@ public:
         outtree->Branch("sample", &sample, "cut_branch/I");
         outtree->Branch("sigtype", &sigtype, "signal/I");
         outtree->Branch("topology", &topology, "topology/I");
-        outtree->Branch("D1True", &D1true, ("D1True/F"));
+        outtree->Branch("D1True", &D1True, ("D1True/F"));
         outtree->Branch("D1Reco", &D1Reco, ("D1Reco/F"));
-        outtree->Branch("D2True", &D2true, ("D2True/F"));
+        outtree->Branch("D2True", &D2True, ("D2True/F"));
         outtree->Branch("D2Reco", &D2Reco, ("D2Reco/F"));
+        /*outtree->Branch("D3True", &D3True, ("D3True/F"));
+        outtree->Branch("D3Reco", &D3Reco, ("D3Reco/F"));
+        outtree->Branch("D4True", &D4True, ("D4True/F"));
+        outtree->Branch("D4Reco", &D4Reco, ("D4Reco/F"));*/
         outtree->Branch("weight", &weight, "weight/F");
         outtree->Branch("weightMC", &weightMC, "weightMC/F");
     }

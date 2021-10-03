@@ -82,7 +82,12 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
 
     for(std::size_t s = 0; s < sample.size(); ++s)
     {
+        // Map which will be filled with the bin index of each event (-1 if event is not signal and -2 if event is signal but does not fall into bins):
         std::vector<int> sample_map;
+
+        int N_badbins = 0;
+
+        // Loop over all events in current sample:
         for(int i = 0; i < sample[s]->GetN(); ++i)
         {
             AnaEvent* ev = sample[s]->GetEvent(i);
@@ -92,14 +97,15 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             double D4 = ev->GetRecoD4();
             int bin   = GetBinIndex(sample[s]->GetSampleID(), D1, D2, D3, D4);
 #ifndef NDEBUG
-            /*
             if(bin == BADBIN)
             {
+                ++N_badbins;
+                /*
                 std::cout << WAR << m_name << ", Event: " << i << std::endl
                           << WAR << "D1 = " << D1 << ", D2 = " << D2 << ", D3 = " << D3 << ", D4 = " << D4 << ", falls outside bin ranges." << std::endl
                           << WAR << "This event will be ignored in the analysis." << std::endl;
+                */
             }
-            */
 #endif
             // If event is signal let the c_i params handle the reweighting:
             if(mode == 1 && ev->isSignalEvent())
@@ -107,9 +113,14 @@ void DetParameters::InitEventMap(std::vector<AnaSample*>& sample, int mode)
             else if(mode == 2)
                 bin = PASSEVENT;
             sample_map.push_back(bin);
-        }
+
+        } // event loop
+
+        std::cout << TAG << "Number of signal events that fall outside bin ranges for sample " << sample.at(s)->GetName() << ": " << N_badbins << std::endl;
+
         m_evmap.push_back(sample_map);
-    }
+    } // sample loop
+    
 }
 
 // Multiplies the current event weight for AnaEvent* event with the detector parameter for the sample and reco bin that this event falls in:

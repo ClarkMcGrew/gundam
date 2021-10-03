@@ -12,8 +12,7 @@ public:
 
     void InitParameters();
     void InitEventMap(std::vector<AnaSample*>& sample, int mode);
-    void ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent,
-                  std::vector<double>& params);
+    void ReWeight(AnaEvent* event, const std::string& det, int nsample, int nevent, std::vector<double>& params);
     void AddDetector(const std::string& det, const std::vector<double>& bins);
     void AddDetector(const std::string& det, const std::string& binning_file);
     int GetBinIndex(const std::string& det, double enu);
@@ -22,7 +21,6 @@ public:
 private:
     std::vector<double> m_enubins;
     std::map<std::string, int> m_det_offset;
-    std::map<std::string, std::vector<double>> m_det_bins;
     std::map<std::string, BinManager> m_det_bm;
     std::vector<std::string> v_detectors;
 

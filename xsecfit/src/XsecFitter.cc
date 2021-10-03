@@ -239,21 +239,21 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
             m_samples[s]->FillEventHist(kAsimov, stat_fluc);
     }
 
-    // fit-type = kAsimovFit = 1:
+    // fit-type = kExternalFit = 1:
     else if(fit_type == kExternalFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)
             m_samples[s]->FillEventHist(kExternal, stat_fluc);
     }
 
-    // fit-type = kAsimovFit = 2:
+    // fit-type = kDataFit = 2:
     else if(fit_type == kDataFit)
     {
         for(std::size_t s = 0; s < m_samples.size(); s++)
             m_samples[s]->FillEventHist(kData, stat_fluc);
     }
 
-    // fit-type = kAsimovFit = 3:
+    // fit-type = kToyFit = 3:
     else if(fit_type == kToyFit)
     {
         GenerateToyData(0, stat_fluc);
@@ -268,6 +268,7 @@ bool XsecFitter::Fit(const std::vector<AnaSample*>& samples, int fit_type, bool 
     }
 
     SaveEventHist(m_calls);
+    std::cout << TAG << "m_calls =" << m_calls << std::endl;
 
     // did_converge flag which is returned at the end:
     bool did_converge = false;
@@ -643,10 +644,14 @@ void XsecFitter::SaveEventTree(std::vector<std::vector<double>>& res_params)
             reaction = ev->GetReaction();
             target   = ev->GetTarget();
             nutype   = ev->GetFlavor();
-            D1true   = ev->GetTrueD1();
-            D2true   = ev->GetTrueD2();
+            D1True   = ev->GetTrueD1();
+            D2True   = ev->GetTrueD2();
+            //D3True   = ev->GetTrueD3();
+            //D4True   = ev->GetTrueD4();
             D1Reco   = ev->GetRecoD1();
             D2Reco   = ev->GetRecoD2();
+            //D3Reco   = ev->GetRecoD3();
+            //D4Reco   = ev->GetRecoD4();
             weightMC = ev->GetEvWghtMC() * m_potratio;
             weight   = ev->GetEvWght() * m_potratio;
             outtree->Fill();

@@ -7,7 +7,7 @@
     "stat_fluc" : false,
     "zero_syst" : false,
     "rng_template" : true,
-    "save_events" : false,
+    "save_events" : true,
     "data_POT"  : 1.0,
     "mc_POT"    : 1.0,
     "rng_seed"  : 12345,
@@ -29,16 +29,16 @@
         "matrix" : "flux_numu_cov",
         "binning" : "flux_binning.txt",
         "throw"  : false,
-        "decomp" : true,
-        "variance" : 0.95,
+        "decomp" : false,
+        "variance" : 1.00,
         "fit_par" : false
     },
     "det_cov" : {
         "file" : "xsllh_detcovmat_output_4pi_4D.root",
         "matrix" : "detector_covariance_matrix",
         "throw"  : false,
-        "decomp" : true,
-        "variance" : 0.95,
+        "decomp" : false,
+        "variance" : 1.00,
         "fit_par" : false
     },
     "xsec_cov" : {
@@ -61,7 +61,7 @@
             "binning" : "4pi_4D_binning_true.txt",
             "template_par" : [
                 {
-                    "name" : "nd280CC1pi",
+                    "name" : "CC1pi",
                     "binning" : "4pi_4D_binning_true.txt",
                     "signal" : {"topology" : [1], "target" : [6], "beammode" : [1], "flavor" : [14]},
                     "use" : true

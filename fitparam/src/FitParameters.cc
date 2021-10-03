@@ -141,7 +141,7 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
 #endif
                 // If event is signal and falls into binning we append the bin index to sample_map:
                 sample_map.push_back(bin);
-            }
+            } // event loop
 
             // If the event is not signal, we append -1 to the sample_map:
             else
@@ -150,7 +150,7 @@ void FitParameters::InitEventMap(std::vector<AnaSample*> &sample, int mode)
                 continue;
             }
 
-        }
+        } // sample loop
         std::cout << TAG << "Number of signal events that fall outside bin ranges for sample " << sample.at(s)->GetName() << ": " << N_badbins << std::endl;
 
         m_evmap.push_back(sample_map);
@@ -256,9 +256,10 @@ void FitParameters::AddDetector(const std::string& det, const std::vector<Signal
     // Loop over all the signal definitions (defined as template_par in .json file):
     for(const auto& sig : v_input)
     {
-        std::cout << "sig.detector: " << sig.detector << std::endl;
+        
         //if(sig.detector != det || sig.use_signal == false)
         //    continue;
+        //std::cout << "sig.detector: " << sig.detector << std::endl;
 
         v_signals.emplace_back(signal_id);
 

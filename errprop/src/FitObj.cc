@@ -1,7 +1,6 @@
 #include "FitObj.hh"
 
-FitObj::FitObj(const std::string& json_config, const std::string& event_tree_name,
-               bool is_true_tree, bool read_data_file)
+FitObj::FitObj(const std::string& json_config, const std::string& event_tree_name, bool is_true_tree, bool read_data_file)
 {
     OptParser parser;
     if(!parser.ParseJSON(json_config))
@@ -49,12 +48,11 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
             auto s = new AnaSample(opt.cut_branch, opt.name, opt.detector, opt.binning, tdata);
             s->SetNorm(potD / potMC);
             samples.push_back(s);
-            /*
+            
             if(opt.cut_branch >= 0 && !is_true_tree)
                 samples.push_back(s);
             else if(opt.cut_branch < 0 && is_true_tree)
                 samples.push_back(s);
-            */
         }
     }
 
@@ -93,36 +91,6 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
             std::cout << ERR << "Could not open file! Exiting." << std::endl;
             std::exit(121);
         }
-        TH1D* nd_numu_bins_hist = (TH1D*)file_flux_cov->Get(parser.flux_cov.binning.c_str());
-        TAxis* nd_numu_bins = nd_numu_bins_hist->GetXaxis();
-
-        std::vector<double> enubins;
-        enubins.push_back(0);
-        enubins.push_back(100);
-        enubins.push_back(200);
-        enubins.push_back(300);
-        enubins.push_back(400);
-        enubins.push_back(500);
-        enubins.push_back(600);
-        enubins.push_back(700);
-        enubins.push_back(800);
-        enubins.push_back(1000);
-        enubins.push_back(1200);
-        enubins.push_back(1500);
-        enubins.push_back(2000);
-        enubins.push_back(2500);
-        enubins.push_back(3000);
-        enubins.push_back(3500);
-        enubins.push_back(4000);
-        enubins.push_back(5000);
-        enubins.push_back(7000);
-        enubins.push_back(10000);
-        enubins.push_back(30000);
-        /*
-        enubins.push_back(nd_numu_bins -> GetBinLowEdge(1));
-        for(int i = 0; i < nd_numu_bins -> GetNbins(); ++i)
-            enubins.push_back(nd_numu_bins -> GetBinUpEdge(i+1));
-        */
 
         TMatrixDSym* cov_flux = (TMatrixDSym*)file_flux_cov -> Get(parser.flux_cov.matrix.c_str());
         file_flux_cov -> Close();
@@ -131,7 +99,8 @@ FitObj::FitObj(const std::string& json_config, const std::string& event_tree_nam
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
-                fluxpara->AddDetector(opt.name, enubins);
+                //fluxpara->AddDetector(opt.name, enubins);
+                fluxpara->AddDetector(opt.name, parser.flux_cov.binning);
         }
         fluxpara->InitEventMap(samples, 0);
         fit_par.push_back(fluxpara);
@@ -275,7 +244,6 @@ void FitObj::ReweightEvents(const std::vector<double>& input_par)
             if(ev->isSignalEvent())
             {
                 int signal_id = ev->GetSignalType();
-                //int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
                 int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), ev->GetTrueD4(), ev->GetTrueD3()});
                 signal_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWght());
             }
@@ -299,7 +267,6 @@ void FitObj::ReweightNominal()
             if(ev->isSignalEvent())
             {
                 int signal_id = ev->GetSignalType();
-                //int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1()});
                 int bin_idx = signal_bins[signal_id].GetBinIndex(std::vector<double>{ev->GetTrueD2(), ev->GetTrueD1(), ev->GetTrueD4(), ev->GetTrueD3()});
                 signal_hist[signal_id].Fill(bin_idx + 0.5, ev->GetEvWghtMC());
             }
@@ -332,8 +299,7 @@ TH1D FitObj::GetHistCombined(const std::string& suffix) const
     return hist_combined;
 }
 
-double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux_hist,
-                                const std::string& det)
+double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux_hist, const std::string& det)
 {
     double flux_int = 0.0;
     if(m_flux_par == nullptr)
@@ -356,12 +322,8 @@ double FitObj::ReweightFluxHist(const std::vector<double>& input_par, TH1D& flux
         {
             const double enu = flux_hist.GetBinCenter(i);
             const double val = flux_hist.GetBinContent(i);
-            std::cout << TAG << "fuck u FitObj before" << std::endl;
-            const int idx = m_flux_par->GetBinIndex(det, enu) 
-                          + m_flux_par->GetDetectorOffset(det);
-            std::cout << TAG << "fuck u FitObj after" << std::endl;
+            const int idx = m_flux_par->GetBinIndex(det, enu) + m_flux_par->GetDetectorOffset(det);
             flux_int += val * flux_par[idx];
-            
         }
     }
 

@@ -173,6 +173,7 @@ int main(int argc, char** argv)
     FitParameters sigfitpara("par_fit");
     if(parser.rng_template)
         sigfitpara.SetRNGstart();
+        
     if(parser.regularise)
         sigfitpara.SetRegularisation(parser.reg_strength, parser.reg_method);
 
@@ -204,13 +205,6 @@ int main(int argc, char** argv)
             std::cout << ERR << "Could not open file! Exiting." << std::endl;
             return 1;
         }
-        //TH1D* nd_numu_bins_hist = (TH1D*)file_flux_cov->Get(parser.flux_cov.binning.c_str());
-        //TAxis* nd_numu_bins = nd_numu_bins_hist->GetXaxis();
-
-        //std::vector<double> enubins;
-        //enubins.push_back(nd_numu_bins -> GetBinLowEdge(1));
-        //for(int i = 0; i < nd_numu_bins -> GetNbins(); ++i)
-        //    enubins.push_back(nd_numu_bins -> GetBinUpEdge(i+1));
 
         TMatrixDSym* cov_flux = (TMatrixDSym*)file_flux_cov -> Get(parser.flux_cov.matrix.c_str());
         file_flux_cov -> Close();
@@ -221,6 +215,8 @@ int main(int argc, char** argv)
         fluxpara.SetCovarianceMatrix(*cov_flux, parser.flux_cov.decompose);
         fluxpara.SetThrow(parser.flux_cov.do_throw);
         fluxpara.SetInfoFrac(parser.flux_cov.info_frac);
+        
+        // Loop over all detectors:
         for(const auto& opt : parser.detectors)
         {
             if(opt.use_detector)
@@ -228,10 +224,15 @@ int main(int argc, char** argv)
                 fluxpara.AddDetector(opt.name, parser.flux_cov.binning);
             }
         }
+
+        // Eventmap determines which flux bin each events falls into:
         fluxpara.InitEventMap(samples, 0);
+
+        // Add signal (flux) parameters to vector of all fit parameters:
         fitpara.push_back(&fluxpara);
     }
 
+    // Xsec parameters:
     XsecParameters xsecpara("par_xsec");
     if(parser.xsec_cov.do_fit)
     {
@@ -258,10 +259,15 @@ int main(int argc, char** argv)
             if(opt.use_detector)
                 xsecpara.AddDetector(opt.name, opt.xsec);
         }
+
+        // Eventmap determines which _______________________:
         xsecpara.InitEventMap(samples, 0);
+
+        // Add signal (xsec) parameters to vector of all fit parameters:
         fitpara.push_back(&xsecpara);
     }
 
+    // Detector parameters:
     DetParameters detpara("par_det");
     if(parser.det_cov.do_fit)
     {
@@ -289,7 +295,11 @@ int main(int argc, char** argv)
             if(opt.use_detector)
                 detpara.AddDetector(opt.name, samples, true);
         }
+
+        // Eventmap determines which _______________________:
         detpara.InitEventMap(samples, 0);
+
+        // Add signal (xsec) parameters to vector of all fit parameters:
         fitpara.push_back(&detpara);
     }
 

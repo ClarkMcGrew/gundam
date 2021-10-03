@@ -1,13 +1,13 @@
 {
     "input_dir" : "/inputs/4D_Numu_fit/",
     "input_fit_file" : "xsllh_output_4pi_4D_fit_tp_flux_xsec_det.root",
-    "output_file" : "NumuCC4piMultiPi_Xsec.root",
+    "output_file" : "xsllh_calcxsec.root",
     "extra_hists" : "extra_hists.txt",
     "num_toys" : 2500,
     "rng_seed" : 0,
     "sel_config" : "config_4piCC1pi_4D_tp_flux_xsec_det.json",
     "tru_config" : "config_4piCC1pi_4D_tp_flux_xsec_det.json",
-    "read_data_events" : true,
+    "read_data_events" : false,
     "decomposition" : {
         "do_force_posdef" : true,
         "force_posdef_val" : 1E-6,
@@ -15,7 +15,7 @@
         "drop_tolerance" : 1E-9
     },
     "sig_norm" : {
-        "nd280CC1pi" : {
+        "CC1pi" : {
             "pot_norm" : 1.0,
             "flux_file" : "xsllh_fluxcovmat_output.root",
             "flux_hist" : "flux_binning",

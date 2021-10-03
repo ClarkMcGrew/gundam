@@ -15,7 +15,6 @@ class BinManager
     public:
         BinManager();
         BinManager(const std::string& filename, bool UseNutypeBeammode=false);
-
         int GetNbins() const;
         int SetBinning(const std::string& filename, bool UseNutypeBeammode=false);
         int GetBinIndex(const std::vector<double>& val) const;

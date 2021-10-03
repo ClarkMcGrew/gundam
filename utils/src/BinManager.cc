@@ -136,7 +136,6 @@ int BinManager::GetBinIndex(const std::vector<double>& val) const
         std::cout << "[Error]: funtion 1: Number of parameters does not match dimension!   dimension =" << dimension << "   parameters ="<< val.size() << std::endl;
         return -1;
     }
-
     for(int i = 0; i < nbins; ++i)
     {   
         bool flag = true;
@@ -150,7 +149,6 @@ int BinManager::GetBinIndex(const std::vector<double>& val) const
             return i;
         }
     }
-
     return -1;
 }
 
