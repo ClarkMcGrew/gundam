@@ -56,7 +56,7 @@ public:
   void scanParameters(int nbSteps_ = -1, const std::string& saveDir_ = "");
   void scanParameter(int iPar, int nbSteps_ = -1, const std::string& saveDir_ = "");
 
-  void fit();
+  virtual void fit();
   void updateChi2Cache();
   double evalFit(const double* parArray_);
 

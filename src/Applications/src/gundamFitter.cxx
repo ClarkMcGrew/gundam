@@ -5,6 +5,8 @@
 #include "versionConfig.h"
 
 #include "FitterEngine.h"
+#include "MCMCEngine.h"
+#include "MCMCProxyEngine.h"
 #include "JsonUtils.h"
 #include "GlobalVariables.h"
 #include "GundamGreetings.h"
@@ -122,8 +124,13 @@ int main(int argc, char** argv){
 
   LogInfo << "FitterEngine setup..." << std::endl;
 
-  // Fitter
-  FitterEngine fitter;
+  // Fitter or MCMC sampler
+  if (JsonUtils::fetchValue(jsonConfig, "mcmc", true)) {
+    MCMCEngine fitter;
+  }
+  else {
+    FitterEngine fitter;
+  }
   fitter.setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
   fitter.setSaveDir(GenericToolbox::mkdirTFile(out, "FitterEngine"));
   fitter.setNbScanSteps(nbScanSteps);
