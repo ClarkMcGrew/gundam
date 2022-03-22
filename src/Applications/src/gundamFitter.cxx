@@ -97,40 +97,47 @@ int main(int argc, char** argv){
 
   LogInfo << "FitterEngine setup..." << std::endl;
 
-  // Fitter or MCMC sampler
+  // Fitter pointer
+  FitterEngine *fitter;
+  FitterEngine _fitter;
+  MCMCEngine _mcmc;
+  
+  // MCMC sampler
   if (JsonUtils::fetchValue(jsonConfig, "mcmc", true)) {
-    MCMCEngine fitter;
+    fitter = &_mcmc;
   }
+  // Fitter
   else {
-    FitterEngine fitter;
+    fitter = &_fitter;
   }
-  fitter.setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
-  fitter.setSaveDir(GenericToolbox::mkdirTFile(out, "FitterEngine"));
-  fitter.setNbScanSteps(nbScanSteps);
-  fitter.setEnablePostFitScan(enableParameterScan);
-  fitter.initialize();
 
-  fitter.updateChi2Cache();
-  LogInfo << "Initial χ² = " << fitter.getChi2Buffer() << std::endl;
-  LogInfo << "Initial χ²(stat) = " << fitter.getChi2StatBuffer() << std::endl;
+  fitter->setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
+  fitter->setSaveDir(GenericToolbox::mkdirTFile(out, "FitterEngine"));
+  fitter->setNbScanSteps(nbScanSteps);
+  fitter->setEnablePostFitScan(enableParameterScan);
+  fitter->initialize();
+
+  fitter->updateChi2Cache();
+  LogInfo << "Initial χ² = " << fitter->getChi2Buffer() << std::endl;
+  LogInfo << "Initial χ²(stat) = " << fitter->getChi2StatBuffer() << std::endl;
 
   // --------------------------
   // Pre-fit:
   // --------------------------
 
   // LLH Visual Scan
-  if( clParser.isOptionTriggered("generateOneSigmaPlots") or JsonUtils::fetchValue(jsonConfig, "generateOneSigmaPlots", false) ) fitter.generateOneSigmaPlots("preFit");
-  if( clParser.isOptionTriggered("scanParameters") or JsonUtils::fetchValue(jsonConfig, "scanParameters", false) ) fitter.scanParameters(nbScanSteps, "preFit/scan");
+  if( clParser.isOptionTriggered("generateOneSigmaPlots") or JsonUtils::fetchValue(jsonConfig, "generateOneSigmaPlots", false) ) fitter->generateOneSigmaPlots("preFit");
+  if( clParser.isOptionTriggered("scanParameters") or JsonUtils::fetchValue(jsonConfig, "scanParameters", false) ) fitter->scanParameters(nbScanSteps, "preFit/scan");
 
   // Plot generators
-  if( JsonUtils::fetchValue(jsonConfig, "generateSamplePlots", true) ) fitter.generateSamplePlots("preFit/samples");
+  if( JsonUtils::fetchValue(jsonConfig, "generateSamplePlots", true) ) fitter->generateSamplePlots("preFit/samples");
 
 
   // --------------------------
   // Run the fitter:
   // --------------------------
   if( not isDryRun and JsonUtils::fetchValue(jsonConfig, "fit", true) ){
-    fitter.fit();
+    fitter->fit();
   }
 
   LogWarning << "Closing output file \"" << out->GetName() << "\"..." << std::endl;

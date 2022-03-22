@@ -1,12 +1,13 @@
 set(SRCFILES
   src/ND280Fitter.cpp
-  src/MCMCFitter.cpp
+  src/MCMCEngine.cpp
   src/XsecFitter.cc
   src/FitterEngine.cpp
   )
 set(HEADERS
   include/ND280Fitter.h
-  include/MCMCFitter.h
+  include/TSimpleMCMC.H
+  include/MCMCEngine.h
   include/MCMCProxyFitter.h
   include/XsecFitter.hh
   include/FitterEngine.h

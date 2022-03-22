@@ -66,7 +66,7 @@ protected:
 
 
 
-private:
+//private:
   // Parameters
   TDirectory* _saveDir_{nullptr};
   nlohmann::json _config_{};
