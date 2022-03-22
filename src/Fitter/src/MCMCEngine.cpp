@@ -3,6 +3,8 @@
 //
 
 #include "MCMCEngine.h"
+#include "MCMCProxyEngine.h"
+#include "TSimpleMCMC.H"
 
 #include "JsonUtils.h"
 
@@ -15,8 +17,8 @@ void MCMCEngine::fit() {
     _minimizerAlgo_ = "Metropolis";
 
     // Get output file name
-    string outFileName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputFile", "mcmc.root");
-    string outTreeName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "accepted");
+    std::string outFileName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputFile", "mcmc.root");
+    std::string outTreeName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "accepted");
 
     // Create output file and a tree to save accepted points
     TFile *outputFile = new TFile(outFileName.c_str(), "recreate");
@@ -24,15 +26,15 @@ void MCMCEngine::fit() {
 
     // Create a mcmc sampler with this MCMCEngine serving as likelihood
     TSimpleMCMC<MCMCProxyEngine> mcmc(tree);
-    ProxyEngine& like = mcmc.GetLogLikelihood();
+    MCMCProxyEngine& like = mcmc.GetLogLikelihood();
     // Let the MCMCEngine proxy pointer in ProxyEngine point to 'this' intialized object
     like.proxy = this;
 
     // Set dimensiton for the MCMC sampler
-    mcmc.GetProposeStep().SetDim(like.proxy->GetDim());
+    mcmc.GetProposeStep().SetDim(like.proxy->_nbFitParameters_);
 
     // Create a fitting parameter vector and intialize it
-    Vector p(like.proxy->GetDim());
+    Vector p(like.proxy->_nbFitParameters_);
     for (int i = 0; i < _nbFitParameters_; i++) {
         p[i] = _minimizerFitParameterPtr_[i]->getParameterValue();
     }
@@ -48,11 +50,11 @@ void MCMCEngine::fit() {
     mcmc.Start(p, gSaveBurnin);
 
     // Burnin cycles
-    for (int chain = 0; chain < gBurninCycle; ++i){
+    for (int chain = 0; chain < gBurninCycle; ++chain){
       std::cout << "Start Burnin chain " << chain << std::endl;
       mcmc.GetProposeStep().UpdateProposal();
       // Burnin chain in each cycle
-      for (int i = 0; i < gBurninLength + p.size()*p.size(); ++i) {
+      for (int i = 0; i < gBurninLength; ++i) {
         // Run step
         mcmc.Step(gSaveBurnin);
 
@@ -65,11 +67,11 @@ void MCMCEngine::fit() {
     std::cout << "Finished burnin chains" << std::endl;
 
     // Run cycles
-    for (int chain = 0; chain < gRunCycle; ++i){
+    for (int chain = 0; chain < gRunCycle; ++chain){
       std::cout << "Start run chain " << chain << std::endl;
       mcmc.GetProposeStep().UpdateProposal();
       // Run chain in each cycle
-      for (int i = 0; i < gRunStep + p.size()*p.size(); ++i) {
+      for (int i = 0; i < gRunLength; ++i) {
         // Run step
         mcmc.Step(true);
 

@@ -20,10 +20,10 @@ struct MCMCProxyEngine {
 	//    updateChi2Cache() does the "magic" to calculate _chi2Buffer_ with updated fit 
 	//    parameters _minimizerFitParameterPtr_.
 	// FitterEngine::evalFit(const double* parArray_) does a lot of things to output timing info
-	// --- FitterEngine.cpp:645 print _minimizerType_, _minimizerAlgo_ needs to be updated
 	// --- FitterEngine.cpp:653 _convergenceMonitor_, does it affect likelihood calculation?
 	// --- FitterEngine.cpp:668 _chi2HistoryTree_, does it affect likelihood calculation?
-        proxy->evalFit(&fCurrParams[0]);
+        double likelihood = proxy->evalFit(&fCurrParams[0]);
+	return likelihood;
     }
 
 
