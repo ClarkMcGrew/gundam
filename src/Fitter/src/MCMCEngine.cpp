@@ -76,7 +76,7 @@ void MCMCEngine::fit() {
     // Create a fitting parameter vector and intialize it
     Vector p(_nbFitParameters_);
     for (int i = 0; i < _nbFitParameters_; i++) {
-        p[i] = _minimizerFitParameterPtr_[i]->getParameterValue();
+        p[i] = 0; 
     }
 
     // Get MCMC burnin and running info
