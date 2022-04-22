@@ -23,7 +23,7 @@ struct MCMCProxyEngine {
 	// --- FitterEngine.cpp:653 _convergenceMonitor_, does it affect likelihood calculation?
 	// --- FitterEngine.cpp:668 _chi2HistoryTree_, does it affect likelihood calculation?
         double likelihood = proxy->evalFit(&fCurrParams[0]);
-	return likelihood;
+	return -0.5 * likelihood;
     }
 
 
