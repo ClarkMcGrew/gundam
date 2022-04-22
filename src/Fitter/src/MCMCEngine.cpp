@@ -24,6 +24,50 @@ void MCMCEngine::fit() {
     TFile *outputFile = new TFile(outFileName.c_str(), "recreate");
     TTree *tree = new TTree(outTreeName.c_str(),"Tree of accepted points");
 
+    // Storing parameter names
+    TTree *parName = new TTree("parameterSets", "Tree of parameterSets");
+    std::vector<std::string> nameParameterSets;
+    Int_t nParameters;
+    std::vector<int> parameter_index; 
+    std::vector<double> parameter_prior; 
+    std::vector<double> parameter_sigma; 
+    std::vector<std::string> parameter_name; 
+    parName->Branch("nameParameterSets", &nameParameterSets);
+    parName->Branch("nParameters", &nParameters);
+    parName->Branch("parameter_index", &parameter_index);
+    parName->Branch("parameter_name", &parameter_name);
+    parName->Branch("parameter_prior", &parameter_prior);
+    parName->Branch("parameter_sigma", &parameter_sigma);
+
+    for (const auto& parSet: _propagator_.getParameterSetsList()) {
+      if (not parSet.isEnabled()) continue;
+
+      // Save name of parameter Set
+      nameParameterSets.clear();
+      nameParameterSets.push_back(parSet.getName());
+      nParameters = 0;
+      parameter_index.clear();
+      parameter_name.clear();
+      parameter_prior.clear();
+      parameter_sigma.clear();
+      
+      auto* parList = &parSet.getEffectiveParameterList();
+      for (auto& iPar : *parList) {
+	if (iPar.getParameterIndex()!= 9 && iPar.getParameterIndex()!= 10) {
+	if (iPar.isFixed()) continue;
+	if (!iPar.isEnabled()) continue;}
+	nParameters ++;
+	parameter_index.push_back(iPar.getParameterIndex());
+	parameter_name.push_back(iPar.getTitle());
+	parameter_prior.push_back(iPar.getPriorValue());
+	parameter_sigma.push_back(iPar.getStdDevValue());
+      }
+      parName->Fill();
+    }
+
+    parName->Write();
+    // End Storing parameter name informations
+
     // Create a mcmc sampler with this MCMCEngine serving as likelihood
     TSimpleMCMC<MCMCProxyEngine> mcmc(tree);
     MCMCProxyEngine& like = mcmc.GetLogLikelihood();
@@ -31,10 +75,10 @@ void MCMCEngine::fit() {
     like.proxy = this;
 
     // Set dimensiton for the MCMC sampler
-    mcmc.GetProposeStep().SetDim(like.proxy->_nbFitParameters_);
+    mcmc.GetProposeStep().SetDim(_nbFitParameters_);
 
     // Create a fitting parameter vector and intialize it
-    Vector p(like.proxy->_nbFitParameters_);
+    Vector p(_nbFitParameters_);
     for (int i = 0; i < _nbFitParameters_; i++) {
         p[i] = _minimizerFitParameterPtr_[i]->getParameterValue();
     }
@@ -48,6 +92,7 @@ void MCMCEngine::fit() {
 
     // Initializing the mcmc sampler
     mcmc.Start(p, gSaveBurnin);
+
 
     // Burnin cycles
     for (int chain = 0; chain < gBurninCycle; ++chain){
