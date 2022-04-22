@@ -27,7 +27,7 @@ void MCMCEngine::fit() {
     // Storing parameter names
     TTree *parName = new TTree("parameterSets", "Tree of parameterSets");
     std::vector<std::string> nameParameterSets;
-    Int_t nParameters;
+    std::vector<int> nParameters;
     std::vector<int> parameter_index; 
     std::vector<double> parameter_prior; 
     std::vector<double> parameter_sigma; 
@@ -43,27 +43,23 @@ void MCMCEngine::fit() {
       if (not parSet.isEnabled()) continue;
 
       // Save name of parameter Set
-      nameParameterSets.clear();
       nameParameterSets.push_back(parSet.getName());
-      nParameters = 0;
-      parameter_index.clear();
-      parameter_name.clear();
-      parameter_prior.clear();
-      parameter_sigma.clear();
+      int countParameters = 0;
       
       auto* parList = &parSet.getEffectiveParameterList();
       for (auto& iPar : *parList) {
 	if (iPar.getParameterIndex()!= 9 && iPar.getParameterIndex()!= 10) {
 	if (iPar.isFixed()) continue;
 	if (!iPar.isEnabled()) continue;}
-	nParameters ++;
+	countParameters ++;
 	parameter_index.push_back(iPar.getParameterIndex());
 	parameter_name.push_back(iPar.getTitle());
 	parameter_prior.push_back(iPar.getPriorValue());
 	parameter_sigma.push_back(iPar.getStdDevValue());
       }
-      parName->Fill();
+      nParameters.push_back(countParameters);
     }
+    parName->Fill();
 
     parName->Write();
     // End Storing parameter name informations
