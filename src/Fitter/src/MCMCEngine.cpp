@@ -6,7 +6,13 @@
 #include "MCMCProxyEngine.h"
 #include "TSimpleMCMC.H"
 
+#include "GlobalVariables.h"
+#include "Logger.h"
 #include "JsonUtils.h"
+
+LoggerInit([]{
+  Logger::setUserHeaderStr("[MCMCEngine]");
+})
 
 void MCMCEngine::fit() {
 
@@ -19,6 +25,18 @@ void MCMCEngine::fit() {
     // Get output file name
     std::string outFileName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputFile", "mcmc.root");
     std::string outTreeName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "accepted");
+
+    // Check for restore file
+    TFile *restoreFile{nullptr};
+    TTree *restoreTree{nullptr};
+    std::string restoreName = GlobalVariables::getRestoreName();
+    LogThrowIf(restoreName == outFileName, "Writing the restore file! Need to change output file name in configBanffFit.yaml");
+    if (not restoreName.empty()) {
+      std::cout << "Restore from: " << restoreName << std::endl;
+      restoreFile = new TFile(restoreName.c_str(), "old");
+      restoreTree = (TTree*) restoreFile->Get(outTreeName.c_str());
+      LogThrowIf( not restoreTree, "No restore tree not found! Make sure outTreeName is the same as previous chain in configBanffFit.yaml");
+    } 
 
     // Create output file and a tree to save accepted points
     TFile *outputFile = new TFile(outFileName.c_str(), "recreate");
@@ -89,6 +107,12 @@ void MCMCEngine::fit() {
     // Initializing the mcmc sampler
     mcmc.Start(p, gSaveBurnin);
 
+    // Restore the chain if exist
+    if (restoreTree) {
+      mcmc.Restore(restoreTree);
+      delete restoreFile;
+      std::cout << "State Restored" << std::endl;
+    }
 
     // Burnin cycles
     for (int chain = 0; chain < gBurninCycle; ++chain){
@@ -123,6 +147,10 @@ void MCMCEngine::fit() {
       }
     }
     std::cout << "Finished Running chains" << std::endl;
+
+    // Save the final state. This is needed so that the current chain with the current
+    // adaptive proposal can be restored and continued.
+    mcmc.SaveStep();
 
     // Save the sampled points to the outputfile
     if (tree) tree->Write();

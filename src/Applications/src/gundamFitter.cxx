@@ -45,6 +45,7 @@ int main(int argc, char** argv){
   clParser.addOption("outputFile", {"-o", "--out-file"}, "Specify the output file");
   clParser.addOption("scanParameters", {"--scan"}, "Enable parameter scan before and after the fit");
   clParser.addOption("toyFit", {"--toy"}, "Run a toy fit");
+  clParser.addOption("restoreFile", {"-r", "--restore-file"}, "Specify the mcmc restore file");
 
   clParser.getOptionPtr("scanParameters")->setAllowEmptyValue(true); // --scan can be followed or not by the number of steps
   clParser.getOptionPtr("toyFit")->setAllowEmptyValue(true); // --toy can be followed or not by the number of steps
@@ -104,6 +105,12 @@ int main(int argc, char** argv){
 
 
   LogInfo << "Writing runtime parameters in output file..." << std::endl;
+
+  auto restoreFileName = clParser.getOptionVal("restoreFile", "");
+  if (not restoreFileName.empty()) {
+    GlobalVariables::setRestoreName(restoreFileName.c_str());
+    LogInfo << "MCMC continues to sample from: \"" << GlobalVariables::getRestoreName() << "\""<< std::endl;
+  }
 
   // Gundam version?
   TNamed gundamVersionString("gundamVersion", getVersionStr().c_str());
