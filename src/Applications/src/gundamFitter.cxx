@@ -98,7 +98,7 @@ int main(int argc, char** argv){
   LogInfo << "FitterEngine setup..." << std::endl;
 
   // Fitter pointer
-  FitterEngine *fitter = NULL;
+  FitterEngine *fitter{nullptr};
   
   // MCMC sampler
   if (JsonUtils::fetchValue(jsonConfig, "mcmc", true)) {
