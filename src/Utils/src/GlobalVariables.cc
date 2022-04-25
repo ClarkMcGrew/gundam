@@ -7,6 +7,7 @@
 // INIT
 bool GlobalVariables::_enableDevMode_{false};
 int GlobalVariables::_nbThreads_ = 1;
+std::string GlobalVariables::_restoreName_ = "";
 std::mutex GlobalVariables::_threadMutex_;
 std::map<std::string, bool> GlobalVariables::_boolMap_;
 std::vector<TChain*> GlobalVariables::_chainList_;
@@ -25,9 +26,13 @@ void GlobalVariables::setNbThreads(int nbThreads_){
 void GlobalVariables::setPrngSeed(ULong_t seed_){
   _prng_.SetSeed(seed_);
 }
+void GlobalVariables::setRestoreName(std::string restoreName_) {
+  _restoreName_ = restoreName_;
+}
 
 bool GlobalVariables::isEnableDevMode(){ return _enableDevMode_; }
 const int& GlobalVariables::getNbThreads(){ return _nbThreads_; }
+const std::string GlobalVariables::getRestoreName(){ return _restoreName_; }
 std::mutex& GlobalVariables::getThreadMutex() { return _threadMutex_; }
 std::map<std::string, bool>& GlobalVariables::getBoolMap() { return _boolMap_; }
 std::vector<TChain*>& GlobalVariables::getChainList() { return _chainList_; }
