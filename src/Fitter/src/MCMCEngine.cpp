@@ -59,6 +59,7 @@ void MCMCEngine::fit() {
 
     for (const auto& parSet: _propagator_.getParameterSetsList()) {
       if (not parSet.isEnabled()) continue;
+      LogThrowIf( parSet.isUseEigenDecompInFit() , "Eigen Decomp is used In Fit! Don't run MCMC with Eigen Decomp");
 
       // Save name of parameter Set
       nameParameterSets.push_back(parSet.getName());
