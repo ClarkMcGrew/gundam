@@ -143,13 +143,12 @@ int main(int argc, char** argv){
   // Fitter pointer
   FitterEngine *fitter{nullptr};
 
-  // MCMC sampler
-  if (JsonUtils::fetchValue(jsonConfig, "mcmc", true)) {
-    fitter = new MCMCEngine();
-  }
-  // Fitter
-  else {
+  std::string engine = JsonUtils::fetchValue(jsonConfig, "engine", "Fitter");
+  if (engine == "Fitter") {
     fitter = new FitterEngine();
+  }
+  else if (engine == "MCMC") {
+    fitter = new MCMCEngine();
   }
 
   fitter->setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
