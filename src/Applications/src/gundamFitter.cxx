@@ -143,14 +143,14 @@ int main(int argc, char** argv){
     fitter = new FitterEngine();
   }
 
-  fitter.setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
-  fitter.setSaveDir(GenericToolbox::mkdirTFile(out, "FitterEngine"));
-  fitter.setNbScanSteps(nbScanSteps);
-  fitter.setEnablePostFitScan(enableParameterScan);
+  fitter->setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
+  fitter->setSaveDir(GenericToolbox::mkdirTFile(out, "FitterEngine"));
+  fitter->setNbScanSteps(nbScanSteps);
+  fitter->setEnablePostFitScan(enableParameterScan);
 
-  if( isToyFit ){ fitter.getPropagator().setThrowAsimovToyParameters(true); }
+  if( isToyFit ){ fitter->getPropagator().setThrowAsimovToyParameters(true); }
 
-  fitter.initialize();
+  fitter->initialize();
 
   fitter->updateChi2Cache();
   LogInfo << "Initial χ² = " << fitter->getChi2Buffer() << std::endl;
