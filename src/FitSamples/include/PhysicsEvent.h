@@ -17,6 +17,7 @@
 #include "AnaEvent.hh"
 #include "FitParameterSet.h"
 #include "Dial.h"
+#include "NestedDialTest.h"
 
 
 class PhysicsEvent {
@@ -81,6 +82,7 @@ public:
   void deleteLeaf(long index_);
   void trimDialCache();
   void addDialRefToCache(Dial* dialPtr_);
+  void addNestedDialRefToCache(NestedDialTest* nestedDialPtr_, const std::vector<Dial*>& dialPtrList_ = std::vector<Dial*>{});
   std::map<std::string, std::function<void(GenericToolbox::RawDataArray&, const GenericToolbox::LeafHolder&)>> generateLeavesDictionary(bool disableArrays_ = false) const;
 
   // Stream operator
@@ -102,8 +104,27 @@ private:
   double _fakeDataWeight_{1};
   int _sampleBinIndex_{-1};
 
+#ifdef GUNDAM_USING_CUDA
+public:
+  void setCacheManagerIndex(int i) {_CacheManagerIndex_ = i;}
+  int  getCacheManagerIndex() {return _CacheManagerIndex_;}
+  void setCacheManagerValuePointer(const double* v) {_CacheManagerValue_ = v;}
+  void setCacheManagerValidPointer(const bool* v) {_CacheManagerValid_ = v;}
+  void setCacheManagerUpdatePointer(void (*p)()) {_CacheManagerUpdate_ = p;}
+private:
+  // An "opaque" index into the cache that is used to simplify bookkeeping.
+  int _CacheManagerIndex_{-1};
+  // A pointer to the cached result.
+  const double* _CacheManagerValue_{nullptr};
+  // A pointer to the cache validity flag.
+  const bool* _CacheManagerValid_{nullptr};
+  // A pointer to a callback to force the cache to be updated.
+  void (*_CacheManagerUpdate_)(){nullptr};
+#endif
+
   // Caches
-  std::vector<Dial*> _rawDialPtrList_;
+  std::vector<Dial*> _rawDialPtrList_{};
+  std::vector<std::pair<NestedDialTest*, std::vector<Dial*>>> _nestedDialRefList_{};
 
 };
 

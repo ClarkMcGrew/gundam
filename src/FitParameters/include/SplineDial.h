@@ -40,16 +40,14 @@ private:
 
   TSpline3 _spline_;
 
-  struct FastSpliner{
-    double x, y, b, c, d, num;
-    double stepsize{-1};
-    int l;
-  };
-  FastSpliner fs;
+//  struct FastSpliner{
+//    double x, y, b, c, d, num;
+//    double stepsize{-1};
+//    int l;
+//  };
+//  FastSpliner fs;
 
   // DEBUG
 
 };
-
-
 #endif //GUNDAM_SPLINEDIAL_H

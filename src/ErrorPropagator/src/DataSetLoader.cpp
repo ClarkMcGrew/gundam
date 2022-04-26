@@ -18,7 +18,6 @@
 #include <TTreeFormulaManager.h>
 #include "TTree.h"
 
-
 LoggerInit([](){
   Logger::setUserHeaderStr("[DataSetLoader]");
 })
@@ -113,6 +112,14 @@ void DataSetLoader::initialize() {
       this->addLeafStorageRequestedForMc(leafName);
     }
 
+    if( JsonUtils::doKeyExist(_config_, "toyParameters") ){
+      LogAlert << "TOY PARAMETERS CONFIG LEFT TO IMPLEMENT" << std::endl;
+
+      auto toysConf = JsonUtils::fetchValue(_config_, "toyParameters", nlohmann::json());
+
+      
+    }
+
   }
 
   {
@@ -193,7 +200,6 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
       // Asimov events will be loaded after the prior weight have been propagated on MC samples
       continue;
     }
-
     if( isData and sampleSetPtr_->getDataEventType() == DataEventType::FakeData ){
       // FakeData events will be loaded after the prior weight have been propagated on MC samples
       continue;
@@ -282,11 +288,14 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
 
             // Filling var indexes:
             for( auto& dial : dialSetPtr->getDialList() ){
-              std::vector<int> varIndexes;
-              for( const auto& var : dial->getApplyConditionBin().getVariableNameList() ){
-                varIndexes.emplace_back(GenericToolbox::findElementIndex(var, _leavesRequestedForIndexing_));
+              if( dial->getApplyConditionBinPtr() != nullptr ){
+                std::vector<int> varIndexes;
+                for( const auto& var : dial->getApplyConditionBin().getVariableNameList() ){
+                  varIndexes.emplace_back(GenericToolbox::findElementIndex(var, _leavesRequestedForIndexing_));
+                }
+                dial->getApplyConditionBin().setEventVarIndexCache(varIndexes);
               }
-              dial->getApplyConditionBin().setEventVarIndexCache(varIndexes);
+
             }
 
             // Reserve memory for additional dials (those on a tree leaf)
@@ -342,59 +351,60 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
       threadChain = isData ? this->buildDataChain() : this->buildMcChain();
       threadChain->SetBranchStatus("*", false);
 
-      if( not isData and not this->getMcNominalWeightFormulaStr().empty() and not this->getFakeDataWeightFormulaStr().empty() ){
-        threadChain->SetBranchStatus("*", true);
-        threadNominalWeightFormula = new TTreeFormula(
-            Form("NominalWeightFormula%i", iThread_),
-            this->getMcNominalWeightFormulaStr().c_str(),
-            threadChain
-        );
-        threadFakeDataWeightFormula = new TTreeFormula(
-            Form("FakeDataWeightFormula%i", iThread_),
-            this->getFakeDataWeightFormulaStr().c_str(),
-            threadChain
-        );
+      if( not isData ){
+        if     ( not this->getMcNominalWeightFormulaStr().empty() and not this->getFakeDataWeightFormulaStr().empty() ){
+          threadChain->SetBranchStatus("*", true);
+          threadNominalWeightFormula = new TTreeFormula(
+              Form("NominalWeightFormula%i", iThread_),
+              this->getMcNominalWeightFormulaStr().c_str(),
+              threadChain
+          );
+          threadFakeDataWeightFormula = new TTreeFormula(
+              Form("FakeDataWeightFormula%i", iThread_),
+              this->getFakeDataWeightFormulaStr().c_str(),
+              threadChain
+          );
 
-        threadFormulas.Add(threadNominalWeightFormula);
-        threadFormulas.Add(threadFakeDataWeightFormula);
+          threadFormulas.Add(threadNominalWeightFormula);
+          threadFormulas.Add(threadFakeDataWeightFormula);
 
-        threadChain->SetNotify(&threadFormulas);
-        threadChain->SetBranchStatus("*", false);
-        for( int iLeaf = 0 ; iLeaf < threadNominalWeightFormula->GetNcodes() ; iLeaf++ ){
-          threadChain->SetBranchStatus(threadNominalWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+          threadChain->SetNotify(&threadFormulas);
+          threadChain->SetBranchStatus("*", false);
+          for( int iLeaf = 0 ; iLeaf < threadNominalWeightFormula->GetNcodes() ; iLeaf++ ){
+            threadChain->SetBranchStatus(threadNominalWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+          }
+          for( int iLeaf = 0 ; iLeaf < threadFakeDataWeightFormula->GetNcodes() ; iLeaf++ ){
+            threadChain->SetBranchStatus(threadFakeDataWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+          }
         }
-        for( int iLeaf = 0 ; iLeaf < threadFakeDataWeightFormula->GetNcodes() ; iLeaf++ ){
-          threadChain->SetBranchStatus(threadFakeDataWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+        else if( not this->getMcNominalWeightFormulaStr().empty() ){
+          threadChain->SetBranchStatus("*", true);
+          threadNominalWeightFormula = new TTreeFormula(
+              Form("NominalWeightFormula%i", iThread_),
+              this->getMcNominalWeightFormulaStr().c_str(),
+              threadChain
+          );
+          threadChain->SetNotify(threadNominalWeightFormula);
+          threadChain->SetBranchStatus("*", false);
+          for( int iLeaf = 0 ; iLeaf < threadNominalWeightFormula->GetNcodes() ; iLeaf++ ){
+            threadChain->SetBranchStatus(threadNominalWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+          }
+        }
+        else if( not this->getFakeDataWeightFormulaStr().empty() ){
+          threadChain->SetBranchStatus("*", true);
+          threadFakeDataWeightFormula = new TTreeFormula(
+              Form("FakeDataWeightFormula%i", iThread_),
+              this->getFakeDataWeightFormulaStr().c_str(),
+              threadChain
+          );
+          threadChain->SetNotify(threadFakeDataWeightFormula);
+          threadChain->SetBranchStatus("*", false);
+          for( int iLeaf = 0 ; iLeaf < threadFakeDataWeightFormula->GetNcodes() ; iLeaf++ ){
+            threadChain->SetBranchStatus(threadFakeDataWeightFormula->GetLeaf(iLeaf)->GetName(), true);
+          }
         }
       }
-      else if( not isData and not this->getMcNominalWeightFormulaStr().empty() ){
-        threadChain->SetBranchStatus("*", true);
-        threadNominalWeightFormula = new TTreeFormula(
-            Form("NominalWeightFormula%i", iThread_),
-            this->getMcNominalWeightFormulaStr().c_str(),
-            threadChain
-        );
-        threadChain->SetNotify(threadNominalWeightFormula);
-        threadChain->SetBranchStatus("*", false);
-        for( int iLeaf = 0 ; iLeaf < threadNominalWeightFormula->GetNcodes() ; iLeaf++ ){
-          threadChain->SetBranchStatus(threadNominalWeightFormula->GetLeaf(iLeaf)->GetName(), true);
-        }
-      }
-      else if (not isData and not this->getFakeDataWeightFormulaStr().empty() ){
-        threadChain->SetBranchStatus("*", true);
-        threadFakeDataWeightFormula = new TTreeFormula(
-            Form("FakeDataWeightFormula%i", iThread_),
-            this->getFakeDataWeightFormulaStr().c_str(),
-            threadChain
-        );
-        threadChain->SetNotify(threadFakeDataWeightFormula);
-        threadChain->SetBranchStatus("*", false);
-        for( int iLeaf = 0 ; iLeaf < threadFakeDataWeightFormula->GetNcodes() ; iLeaf++ ){
-          threadChain->SetBranchStatus(threadFakeDataWeightFormula->GetLeaf(iLeaf)->GetName(), true);
-        }
-      }
-
-      if (isData and not this->getDataNominalWeightFormulaStr().empty() ){
+      else if (not this->getDataNominalWeightFormulaStr().empty() ){
         threadChain->SetBranchStatus("*", true);
         threadNominalWeightFormula = new TTreeFormula(
             Form("NominalWeightFormula%i", iThread_),
@@ -618,9 +628,9 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
                     lastFailedBinVarIndex = -1;
                     for( iDial = 0 ; iDial < dialSetPtr->getDialList().size(); iDial++ ){
                       // ----------> SLOW PART
-                      applyConditionBinPtr = &dialSetPtr->getDialList()[iDial]->getApplyConditionBin();
+                      applyConditionBinPtr = dialSetPtr->getDialList()[iDial]->getApplyConditionBinPtr();
 
-                      if( lastFailedBinVarIndex != -1 ){
+                      if( applyConditionBinPtr != nullptr and lastFailedBinVarIndex != -1 ){
                         if( not applyConditionBinPtr->isBetweenEdges(
                             applyConditionBinPtr->getEdgesList()[lastFailedBinVarIndex],
                             eventBuffer.getVarAsDouble(applyConditionBinPtr->getEventVarIndexCache()[lastFailedBinVarIndex] )
@@ -633,18 +643,21 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
                       // Ok, lets give this dial a chance:
                       isEventInDialBin = true;
 
-                      for( iVar = 0 ; iVar < applyConditionBinPtr->getEdgesList().size() ; iVar++ ){
-                        if( iVar == lastFailedBinVarIndex ) continue; // already checked if set
-                        if( not applyConditionBinPtr->isBetweenEdges(
-                            applyConditionBinPtr->getEdgesList()[iVar],
-                            eventBuffer.getVarAsDouble(applyConditionBinPtr->getEventVarIndexCache()[iVar] )
-                        )){
-                          isEventInDialBin = false;
-                          lastFailedBinVarIndex = int(iVar);
-                          break;
-                          // NEXT DIAL! Don't check other bin variables
-                        }
-                      } // Bin var loop
+                      if( applyConditionBinPtr != nullptr ){
+                        for( iVar = 0 ; iVar < applyConditionBinPtr->getEdgesList().size() ; iVar++ ){
+                          if( iVar == lastFailedBinVarIndex ) continue; // already checked if set
+                          if( not applyConditionBinPtr->isBetweenEdges(
+                              applyConditionBinPtr->getEdgesList()[iVar],
+                              eventBuffer.getVarAsDouble(applyConditionBinPtr->getEventVarIndexCache()[iVar] )
+                          )){
+                            isEventInDialBin = false;
+                            lastFailedBinVarIndex = int(iVar);
+                            break;
+                            // NEXT DIAL! Don't check other bin variables
+                          }
+                        } // Bin var loop
+                      }
+
                       // <------------------
                       if( isEventInDialBin ) {
                         dialSetPtr->getDialList()[iDial]->setIsReferenced(true);
@@ -685,7 +698,6 @@ void DataSetLoader::load(FitSampleSet* sampleSetPtr_, std::vector<FitParameterSe
     for( size_t iSample = 0 ; iSample < samplesToFillList.size() ; iSample++ ){
       if (not isData) samplesToFillList[iSample]->getMcContainer().shrinkEventList(sampleIndexOffsetList[iSample]);
       if (isData) samplesToFillList[iSample]->getDataContainer().shrinkEventList(sampleIndexOffsetList[iSample]);
-
     }
 
     LogInfo << "Events have been loaded for " << ( isData ? "data": "mc" )
@@ -752,6 +764,7 @@ void DataSetLoader::print() {
 }
 
 void DataSetLoader::fetchRequestedLeaves(std::vector<FitParameterSet>* parSetList_){
+  LogDebug << __METHOD_NAME__ << std::endl;
 
   if( parSetList_ == nullptr ) return;
 
@@ -776,9 +789,11 @@ void DataSetLoader::fetchRequestedLeaves(std::vector<FitParameterSet>* parSetLis
         }
 
         for( auto& dial : dialSetPtr->getDialList() ){
-          for( auto& var : dial->getApplyConditionBin().getVariableNameList() ){
-            this->addLeafRequestedForIndexing(var);
-          } // var
+          if( dial->getApplyConditionBinPtr() != nullptr ){
+            for( auto& var : dial->getApplyConditionBin().getVariableNameList() ){
+              this->addLeafRequestedForIndexing(var);
+            } // var
+          }
         } // dial
       }
 

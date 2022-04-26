@@ -110,21 +110,67 @@ void SampleElement::refillHistogram(int iThread_){
     iThread_ = 0;
   }
 
-  // Faster that pointer shifter. -> would be slower if refillHistogram is handled by the propagator
+  // Faster that pointer shifter. -> would be slower if refillHistogram is
+  // handled by the propagator
 
   // Size = Nbins + 2 overflow (0 and last)
   auto* binContentArray = histogram->GetArray();
 
   int iBin = iThread_;
   int nBins = int(perBinEventPtrList.size());
-  while( iBin < nBins ){
-    binContentArray[iBin+1] = 0;
-    for( auto* eventPtr : perBinEventPtrList.at(iBin)){
-      binContentArray[iBin+1] += eventPtr->getEventWeight();
+
+#ifdef GUNDAM_USING_CUDA
+  if (_CacheManagerValue_) {
+      if (_CacheManagerValid_ && !(*_CacheManagerValid_)) {
+          // This is slowish, but will make sure that the cached result is
+          // updated when the cache has changed.  The values pointed to by
+          // _CacheManagerResult_ and _CacheManagerValid_ are inside
+          // of the weights cache (a bit of evil coding here), and are
+          // updated by the cache.  The update is triggered by
+          // _CacheManagerUpdate().
+          if (_CacheManagerUpdate_) (*_CacheManagerUpdate_)();
+      }
+  }
+  while( iBin < nBins ) {
+    double content = 0.0;
+    if (_CacheManagerValue_ && 0 <= _CacheManagerIndex_) {
+        content = _CacheManagerValue_[_CacheManagerIndex_+iBin];
+#ifdef CACHE_MANAGER_SLOW_VALIDATION
+        double slowValue = 0.0;
+        for( auto* eventPtr : perBinEventPtrList.at(iBin)){
+            slowValue += eventPtr->getEventWeight();
+        }
+        double delta = std::abs(slowValue-content);
+        if (delta > 1E-6) {
+            LogInfo << "VALIDATION: Bin mismatch " << _CacheManagerIndex_
+                    << " " << iBin
+                    << " " << name
+                    << " " << slowValue
+                    << " " << content
+                    << " " << delta
+                    << std::endl;
+        }
+#endif
     }
-    histogram->GetSumw2()->GetArray()[iBin+1] = TMath::Sqrt(binContentArray[iBin+1]);
+    else {
+        for( auto* eventPtr : perBinEventPtrList.at(iBin)){
+            content += eventPtr->getEventWeight();
+        }
+    }
+    binContentArray[iBin+1] = content;
+    histogram->GetSumw2()->GetArray()[iBin+1] = content;
     iBin += nbThreads;
   }
+#else
+  while( iBin < nBins ) {
+    binContentArray[iBin + 1] = 0;
+    for (auto *eventPtr: perBinEventPtrList.at(iBin)) {
+      binContentArray[iBin + 1] += eventPtr->getEventWeight();
+    }
+    histogram->GetSumw2()->GetArray()[iBin + 1] = binContentArray[iBin + 1];
+    iBin += nbThreads;
+  }
+#endif
 }
 void SampleElement::rescaleHistogram() {
   if( isLocked ) return;

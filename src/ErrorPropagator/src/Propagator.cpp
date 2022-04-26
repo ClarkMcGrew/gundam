@@ -4,8 +4,15 @@
 
 #include "Propagator.h"
 
+#ifdef GUNDAM_USING_CUDA
+#include "CacheManager.h"
+#endif
+
 #include "FitParameterSet.h"
 #include "Dial.h"
+#include "SplineDial.h"
+#include "GraphDial.h"
+#include "NormalizationDial.h"
 #include "JsonUtils.h"
 #include "GlobalVariables.h"
 #include <AnaTreeMC.hh>
@@ -14,7 +21,7 @@
 #include "GenericToolbox.Root.h"
 
 #include <vector>
-
+#include <set>
 
 LoggerInit([](){
   Logger::setUserHeaderStr("[Propagator]");
@@ -31,11 +38,11 @@ void Propagator::reset() {
   std::vector<std::string> jobNameRemoveList;
   for( const auto& jobName : GlobalVariables::getParallelWorker().getJobNameList() ){
     if(jobName == "Propagator::fillEventDialCaches"
-    or jobName == "Propagator::reweightSampleEvents"
-    or jobName == "Propagator::updateDialResponses"
-    or jobName == "Propagator::refillSampleHistograms"
-    or jobName == "Propagator::applyResponseFunctions"
-      ){
+       or jobName == "Propagator::reweightSampleEvents"
+       or jobName == "Propagator::updateDialResponses"
+       or jobName == "Propagator::refillSampleHistograms"
+       or jobName == "Propagator::applyResponseFunctions"
+        ){
       jobNameRemoveList.emplace_back(jobName);
     }
   }
@@ -50,15 +57,18 @@ void Propagator::reset() {
 void Propagator::setShowTimeStats(bool showTimeStats) {
   _showTimeStats_ = showTimeStats;
 }
-void Propagator::setSaveDir(TDirectory *saveDir) {
-  _saveDir_ = saveDir;
-}
 void Propagator::setConfig(const json &config) {
   _config_ = config;
   while( _config_.is_string() ){
     LogWarning << "Forwarding " << __CLASS_NAME__ << " config: \"" << _config_.get<std::string>() << "\"" << std::endl;
     _config_ = JsonUtils::readConfigFile(_config_.get<std::string>());
   }
+}
+void Propagator::setSaveDir(TDirectory *saveDir) {
+  _saveDir_ = saveDir;
+}
+void Propagator::setThrowAsimovToyParameters(bool throwAsimovToyParameters) {
+  _throwAsimovToyParameters_ = throwAsimovToyParameters;
 }
 
 void Propagator::initialize() {
@@ -107,6 +117,8 @@ void Propagator::initialize() {
   _plotGenerator_.setConfig(plotGeneratorConfig);
   _plotGenerator_.initialize();
 
+  _throwAsimovToyParameters_ = JsonUtils::fetchValue<json>(_config_, "throwAsimovFitParameters", _throwAsimovToyParameters_);
+
   LogInfo << "Initializing input datasets..." << std::endl;
   auto dataSetListConfig = JsonUtils::getForwardedConfig(_config_, "dataSetList");
   if( dataSetListConfig.empty() ){
@@ -136,13 +148,22 @@ void Propagator::initialize() {
 //    fillDialsStack();
 //  }
 
+#ifdef GUNDAM_USING_CUDA
+  // After all of the data has been loaded.  Specifically, this must be after
+  // the MC has been copied for the Asimov fit, or the "data" use the MC
+  // reweighting cache.  This must also be before the first use of
+  // reweightSampleEvents.
+  Cache::Manager::Build(getFitSampleSet());
+#endif
+
   LogInfo << "Initializing threads..." << std::endl;
   initializeThreads();
 
   LogInfo << "Propagating prior parameters on events..." << std::endl;
   reweightSampleEvents();
 
-  LogInfo << "Set the current MC prior weights as nominal weight..." << std::endl;
+  LogInfo << "Set the current MC prior weights as nominal weight..."
+          << std::endl;
   for( auto& sample : _fitSampleSet_.getFitSampleList() ){
     for( auto& event : sample.getMcContainer().eventList ){
       event.setNominalWeight(event.getEventWeight());
@@ -150,15 +171,17 @@ void Propagator::initialize() {
   }
 
   if(   _fitSampleSet_.getDataEventType() == DataEventType::Asimov
-    or _fitSampleSet_.getDataEventType() == DataEventType::FakeData
-  ){
+        or _fitSampleSet_.getDataEventType() == DataEventType::FakeData
+      ){
     LogInfo << "Propagating prior weights on data Asimov/FakeData events..." << std::endl;
 
-    if( JsonUtils::fetchValue<json>(_config_, "throwAsimovFitParameters", false) ){
+    if( _throwAsimovToyParameters_ ){
       LogWarning << "Throwing fit parameters for Asimov data..." << std::endl;
       for( auto& parSet : _parameterSetsList_ ){
         if( not parSet.isEnabled() ) continue;
+        if( not parSet.isEnabledThrowToyParameters() ) continue;
         parSet.throwFitParameters();
+        std::cout << parSet.getSummary() << std::endl;
       }
       reweightSampleEvents();
     }
@@ -174,6 +197,7 @@ void Propagator::initialize() {
       for( int iEvent = 0 ; iEvent < nEvents ; iEvent++ ){
         // Since no reweight is applied on data samples, the nominal weight should be the default one
         weightBuffer = (*mcEventList)[iEvent].getEventWeight();
+
         if( _fitSampleSet_.getDataEventType() == DataEventType::FakeData ){
           weightBuffer *= (*mcEventList)[iEvent].getFakeDataWeight();
         }
@@ -185,7 +209,7 @@ void Propagator::initialize() {
     }
 
     // Make sure MC event are back at their nominal value:
-    if( JsonUtils::fetchValue<json>(_config_, "throwAsimovFitParameters", false) ){
+    if( _throwAsimovToyParameters_ ){
       for( auto& parSet : _parameterSetsList_ ){
         if( not parSet.isEnabled() ) continue;
         parSet.moveFitParametersToPrior();
@@ -276,15 +300,47 @@ void Propagator::updateDialResponses(){
   dialUpdate.counts++; dialUpdate.cumulated += GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
 }
 void Propagator::reweightSampleEvents() {
+  bool usedGPU{false};
+#ifdef GUNDAM_USING_CUDA
+#define DUMP_PARAMETERS
+#ifdef DUMP_PARAMETERS
+  do {
+    static bool printed = false;
+    if (printed) break;
+    printed = true;
+    // This produces a crazy amount of output.
+    int iPar = 0;
+    for (auto& parSet : _parameterSetsList_) {
+      for ( auto& par : parSet.getParameterList()) {
+        LogInfo << "DUMP: " << iPar++
+                << " " << par.isEnabled()
+                << " " << par.getParameterValue()
+                << " (" << par.getFullTitle() << ")";
+        if (Cache::Manager::ParameterIndex(&par) < 0) {
+          LogInfo << " not used";
+        }
+        LogInfo << std::endl;
+      }
+    }
+  } while (false);
+#endif
   GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
-  GlobalVariables::getParallelWorker().runJob("Propagator::reweightSampleEvents");
-  weightProp.counts++; weightProp.cumulated += GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
+  usedGPU = Cache::Manager::Fill();
+#endif
+  if( not usedGPU ){
+    GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
+    GlobalVariables::getParallelWorker().runJob("Propagator::reweightSampleEvents");
+  }
+  weightProp.counts++;
+  weightProp.cumulated += GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
 }
+
 void Propagator::refillSampleHistograms(){
   GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
   GlobalVariables::getParallelWorker().runJob("Propagator::refillSampleHistograms");
   fillProp.counts++; fillProp.cumulated += GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
 }
+
 void Propagator::applyResponseFunctions(){
   GenericToolbox::getElapsedTimeSinceLastCallInMicroSeconds(__METHOD_NAME__);
   GlobalVariables::getParallelWorker().runJob("Propagator::applyResponseFunctions");
@@ -312,11 +368,11 @@ void Propagator::fillDialsStack(){
           if(dialSet.getGlobalDialType() == DialType::Normalization){ continue; } // no cache needed
           for( auto& dial : dialSet.getDialList() ){
             if(dial->isReferenced()) _dialsStack_.emplace_back(dial.get());
-          }
-        }
-      }
+          } // dial
+        } // dialSet
+      } // par
     }
-  }
+  } // parSet
 }
 
 
@@ -385,8 +441,8 @@ void Propagator::makeResponseFunctions(){
         _responseFunctionsSamplesMcHistogram_[&sample].emplace_back(std::shared_ptr<TH1D>((TH1D*) sample.getMcContainer().histogram->Clone()) );
         GenericToolbox::transformBinContent(_responseFunctionsSamplesMcHistogram_[&sample].back().get(), [&](TH1D* h_, int b_){
           h_->SetBinContent(
-            b_,
-            (h_->GetBinContent(b_)/_nominalSamplesMcHistogram_[&sample]->GetBinContent(b_))-1);
+              b_,
+              (h_->GetBinContent(b_)/_nominalSamplesMcHistogram_[&sample]->GetBinContent(b_))-1);
           h_->SetBinError(b_,0);
         });
       }
@@ -436,6 +492,7 @@ void Propagator::updateDialResponses(int iThread_){
   }
 
 }
+
 void Propagator::reweightSampleEvents(int iThread_) {
   int nThreads = GlobalVariables::getNbThreads();
   if(iThread_ == -1){
@@ -510,8 +567,8 @@ void Propagator::applyResponseFunctions(int iThread_){
         for( int iBin = 1 ; iBin <= histBuffer->GetNbinsX() ; iBin++ ){
           if( iBin % GlobalVariables::getNbThreads() != iThread_ ) continue;
           histBuffer->SetBinContent(
-            iBin,
-            histBuffer->GetBinContent(iBin) * ( 1 + xSigmaPar * rfHistBuffer->GetBinContent(iBin) )
+              iBin,
+              histBuffer->GetBinContent(iBin) * ( 1 + xSigmaPar * rfHistBuffer->GetBinContent(iBin) )
           );
         }
       }
