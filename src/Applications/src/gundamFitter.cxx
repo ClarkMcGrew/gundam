@@ -31,6 +31,10 @@ int main(int argc, char** argv){
   g.setAppName("GundamFitter");
   g.hello();
 
+  // Make sure the seed is safely set.  It might be overridden by the command
+  // line.  This uses the UUID of the process as the default seed.
+  GlobalVariables::setPrngSeed(0);
+
   // --------------------------
   // Read Command Line Args:
   // --------------------------
@@ -46,6 +50,7 @@ int main(int argc, char** argv){
   clParser.addOption("scanParameters", {"--scan"}, "Enable parameter scan before and after the fit");
   clParser.addOption("toyFit", {"--toy"}, "Run a toy fit");
   clParser.addOption("restoreFile", {"-r", "--restore-file"}, "Specify the mcmc restore file");
+  clParser.addOption("prngSeed", {"-s", "--seed"}, "Set the PRNG seed");
 
   clParser.getOptionPtr("scanParameters")->setAllowEmptyValue(true); // --scan can be followed or not by the number of steps
   clParser.getOptionPtr("toyFit")->setAllowEmptyValue(true); // --toy can be followed or not by the number of steps
@@ -80,6 +85,10 @@ int main(int argc, char** argv){
 
   GlobalVariables::setNbThreads(clParser.getOptionVal("nbThreads", 1));
   LogInfo << "Running the fitter with " << GlobalVariables::getNbThreads() << " parallel threads." << std::endl;
+
+  ULong_t seed = clParser.getOptionVal("prngSeed",1);
+  LogInfo << "Pseudorandom sequence initialized with: " << seed << std::endl;
+  GlobalVariables::setPrngSeed(seed);
 
   // --------------------------
   // Initialize the fitter:
