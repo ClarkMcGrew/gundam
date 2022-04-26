@@ -33,7 +33,7 @@ public:
   static std::map<std::string, bool>& getBoolMap();
   static std::vector<TChain*>& getChainList();
   static GenericToolbox::ParallelWorker &getParallelWorker();
-  static TRandom3& getPrng();
+  static TRandom* getPrng();
   static bool getEnableCacheManager();
 
 private:
@@ -45,7 +45,6 @@ private:
   static std::map<std::string, bool> _boolMap_;
   static std::vector<TChain*> _chainList_;
   static GenericToolbox::ParallelWorker _threadPool_;
-  static TRandom3 _prng_;
   static bool _enableCacheManager_;
 
 };

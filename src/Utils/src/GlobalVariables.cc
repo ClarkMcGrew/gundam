@@ -12,7 +12,6 @@ std::mutex GlobalVariables::_threadMutex_;
 std::map<std::string, bool> GlobalVariables::_boolMap_;
 std::vector<TChain*> GlobalVariables::_chainList_;
 GenericToolbox::ParallelWorker GlobalVariables::_threadPool_;
-TRandom3 GlobalVariables::_prng_;
 bool GlobalVariables::_enableCacheManager_{true};
 
 void GlobalVariables::setNbThreads(int nbThreads_){
@@ -24,7 +23,7 @@ void GlobalVariables::setNbThreads(int nbThreads_){
   _threadPool_.initialize();
 }
 void GlobalVariables::setPrngSeed(ULong_t seed_){
-  _prng_.SetSeed(seed_);
+  getPrng()->SetSeed(seed_);
 }
 
 void GlobalVariables::setEnableCacheManager(bool enable) {_enableCacheManager_ = enable;}
@@ -43,6 +42,6 @@ std::vector<TChain*>& GlobalVariables::getChainList() { return _chainList_; }
 GenericToolbox::ParallelWorker &GlobalVariables::getParallelWorker() {
   return _threadPool_;
 }
-TRandom3& GlobalVariables::getPrng(){
-  return _prng_;
+TRandom* GlobalVariables::getPrng(){
+  return gRandom;
 }
