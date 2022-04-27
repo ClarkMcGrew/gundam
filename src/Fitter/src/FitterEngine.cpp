@@ -1367,6 +1367,7 @@ void FitterEngine::initializeMinimizer(bool doReleaseFixed_){
   _minimizerAlgo_ = JsonUtils::fetchValue(_minimizerConfig_, "algorithm", "");
 
   _useNormalizedFitSpace_ = JsonUtils::fetchValue(_minimizerConfig_, "useNormalizedFitSpace", true);
+  if (!allowFitSpaceTransformations()) _useNormalizedFitSpace_ = false;
 
   _minimizer_ = std::shared_ptr<ROOT::Math::Minimizer>(
       ROOT::Math::Factory::CreateMinimizer(_minimizerType_, _minimizerAlgo_)

@@ -66,9 +66,12 @@ protected:
   void rescaleParametersStepSize();
   void initializeMinimizer(bool doReleaseFixed_ = false);
 
+  // Some fit engines (e.g. MCMCEngine) need to work in the untransformed
+  // parameter space.  For instance, in MCMCEngine it is estimating PDF
+  // [P(x)dx], and a transformation can change the metric in a complicated
+  // way.
+  virtual bool allowFitSpaceTransformations() const {return true;}
 
-
-//private:
   // Parameters
   TDirectory* _saveDir_{nullptr};
   nlohmann::json _config_{};
