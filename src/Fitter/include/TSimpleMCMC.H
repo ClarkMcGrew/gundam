@@ -25,7 +25,9 @@ typedef std::vector<Parameter> Vector;
 #define MCMC_DEBUG(level) if (level <= (MCMC_DEBUG_LEVEL)) std::cout
 #endif
 
+#ifndef MCMC_ERROR
 #define MCMC_ERROR (std::cout <<__FILE__<<":: " << __LINE__ << ": " )
+#endif
 
 class TProposeAdaptiveStep;
 
@@ -293,7 +295,7 @@ public:
     bool Step(bool save=true, bool metropolis=true) {
         if (fProposed.empty() || fAccepted.empty()) {
             MCMC_ERROR << "Must initialize starting point" << std::endl;
-            throw;
+            throw std::invalid_argument("Uninitialized starting point");
         }
 
         ++fTotalSteps;
@@ -504,7 +506,7 @@ public:
             // Apply a sanity check.  This MUST be true.
             MCMC_ERROR << "Proposal and current vectors must be same size."
                        << std::endl;
-            throw;
+            throw std::logic_error("Proposal and current length mismatch");
         }
 
         UpdateState(current,value);
@@ -649,14 +651,14 @@ public:
             trace += fCurrentCov(i,i);
         }
         MCMC_DEBUG(1) << " Covariance Trace: " << trace
-                      << std::endl
-                      << "        = ";
+                      << std::endl;
+        MCMC_DEBUG(2) << "        = ";
         for (std::size_t i=0; i<fLastPoint.size(); ++i) {
-            MCMC_DEBUG(1) << fCurrentCov(i,i);
-            if (i<fLastPoint.size()-1) MCMC_DEBUG(1) << " + ";
-            if (i%6 == 5) MCMC_DEBUG(1) << std::endl << "           ";
+            MCMC_DEBUG(2) << fCurrentCov(i,i);
+            if (i<fLastPoint.size()-1) MCMC_DEBUG(2) << " + ";
+            if (i%6 == 5) MCMC_DEBUG(2) << std::endl << "           ";
         }
-        MCMC_DEBUG(1) << std::endl;
+        MCMC_DEBUG(2) << std::endl;
 
         // The proposal is being updated, so deweight the current covariance
         // so that the new information weighs more.
@@ -712,7 +714,7 @@ public:
                 MCMC_ERROR << "Illegal proposal type for dimension " << i
                            << ": Type is " << fProposalType[i].type
                            << std::endl;
-                throw;
+                throw std::invalid_argument("Illegal proposal type");
             }
             // The minimum scale of the covariance relative to the prechain
             // estimate of the variance.  This should be picked to make sure
@@ -762,11 +764,11 @@ public:
     /// forget about the path to stocastic equilibrium since the covariance is
     /// reset back to the initial conditions.
     void ResetProposal() {
-        MCMC_DEBUG(2) << "Reset the proposal after "
+        MCMC_DEBUG(1) << "Reset the proposal after "
                       << fSuccesses << " successes "
                       << " in " << fTrials << " trials "
                       << std::endl;
-        MCMC_DEBUG(2) << " Recent acceptance rate was " << fAcceptance
+        MCMC_DEBUG(1) << " Recent acceptance rate was " << fAcceptance
                       << " with an adjusted width of " << fSigma
                       << std::endl;
         // Reset the success and trials counts.
@@ -826,13 +828,15 @@ public:
 
         // Set a default window to average the covariance over.  This
         // basically averages over everything.  It shouldn't be infinite since
-        // the way the covariance is calculated startes to run into round-off
-        // errors if the is overly large.
+        // the way the covariance is calculated starts to run into round-off
+        // errors if the is overly large.  If the current window is less than
+        // minWindow, then it's not initialized or the user is asking for a
+        // silly value, and "we know better".
         int minWindow = 1000;
         if (fCovarianceWindow < minWindow) fCovarianceWindow = 10000000;
         // After reseting, erase the acceptance history.
         if (fTargetAcceptance < 0.0) {
-            throw std::runtime_error("target acceptance not initialized");
+            throw std::runtime_error("Target acceptance not initialized");
         }
         fAcceptance = fTargetAcceptance;
         fAcceptanceTrials = std::min(10.0, 0.5*fAcceptanceWindow);
@@ -920,7 +924,7 @@ public:
                 if (cov == fSaveCovariance.end()) {
                     MCMC_ERROR << "Past the end of the covariance"
                                << std::endl;
-                    throw;
+                    throw std::logic_error("Past the end of the covariance");
                 }
                 if (i == j) fCurrentCov(i,i) = *cov;
                 else fCurrentCov(i,j) = fCurrentCov(j,i) = *cov;
