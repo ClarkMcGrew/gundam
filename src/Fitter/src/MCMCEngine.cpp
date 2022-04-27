@@ -195,7 +195,7 @@ MCMCEngine::MCMCEngine() {}
 
 // An MIT Style License
 
-// Copyright (c) 2022 Shilin Liu (Preliminary: Checking with Shilin)
+// Copyright (c) 2022 Shilin Liu
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
