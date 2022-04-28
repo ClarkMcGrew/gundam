@@ -464,7 +464,6 @@ bool Cache::Manager::Build(FitSampleSet& sampleList) {
 bool Cache::Manager::Fill() {
     Cache::Manager* cache = Cache::Manager::Get();
     if (!cache) return false;
-#define DUMP_FILL_INPUT_PARAMETERS
 #ifdef DUMP_FILL_INPUT_PARAMETERS
     do {
         static bool printed = false;
