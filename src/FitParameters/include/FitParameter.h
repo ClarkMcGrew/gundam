@@ -23,6 +23,7 @@ namespace PriorType{
   PriorType toPriorType(const std::string& priorStr_);
 }
 
+class FitParameterSet;
 
 class FitParameter {
 
@@ -48,7 +49,7 @@ public:
   void setMinValue(double minValue);
   void setMaxValue(double maxValue);
   void setStepSize(double stepSize);
-  void setParSetRef(void *parSetRef);
+  void setParSetRef(const FitParameterSet *parSetRef);
   void setPriorType(PriorType::PriorType priorType);
 
   void setValueAtPrior();
@@ -72,7 +73,7 @@ public:
   double getMaxValue() const;
   double getStepSize() const;
 
-  void *getParSetRef() const;
+  const FitParameterSet* getParSetRef() const;
 
   // Core
   double getDistanceFromNominal() const; // in unit of sigmas
@@ -97,14 +98,14 @@ private:
   std::string _dialsWorkingDirectory_;
   bool _isEnabled_{true};
   bool _isFixed_{false};
-  void* _parSetRef_{nullptr};
+  const FitParameterSet* _parSetRef_{nullptr};
 
   bool _isEigen_{false};
   bool _isFree_{false};
 
   // Internals
   std::vector<DialSet> _dialSetList_; // one dial set per detector
-  
+
   PriorType::PriorType _priorType_{PriorType::Gaussian};
 
 

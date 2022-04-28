@@ -99,7 +99,7 @@ void FitParameter::setMaxValue(double maxValue) {
 void FitParameter::setStepSize(double stepSize) {
   _stepSize_ = stepSize;
 }
-void FitParameter::setParSetRef(void *parSetRef) {
+void FitParameter::setParSetRef(const FitParameterSet *parSetRef) {
   _parSetRef_ = parSetRef;
 }
 void FitParameter::setPriorType(PriorType::PriorType priorType) {
@@ -219,7 +219,7 @@ double FitParameter::getMaxValue() const {
 double FitParameter::getStepSize() const {
   return _stepSize_;
 }
-void *FitParameter::getParSetRef() const {
+const FitParameterSet* FitParameter::getParSetRef() const {
   return _parSetRef_;
 }
 
