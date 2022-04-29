@@ -31,10 +31,6 @@ int main(int argc, char** argv){
   g.setAppName("GundamFitter");
   g.hello();
 
-  // Make sure the seed is safely set.  It might be overridden by the command
-  // line.  This uses the UUID of the process as the default seed.
-  GlobalVariables::setPrngSeed(0);
-
   // --------------------------
   // Read Command Line Args:
   // --------------------------
@@ -87,7 +83,9 @@ int main(int argc, char** argv){
   GlobalVariables::setNbThreads(clParser.getOptionVal("nbThreads", 1));
   LogInfo << "Running the fitter with " << GlobalVariables::getNbThreads() << " parallel threads." << std::endl;
 
-  ULong_t seed = clParser.getOptionVal("prngSeed",1);
+  // Make sure the seed is safely set.  It might be set on the command
+  // line.  This uses the UUID of the process as the default seed.
+  ULong_t seed = clParser.getOptionVal("prngSeed",0);
   LogInfo << "Pseudorandom sequence initialized with: " << seed << std::endl;
   GlobalVariables::setPrngSeed(seed);
 
@@ -154,6 +152,9 @@ int main(int argc, char** argv){
   }
   else if (engine == "MCMC") {
     fitter = new MCMCEngine();
+  }
+  else {
+      throw std::runtime_error("Invalid fitting engine requested");
   }
 
   fitter->setConfig(JsonUtils::fetchSubEntry(jsonConfig, {"fitterEngineConfig"}));
