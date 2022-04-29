@@ -24,7 +24,7 @@ Cache::Weight::MonotonicSpline::MonotonicSpline(
     Cache::Parameters::Clamps& lowerClamps,
     Cache::Parameters::Clamps& upperClamps,
     std::size_t splines, std::size_t knots)
-    : Cache::Weight::Base("compactSpline",weights,parameters),
+    : Cache::Weight::Base("monotonicSpline",weights,parameters),
       fLowerClamp(lowerClamps), fUpperClamp(upperClamps),
       fSplinesReserved(splines), fSplinesUsed(0),
       fSplineKnotsReserved(knots), fSplineKnotsUsed(0) {
@@ -52,7 +52,7 @@ Cache::Weight::MonotonicSpline::MonotonicSpline(
     fTotalBytes += GetSplineKnotsReserved()*sizeof(WEIGHT_BUFFER_FLOAT);  // fSpineKnots
 
 
-    LogInfo << "Approximate Memory Size for " << GetName()
+    LogInfo << "Approximate memory size for " << GetName()
             << ": " << fTotalBytes/1E+9
             << " GB" << std::endl;
 

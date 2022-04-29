@@ -51,9 +51,9 @@ Cache::Weight::UniformSpline::UniformSpline(
     LogInfo << "Reserved " << GetName()
             << " Spline Knots: " << GetSplineKnotsReserved()
             << std::endl;
-    fTotalBytes += GetSplineKnotsReserved()*sizeof(WEIGHT_BUFFER_FLOAT);  // fSpineKnots
+    fTotalBytes += GetSplineKnotsReserved()*sizeof(WEIGHT_BUFFER_FLOAT);
 
-    LogInfo << "Approximate Memory Size for " << GetName()
+    LogInfo << "Approximate memory size for " << GetName()
             << ": " << fTotalBytes/1E+9
             << " GB" << std::endl;
 
@@ -77,7 +77,8 @@ Cache::Weight::UniformSpline::UniformSpline(
         // during initialization so do not pin the CPU memory into the page
         // set.
         fSplineKnots.reset(
-            new hemi::Array<WEIGHT_BUFFER_FLOAT>(GetSplineKnotsReserved(),false));
+            new hemi::Array<WEIGHT_BUFFER_FLOAT>(
+                GetSplineKnotsReserved(),false));
     }
     catch (std::bad_alloc&) {
         LogError << "Failed to allocate memory, so stopping" << std::endl;

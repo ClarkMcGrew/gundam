@@ -26,15 +26,15 @@ Cache::Weights::Weights(
       fTotalBytes(0), fResultCount(results) {
     if (fResultCount<1) throw std::runtime_error("No results in weight cache");
 
-    LogInfo << "Cached Weights -- output results reserved: "
+    LogInfo << "Initial value and output results reserved: "
            << GetResultCount()
            << std::endl;
     fTotalBytes = 0;
     fTotalBytes += GetResultCount()*sizeof(double);   // fResults
     fTotalBytes += GetResultCount()*sizeof(double);   // fInitialValues;
 
-    LogInfo << "Cached Weights -- approximate memory size: " << fTotalBytes/1E+9
-            << " GB" << std::endl;
+    LogInfo << "Approximate memory size for initial values and results: "
+            << fTotalBytes/1E+9 << " GB" << std::endl;
 
     try {
         // Get CPU/GPU memory for the results and thier initial values.  The

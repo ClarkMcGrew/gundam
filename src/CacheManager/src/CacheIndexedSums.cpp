@@ -23,13 +23,13 @@ Cache::IndexedSums::IndexedSums(Cache::Weights::Results& inputs,
     if (inputs.size()<1) throw std::runtime_error("No bins to sum");
     if (bins<1) throw std::runtime_error("No bins to sum");
 
-    LogInfo << "Cached IndexedSums -- bins reserved: "
+    LogInfo << "IndexedSums bins reserved: "
            << bins
            << std::endl;
     fTotalBytes += bins*sizeof(double);                   // fSums
     fTotalBytes += fEventWeights.size()*sizeof(short);   // fIndexes;
 
-    LogInfo << "Cached IndexedSums -- approximate memory size: "
+    LogInfo << "Approximate memory size for indexed sums: "
             << double(fTotalBytes)/1E+6
             << " MB" << std::endl;
 

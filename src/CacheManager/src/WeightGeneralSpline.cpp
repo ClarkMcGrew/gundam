@@ -53,7 +53,7 @@ Cache::Weight::GeneralSpline::GeneralSpline(
             << std::endl;
     fTotalBytes += GetSplineKnotsReserved()*sizeof(WEIGHT_BUFFER_FLOAT);  // fSpineKnots
 
-    LogInfo << "Approximate Memory Size for " << GetName()
+    LogInfo << "Approximate memory size for " << GetName()
             << ": " << fTotalBytes/1E+9
             << " GB" << std::endl;
 

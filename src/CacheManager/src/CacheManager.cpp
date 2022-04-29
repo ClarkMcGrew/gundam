@@ -124,7 +124,7 @@ Cache::Manager::Manager(int events, int parameters,
         throw std::runtime_error("Not enough memory available");
     }
 
-    LogInfo << "Approximate cache manager size for"
+    LogInfo << "Approximate memory size for cache with"
             << " " << events << " events:"
             << " " << GetResidentMemory()/1E+9 << " GB "
             << " (" << GetResidentMemory()/events << " bytes per event)"

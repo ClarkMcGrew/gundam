@@ -31,7 +31,7 @@ Cache::Weight::Normalization::Normalization(
     fTotalBytes += GetNormsReserved()*sizeof(int);   // fNormResult
     fTotalBytes += GetNormsReserved()*sizeof(short); // fNormParameter
 
-    LogInfo << "Approximate Memory Size: " << fTotalBytes/1E+9
+    LogInfo << "Approximate memory size: " << fTotalBytes/1E+9
            << " GB" << std::endl;
 
     try {
