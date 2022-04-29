@@ -404,6 +404,8 @@ public:
 
 protected:
 
+    /// A wrapper around the call to the likelihood.  The main purpose is to
+    /// count the number of times the likelihood is called.
     double GetLogLikelihoodValue(const Vector& point) {
         ++fLogLikelihoodCount;
         return fLogLikelihood(point);
@@ -494,7 +496,8 @@ public:
     TProposeAdaptiveStep() :
         fLastValue(0.0), fCovarianceWindow(-1),
         fTrials(0), fSuccesses(0), fNextUpdate(-1),
-        fAcceptance(0.0), fAcceptanceTrials(0), fAcceptanceWindow(-1),
+        fAcceptance(0.0), fAcceptanceTrials(0),
+        fAcceptanceWindow(-1), fAcceptanceRigidity(1.0),
         fTargetAcceptance(-1), fSigma(0.0), fStateInitialized(false) { }
 
     /// Take a proposed trial point to fill, the current point, and the
@@ -531,7 +534,25 @@ public:
         }
     }
 
+    /// Get the current estimated center of the point cloud.
     const Vector& GetEstimatedCenter() const {return fCentralPoint;}
+
+    /// Get the number of steps tried in the current chain.
+    int GetTrials() const {return fTrials;}
+
+    /// Get the number of successful steps in the current chain.
+    int GetSuccesses() const {return fSuccesses;}
+
+    /// Get the current step size in standard deviations of the current
+    /// estimate of the posterior covariance.  The step size is adjusted to
+    /// have an acceptance (approximately) equal to the target acceptance.
+    double GetSigma() const {return fSigma;}
+
+    /// Get the current acceptance (averaged over the acceptance window).  The
+    /// step size will be adjusted so that this asymtotically approaches the
+    /// target acceptance.  The usual target acceptance is about 23% (when
+    /// there are more than 5 dimensions.
+    double GetAcceptance() const {return fAcceptance;}
 
     /// Set the number of dimensions in the proposal.  This must match the
     /// dimensionality of the likelihood being use.
@@ -554,7 +575,7 @@ public:
                        << std::endl;
             return;
         }
-        MCMC_DEBUG(0) << "Overriding proposal for dimension " << dim
+        MCMC_DEBUG(2) << "Overriding proposal for dimension " << dim
                       << " to be uniform between "
                       << "[" << minimum
                       << ", " << maximum << "]."
@@ -575,7 +596,7 @@ public:
                        << std::endl;
             return;
         }
-        MCMC_DEBUG(0) << "Overriding proposal for dimension " << dim
+        MCMC_DEBUG(2) << "Overriding proposal for dimension " << dim
                       << " to be Gaussian with "
                       << sigma << " sigma."
                       << std::endl;
@@ -628,11 +649,20 @@ public:
     /// sometimes it should be smaller.
     void SetTargetAcceptance(double a) {fTargetAcceptance = a;}
 
+    /// Set the approximate number of trials needed to approach the target
+    /// acceptance.
+    void SetAcceptanceWindow(double a) {fAcceptanceWindow = a;}
+
+    /// Set the acceptance rigidity.  This is the approximately exponential
+    /// constant needed to relax the acceptance to the target acceptance.  It
+    /// is provided in terms of a fraction of the acceptance window.
+    void SetAcceptanceRigidity(double r) {fAcceptanceRigidity = r;}
+
     /// The proposal steps are chosen based on an estimate of the covariance
     /// of the posterior.  This method forces the covariance of the proposal
     /// to be updated.  It's automatically called during the run, so (while it
     /// can be) it probably doesn't need to be called in user code.
-    void UpdateProposal() {
+    void UpdateProposal(bool fromReset = false) {
         MCMC_DEBUG(1) << "Update after "
                       << fSuccesses << "/" << fTrials << " successes"
                       << " (Accepting: " << fAcceptance
@@ -683,8 +713,19 @@ public:
         // this successes, then UpdateProposal() is done.
         TDecompChol chol(fCurrentCov);
         if (chol.Decompose()) {
+            MCMC_DEBUG(1) << "Correlation matrix was decomposed" << std::endl;
             fDecomposition = chol.GetU();
             return;
+        }
+        MCMC_DEBUG(1) << "Correlation matrix decomposition failed"
+                      << std::endl;
+
+        // If this is attempting to work with the user provided correlation
+        // matrix after a reset, then throw.  This will happen at the very
+        // beginning of the run and can only be fixed by changing the inputs.
+        if (fromReset) {
+            throw std::runtime_error(
+                "Decomposition of user correlations failed");
         }
 
         // The Cholesky decomposition has failed.  That usually means that the
@@ -750,9 +791,13 @@ public:
         // Make another attempt at finding the Cholesky decomposition.
         TDecompChol chol2(fCurrentCov);
         if (chol2.Decompose()) {
+            MCMC_DEBUG(1) << "Correlation matrix was decomposed"
+                          << std::endl;
             fDecomposition = chol2.GetU();
             return;
         }
+        MCMC_DEBUG(1) << "Correlation matrix decomposition failed"
+                      << std::endl;
 
         // Something is going very wrong, so reset the Proposal.  This
         // probably won't work, but it pays to try.
@@ -787,7 +832,7 @@ public:
                 if (i == j
                     && fProposalType[i].type == 0
                     && fProposalType[i].param1 > 0) {
-                    MCMC_DEBUG(0) << "Overriding covariance for dimension "
+                    MCMC_DEBUG(2) << "Overriding covariance for dimension "
                                   << i
                                   << " from "
                                   << fCurrentCov(i,i)
@@ -797,7 +842,7 @@ public:
                     fCurrentCov(i,i) = fProposalType[i].param1;
                 }
                 else if (i == j && fProposalType[i].type == 1) {
-                    MCMC_DEBUG(0) << "Overriding covariance for "
+                    MCMC_DEBUG(2) << "Overriding covariance for "
                                   << i
                                   << " to uniform "
                                   << std::endl;
@@ -847,7 +892,7 @@ public:
         // information coming from the first guess at the central point.
         fCentralPointTrials =  std::min(10.0, 0.1*fCovarianceWindow);
         // This makes sure everything is set properly.
-        UpdateProposal();
+        UpdateProposal(true);
     }
 
     /// Restore the proposal state so that an existing chain can be continued.
@@ -1015,7 +1060,9 @@ public:
         fLastValue = value;
         std::copy(current.begin(), current.end(), fLastPoint.begin());
         // Set a default window to average the acceptance over.
-        fAcceptanceWindow = std::pow(1.0*fLastPoint.size(),2.0) + 1000;
+        if (fAcceptanceWindow < 0) {
+            fAcceptanceWindow = std::pow(1.0*fLastPoint.size(),1.5) + 1000;
+        }
         // The steps until the next update.
         fNextUpdate = fAcceptanceWindow;
         // Make sure we have a reasonable target acceptance
@@ -1065,8 +1112,10 @@ private:
         // the ratio of measured acceptance to the target acceptance is one,
         // then the value of fSigma will not change.  The exponent is chosen
         // to control how quickly the fSigma value will be changed.w
-        fSigma *= std::pow(fAcceptance/fTargetAcceptance,
-                           std::min(0.001,0.5/fAcceptanceWindow));
+        fSigma *=
+            std::pow(fAcceptance/fTargetAcceptance,
+                     std::min(0.01,
+                              1.0/(fAcceptanceRigidity*fAcceptanceWindow)));
 
         // Update the estimate of the central value.  This is simply a running
         // average of the position of the points in the posterior.
@@ -1202,6 +1251,9 @@ private:
 
     // The window to average the acceptance over.
     double fAcceptanceWindow;
+
+    // The rigidity of the acceptance relaxation
+    double fAcceptanceRigidity;
 
     // The target acceptance rate for the chain.
     double fTargetAcceptance;
