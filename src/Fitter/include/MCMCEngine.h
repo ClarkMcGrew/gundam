@@ -14,18 +14,23 @@ public:
   MCMCEngine();
   ~MCMCEngine() = default;
 
-  // A function that performs the fit.
-  // Defines a mcmc sampler and do the fit
-  // MCMC sampler runs based on the json input information
+  // A function that performs the "fit".  This creates an MCMC sampler using
+  // the likelihood and generates an MCMC chain based on settings in the JSON
+  // configuration.  The chain will be saved into the output file.
   void fit();
 
 protected:
-  // MCMCEngine is estimating PDF [P(x)dx], and a transformation can change
-  // the metric in a complicated way.  Transformations like renormalizing the
-  // parameters, and eigen-value decomposition should not be done, or the
-  // output results are very hard to interpret [You will get a point cloud,
-  // but it will require a lot of internal information to interpret].
-  bool allowFitSpaceTransformations() const override {return false;}
+
+  // Transform the accepted point into the fPoint vector so it can be saved.
+  // The accepted point may be in a normalized fitting parameter value, or in
+  // an eigenvalue decomposed state of the parameter space.  All of the
+  // transformation applied to the accepted point MUST be linear, or the
+  // metric of the likelihood has changed in a bad way and the chain isn't
+  // valid.
+  void FillPoints();
+
+  // The point value that is associated with the last call to the likelihood.
+  std::vector<double> fPoint;
 };
 #endif
 

@@ -9,7 +9,7 @@
 #include "Logger.h"
 #include "JsonUtils.h"
 
-// Tell TSimpleMCMC.H how to send output.
+// Tell TSimpleMCMC.H how much output to use and where to send it.
 #define MCMC_DEBUG_LEVEL 1
 #define MCMC_DEBUG(level) if (level <= (MCMC_DEBUG_LEVEL)) LogInfo
 #define MCMC_ERROR (LogInfo << "ERROR: ")
@@ -17,8 +17,17 @@
 #include "TSimpleMCMC.H"
 
 LoggerInit([]{
-  Logger::setUserHeaderStr("[MCMCEngine]");
+  Logger::setUserHeaderStr("[MCMC]");
 })
+
+void MCMCEngine::FillPoints() {
+    int count = 0;
+    for (const FitParameterSet& parSet: _propagator_.getParameterSetsList()) {
+        for (const FitParameter& iPar : parSet.getParameterList()) {
+            fPoint[count++] = iPar.getParameterValue();
+        }
+    }
+}
 
 void MCMCEngine::fit() {
 
@@ -28,22 +37,22 @@ void MCMCEngine::fit() {
     _minimizerType_ = "MCMC";
     _minimizerAlgo_ = "Metropolis";
 
-    LogThrowIf(_useNormalizedFitSpace_,"NormalizedFitSpace used in MCMC, it must be disabled.");
-
     // Get output file name
-    std::string outFileName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputFile", "mcmc.root");
-    std::string outTreeName = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "accepted");
+    std::string outTreeName
+        = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "MCMC");
 
     // Check for restore file
     TFile *restoreFile{nullptr};
     TTree *restoreTree{nullptr};
     std::string restoreName = GlobalVariables::getRestoreName();
-    LogThrowIf(restoreName == outFileName, "Writing the restore file! Need to change output file name in configBanffFit.yaml");
     if (not restoreName.empty()) {
       LogInfo << "Restore from: " << restoreName << std::endl;
       restoreFile = new TFile(restoreName.c_str(), "old");
+      LogThrowIf( not restoreFile,
+                  "No restore file not found.");
       restoreTree = (TTree*) restoreFile->Get(outTreeName.c_str());
-      LogThrowIf( not restoreTree, "No restore tree not found! Make sure outTreeName is the same as previous chain in configBanffFit.yaml");
+      LogThrowIf( not restoreTree,
+                  "No restore tree not found.");
     }
 
     // Create output file and a tree to save accepted points
@@ -53,62 +62,79 @@ void MCMCEngine::fit() {
     TTree *tree = new TTree(outTreeName.c_str(),"Tree of accepted points");
 
     // Storing parameter names
-    TTree *parName = new TTree("parameterSets", "Tree of parameterSets");
-    std::vector<std::string> nameParameterSets;
-    std::vector<int> nParameters;
-    std::vector<int> parameter_index;
-    std::vector<double> parameter_prior;
-    std::vector<double> parameter_sigma;
-    std::vector<std::string> parameter_name;
-    parName->Branch("nameParameterSets", &nameParameterSets);
-    parName->Branch("nParameters", &nParameters);
-    parName->Branch("parameter_index", &parameter_index);
-    parName->Branch("parameter_name", &parameter_name);
-    parName->Branch("parameter_prior", &parameter_prior);
-    parName->Branch("parameter_sigma", &parameter_sigma);
+    TTree *parameterSetsTree = new TTree("parameterSets",
+                                         "Tree of Parameter Set Information");
+    std::vector<std::string> parameterSetNames;
+    std::vector<int> parameterSetOffsets;
+    std::vector<int> parameterSetCounts;
+    std::vector<int> parameterIndex;
+    std::vector<std::string> parameterName;
+    std::vector<double> parameterPrior;
+    std::vector<double> parameterSigma;
+    parameterSetsTree->Branch("parameterSetNames", &parameterSetNames);
+    parameterSetsTree->Branch("parameterSetOffsets", &parameterSetOffsets);
+    parameterSetsTree->Branch("parameterSetCounts", &parameterSetCounts);
+    parameterSetsTree->Branch("parameterIndex", &parameterIndex);
+    parameterSetsTree->Branch("parameterName", &parameterName);
+    parameterSetsTree->Branch("parameterPrior", &parameterPrior);
+    parameterSetsTree->Branch("parameterSigma", &parameterSigma);
 
-    for (const auto& parSet: _propagator_.getParameterSetsList()) {
-      if (not parSet.isEnabled()) continue;
-      LogThrowIf(parSet.isUseEigenDecompInFit(), "Eigen Decomp is used in MCMC! Don't run MCMC with Eigen Decomp");
+    // Pull all of the parameters out of the parameter sets and save the
+    // names, index, priors, and sigmas to the output.  The order in these
+    // vectors define the parameters that are saved in the Points vector in
+    // the output file.  Note that these parameters do not define the meaning
+    // of the parameters in the call to the likelihood function.  Those
+    // parameters are defined by the _minimizerFitParameterPtr_ vector.
+    for (const FitParameterSet& parSet: _propagator_.getParameterSetsList()) {
+      // Save name of parameter set
+      parameterSetNames.push_back(parSet.getName());
+      parameterSetOffsets.push_back(parameterIndex.size());
 
-      // Save name of parameter Set
-      nameParameterSets.push_back(parSet.getName());
       int countParameters = 0;
-
-      auto* parList = &parSet.getEffectiveParameterList();
-      for (auto& iPar : *parList) {
-	if (iPar.getParameterIndex()!= 9 && iPar.getParameterIndex()!= 10) {
-            if (iPar.isFixed()) continue;
-            if (!iPar.isEnabled()) continue;
-        }
-	countParameters ++;
-	parameter_index.push_back(iPar.getParameterIndex());
-	parameter_name.push_back(iPar.getTitle());
-	parameter_prior.push_back(iPar.getPriorValue());
-	parameter_sigma.push_back(iPar.getStdDevValue());
+      for (const FitParameter& iPar : parSet.getParameterList()) {
+          countParameters ++;
+          parameterIndex.push_back(iPar.getParameterIndex());
+          parameterName.push_back(iPar.getTitle());
+          parameterPrior.push_back(iPar.getPriorValue());
+          parameterSigma.push_back(iPar.getStdDevValue());
       }
-      nParameters.push_back(countParameters);
+      parameterSetCounts.push_back(countParameters);
     }
-    parName->Fill();
-
-    parName->Write();
+    parameterSetsTree->Fill();
+    parameterSetsTree->Write();
     // End Storing parameter name informations
 
-    // Create a mcmc sampler with this MCMCEngine serving as likelihood
+    // Create a vector to store the full output of the MCMCEngine chain.  This
+    // will be filled based on the accepted states coming out of the MCMC
+    // sampler.
+    fPoint.resize(parameterName.size());
+    tree->Branch("Points",&fPoint);
+
     TSimpleMCMC<MCMCProxyEngine> mcmc(tree);
     MCMCProxyEngine& like = mcmc.GetLogLikelihood();
     // Let the MCMCEngine proxy pointer in ProxyEngine point to 'this'
     // initialized object
     like.proxy = this;
 
-    // Set dimensiton for the MCMC sampler
-    mcmc.GetProposeStep().SetDim(_nbFitParameters_);
+    mcmc.GetProposeStep().SetDim(_minimizerFitParameterPtr_.size());
 
-    // Create a fitting parameter vector and initialize it
-    Vector p(_nbFitParameters_);
-    int count = 0;
-    for(const FitParameter* par : _minimizerFitParameterPtr_ ){
-        p[count] = par->getPriorValue();
+    // Create a fitting parameter vector and initialize it.  No need to worry
+    // about resizing it or it moving, so be lazy and just use push_back.
+    Vector p;
+    for (const FitParameter* par : _minimizerFitParameterPtr_ ) {
+        if (_useNormalizedFitSpace_) {
+            // Changing the boundaries, change the value/step size?
+            double val
+                = FitParameterSet::toNormalizedParValue(
+                    par->getParameterValue(), *par);
+            double step
+                = FitParameterSet::toNormalizedParRange(
+                    par->getStepSize(), *par);
+            mcmc.GetProposeStep().SetGaussian(p.size(),step);
+            p.push_back(val);
+            continue;
+        }
+        p.push_back(par->getPriorValue());
         switch (par->getPriorType()) {
         case PriorType::Flat: {
             // Gundam uses flat to mean "free", so this doesn't use a Uniform
@@ -117,25 +143,110 @@ void MCMCEngine::fit() {
             if (step <= std::abs(1E-10*par->getPriorValue())) {
                 step = std::max(par->getStepSize(),par->getStdDevValue());
             }
-            mcmc.GetProposeStep().SetGaussian(count,step);
+            step /= std::sqrt(_nbFitParameters_);
+            mcmc.GetProposeStep().SetGaussian(p.size()-1,step);
             break;
         }
-        default:
-            mcmc.GetProposeStep().SetGaussian(count,par->getStdDevValue());
+        default: {
+            double step = par->getStdDevValue();
+            mcmc.GetProposeStep().SetGaussian(p.size()-1,step);
             break;
         }
-        ++count;
+        }
     }
 
-    // Get MCMC burnin and running info
-    int burninCycle = JsonUtils::fetchValue(_minimizerConfig_, "mcmcBurninCycle", 0);
-    int burninLength = JsonUtils::fetchValue(_minimizerConfig_, "mcmcBurninLength", 0);
-    int runCycle = JsonUtils::fetchValue(_minimizerConfig_, "mcmcRunCycle", 1);
-    int runLength = JsonUtils::fetchValue(_minimizerConfig_, "mcmcRunLength", 1000);
-    bool saveBurnin = JsonUtils::fetchValue(_minimizerConfig_, "mcmcSaveBurnin", false);
+    LogInfo << "Chain is using " << p.size()
+            << " effective dimensions for "
+            << parameterName.size() << " parameters"
+            << std::endl;
+
+    // Set up the correlations in the priors.
+    int count1 = 0;
+    for (const FitParameter* par1 : _minimizerFitParameterPtr_ ) {
+        ++count1;
+        const FitParameterSet* set1 = par1->getParSetRef();
+        if (!set1) {
+            LogInfo << "Parameter set reference is not defined for"
+                    << " " << par1->getName()
+                    << std::endl;
+            continue;
+        }
+        if (set1->isUseEigenDecompInFit()) {
+            continue;
+        }
+
+        int count2 = 0;
+        for (const FitParameter* par2 : _minimizerFitParameterPtr_ ) {
+            ++count2;
+            const FitParameterSet* set2 = par2->getParSetRef();
+            if (!set2) {
+                LogInfo << "Parameter set reference is not defined for"
+                        << " " << par1->getName()
+                        << std::endl;
+                continue;
+            }
+            if (set2->isUseEigenDecompInFit()) {
+                continue;
+            }
+
+            if (set1 != set2) continue;
+            int in1 = par1->getParameterIndex();
+            int in2 = par2->getParameterIndex();
+            if (in2 <= in1) continue;
+            const std::shared_ptr<TMatrixDSym>& corr
+                = set1->getPriorCorrelationMatrix();
+            if (!corr) continue;
+            double correlation = (*corr)(in1,in2);
+            // Don't impose very small correlations, let them be discovered.
+            if (std::abs(correlation) < 0.01) continue;
+            // Complain about large correlations.  When a correlation is this
+            // large, then the user should (but probably won't) rethink the
+            // parameter definitions!
+            if (std::abs(correlation) > 0.98) {
+                LogInfo << "VERY LARGE CORRELATION (" << correlation
+                        << ") BETWEEN"
+                        << " " << set1->getName() << "/" << par1->getName()
+                        << " & " << set2->getName() << "/" << par2->getName()
+                        << std::endl;
+            }
+            mcmc.GetProposeStep().SetCorrelation(count1-1,count2-1,
+                                                 (*corr)(in1,in2));
+        }
+    }
+
+
+    // Get MCMC burnin parameters.  Each burnin discards previous information
+    // about the posterior and reset to the initial state (but starts from
+    // the last accepted point.  The burnin will be skipped if the state
+    // has been restored from a file.  The burnin can be skipped in favor of
+    // discarding the initial parts of the MCMC chain.
+    int burninCycle = JsonUtils::fetchValue(_minimizerConfig_,
+                                            "mcmcBurninCycle", 0);
+    int burninLength = JsonUtils::fetchValue(_minimizerConfig_,
+                                             "mcmcBurninLength", 0);
+    bool saveBurnin = JsonUtils::fetchValue(_minimizerConfig_,
+                                            "mcmcSaveBurnin", true);
+
+    // Get the MCMC chain parameters.  A run is broken into "mini-Chains"
+    // called a "cycle" where the posterior covariance information is updated
+    // after each mini-chain.  The cycle will have "mcmcRunLength" steps.
+    int runCycle = JsonUtils::fetchValue(_minimizerConfig_,
+                                         "mcmcRunCycle", 1);
+    int runLength = JsonUtils::fetchValue(_minimizerConfig_,
+                                          "mcmcRunLength", 50000);
+
+    // Set the window to calculate the current acceptance value over.  If this
+    // is set to short, the step size will fluctuate.  If this is set to long,
+    // the step size won't be adjusted to match the target acceptance.
+    int window = JsonUtils::fetchValue(_minimizerConfig_,
+                                       "mcmcWindow", 1000);
+
+    // Fill the initial point.
+    FillPoints();
 
     // Initializing the mcmc sampler
     mcmc.Start(p, saveBurnin);
+    mcmc.GetProposeStep().SetAcceptanceWindow(window);
 
     // Restore the chain if exist
     if (restoreTree) {
@@ -143,26 +254,33 @@ void MCMCEngine::fit() {
       delete restoreFile;
       LogInfo << "State Restored" << std::endl;
     }
+    else {
+        // Burnin cycles
+        for (int chain = 0; chain < burninCycle; ++chain){
+            LogInfo << "Start Burnin chain " << chain << std::endl;
+            // Reset the covariance to the initial state.  This forgets the
+            // path of the previous cycle.
+            mcmc.GetProposeStep().ResetProposal();
+            // Burnin chain in each cycle
+            for (int i = 0; i < burninLength; ++i) {
+                // Run step
+                if (mcmc.Step(false)) FillPoints();
+                if (saveBurnin) mcmc.SaveStep(burninLength <= (i+1));
 
-    // Burnin cycles
-    for (int chain = 0; chain < burninCycle; ++chain){
-      LogInfo << "Start Burnin chain " << chain << std::endl;
-      // Reset the covariance to the initial state.  This forgets the path
-      // of the previous cycle.
-      mcmc.GetProposeStep().ResetProposal();
-      // Burnin chain in each cycle
-      for (int i = 0; i < burninLength; ++i) {
-        // Run step
-        mcmc.Step(saveBurnin);
-
-        if(burninLength > 100 && !(i%(burninLength/100))){
-          LogInfo << "Finished burn-in step: "
-                  << i << "/" << burninLength << " "
-                  << i*100./burninLength << "%" << std::endl;
+                if(burninLength > 100 && !(i%(burninLength/100))){
+                    LogInfo << "Burn-in: " << chain
+                            << " step: " << i << "/" << burninLength << " "
+                            << i*100./burninLength << "%"
+                            << " Trials: "
+                            << mcmc.GetProposeStep().GetSuccesses()
+                            << "/" << mcmc.GetProposeStep().GetTrials()
+                            << " (" << mcmc.GetProposeStep().GetSigma() << ")"
+                            << std::endl;
+                }
+            }
         }
-      }
+        LogInfo << "Finished burnin chains" << std::endl;
     }
-    LogInfo << "Finished burnin chains" << std::endl;
 
     // Run cycles
     for (int chain = 0; chain < runCycle; ++chain){
@@ -172,19 +290,25 @@ void MCMCEngine::fit() {
       mcmc.GetProposeStep().UpdateProposal();
       // Run chain in each cycle
       for (int i = 0; i < runLength; ++i) {
-        // Run step
-        mcmc.Step(true);
-        if(runLength > 100 && !(i%(runLength/100))){
-          LogInfo << "Finished step: " << i << "/" << runLength << " "
-                  << i*100./runLength << "%" << std::endl;
-        }
+          // Run step
+          if (mcmc.Step(false)) FillPoints();
+          // Save the step.  Check to see if this is the last step of the run,
+          // and if it is, then save the state.
+          mcmc.SaveStep(runLength <= (i+1));
+          if(runLength > 100 && !(i%(runLength/100))){
+              LogInfo << "Chain: " << chain
+                      << " step: " << i << "/" << runLength << " "
+                      << i*100./runLength << "%"
+                      << " Trials: "
+                      << mcmc.GetProposeStep().GetSuccesses()
+                      << "/" << mcmc.GetProposeStep().GetTrials()
+                      << " (" << mcmc.GetProposeStep().GetSigma() << ")"
+                      << std::endl;
+          }
       }
+
     }
     LogInfo << "Finished Running chains" << std::endl;
-
-    // Save the final state. This is needed so that the current chain with the
-    // current adaptive proposal can be restored and continued.
-    mcmc.SaveStep();
 
     // Save the sampled points to the outputfile
     if (tree) tree->Write();
