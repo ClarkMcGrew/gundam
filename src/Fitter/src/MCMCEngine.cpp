@@ -214,7 +214,6 @@ void MCMCEngine::fit() {
         }
     }
 
-
     // Get MCMC burnin parameters.  Each burnin discards previous information
     // about the posterior and reset to the initial state (but starts from
     // the last accepted point.  The burnin will be skipped if the state
@@ -231,15 +230,15 @@ void MCMCEngine::fit() {
     // called a "cycle" where the posterior covariance information is updated
     // after each mini-chain.  The cycle will have "mcmcRunLength" steps.
     int runCycle = JsonUtils::fetchValue(_minimizerConfig_,
-                                         "mcmcRunCycle", 1);
+                                         "mcmcRunCycle", 5);
     int runLength = JsonUtils::fetchValue(_minimizerConfig_,
-                                          "mcmcRunLength", 50000);
+                                          "mcmcRunLength", 100000);
 
     // Set the window to calculate the current acceptance value over.  If this
     // is set to short, the step size will fluctuate.  If this is set to long,
     // the step size won't be adjusted to match the target acceptance.
     int window = JsonUtils::fetchValue(_minimizerConfig_,
-                                       "mcmcWindow", 1000);
+                                       "mcmcWindow", 5000);
 
     // Fill the initial point.
     FillPoints();

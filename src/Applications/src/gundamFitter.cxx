@@ -51,6 +51,7 @@ int main(int argc, char** argv){
   clParser.addOption("toyFit", {"--toy"}, "Run a toy fit");
   clParser.addOption("restoreFile", {"-r", "--restore-file"}, "Specify the mcmc restore file");
   clParser.addOption("prngSeed", {"-s", "--seed"}, "Set the PRNG seed");
+  clParser.addOption("fitterEngine", {"-E", "--engine"}, "Set fitter engine override");
 
   clParser.getOptionPtr("scanParameters")->setAllowEmptyValue(true); // --scan can be followed or not by the number of steps
   clParser.getOptionPtr("toyFit")->setAllowEmptyValue(true); // --toy can be followed or not by the number of steps
@@ -89,6 +90,8 @@ int main(int argc, char** argv){
   ULong_t seed = clParser.getOptionVal("prngSeed",1);
   LogInfo << "Pseudorandom sequence initialized with: " << seed << std::endl;
   GlobalVariables::setPrngSeed(seed);
+
+  std::string engineOverride = clParser.getOptionVal("fitterEngine","");
 
   // --------------------------
   // Initialize the fitter:
@@ -144,6 +147,8 @@ int main(int argc, char** argv){
   FitterEngine *fitter{nullptr};
 
   std::string engine = JsonUtils::fetchValue(jsonConfig, "engine", "Fitter");
+  if (not engineOverride.empty()) engine = engineOverride;
+
   if (engine == "Fitter") {
     fitter = new FitterEngine();
   }
