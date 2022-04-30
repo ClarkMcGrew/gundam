@@ -33,7 +33,14 @@ struct MCMCProxyEngine {
 	// --- FitterEngine.cpp:668 _chi2HistoryTree_, does it affect
 	//     the likelihood calculation?
         double likelihood = proxy->evalFit(&fCurrParams[0]);
-	return -0.5 * likelihood;
+
+        // If the parameters are invalid an infinite negative value, in
+        // otherwords, a zero probability.
+        if (!proxy->ValidParameters()) {
+            return -std::numeric_limits<double>::infinity();
+        }
+
+        return -0.5 * likelihood;
     }
 };
 #endif

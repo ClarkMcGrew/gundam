@@ -29,8 +29,21 @@ void MCMCEngine::FillPoints() {
     }
 }
 
-void MCMCEngine::fit() {
+bool MCMCEngine::ValidParameters() {
+    for (const FitParameterSet& parSet: _propagator_.getParameterSetsList()) {
+        for (const FitParameter& iPar : parSet.getParameterList()) {
+            if (iPar.isFixed()) continue;
+            if (!iPar.isEnabled()) continue;
+            if (std::isfinite(iPar.getMinValue())
+                && iPar.getParameterValue() < iPar.getMinValue()) return false;
+            if (std::isfinite(iPar.getMaxValue())
+                && iPar.getParameterValue() > iPar.getMaxValue()) return false;
+        }
+    }
+    return true;
+}
 
+void MCMCEngine::fit() {
     // Update "minimizer" type and algo. Although MCMC is a sampler, we still
     // use minimizer so we don't need to modify the base class FitterEngine
     // This will be printed in evalFit() function
@@ -68,16 +81,24 @@ void MCMCEngine::fit() {
     std::vector<int> parameterSetOffsets;
     std::vector<int> parameterSetCounts;
     std::vector<int> parameterIndex;
+    std::vector<bool> parameterFixed;
+    std::vector<bool> parameterEnabled;
     std::vector<std::string> parameterName;
     std::vector<double> parameterPrior;
     std::vector<double> parameterSigma;
+    std::vector<double> parameterMin;
+    std::vector<double> parameterMax;
     parameterSetsTree->Branch("parameterSetNames", &parameterSetNames);
     parameterSetsTree->Branch("parameterSetOffsets", &parameterSetOffsets);
     parameterSetsTree->Branch("parameterSetCounts", &parameterSetCounts);
     parameterSetsTree->Branch("parameterIndex", &parameterIndex);
+    parameterSetsTree->Branch("parameterFixed", &parameterFixed);
+    parameterSetsTree->Branch("parameterEnabled", &parameterEnabled);
     parameterSetsTree->Branch("parameterName", &parameterName);
     parameterSetsTree->Branch("parameterPrior", &parameterPrior);
     parameterSetsTree->Branch("parameterSigma", &parameterSigma);
+    parameterSetsTree->Branch("parameterMin", &parameterMin);
+    parameterSetsTree->Branch("parameterMax", &parameterMax);
 
     // Pull all of the parameters out of the parameter sets and save the
     // names, index, priors, and sigmas to the output.  The order in these
@@ -92,11 +113,15 @@ void MCMCEngine::fit() {
 
       int countParameters = 0;
       for (const FitParameter& iPar : parSet.getParameterList()) {
-          countParameters ++;
+          ++countParameters;
           parameterIndex.push_back(iPar.getParameterIndex());
+          parameterFixed.push_back(iPar.isFixed());
+          parameterEnabled.push_back(iPar.isEnabled());
           parameterName.push_back(iPar.getTitle());
           parameterPrior.push_back(iPar.getPriorValue());
           parameterSigma.push_back(iPar.getStdDevValue());
+          parameterMin.push_back(iPar.getMinValue());
+          parameterMax.push_back(iPar.getMaxValue());
       }
       parameterSetCounts.push_back(countParameters);
     }

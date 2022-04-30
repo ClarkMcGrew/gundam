@@ -19,6 +19,9 @@ public:
   // configuration.  The chain will be saved into the output file.
   void fit();
 
+ // Return true if the current fit parameters are at a valid point.
+  bool ValidParameters();
+
 protected:
 
   // Transform the accepted point into the fPoint vector so it can be saved.
