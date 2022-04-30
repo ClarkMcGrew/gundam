@@ -54,21 +54,7 @@ void MCMCEngine::fit() {
     std::string outTreeName
         = JsonUtils::fetchValue(_minimizerConfig_, "mcmcOutputTree", "MCMC");
 
-    // Check for restore file
-    TFile *restoreFile{nullptr};
-    TTree *restoreTree{nullptr};
-    std::string restoreName = GlobalVariables::getRestoreName();
-    if (not restoreName.empty()) {
-      LogInfo << "Restore from: " << restoreName << std::endl;
-      restoreFile = new TFile(restoreName.c_str(), "old");
-      LogThrowIf( not restoreFile,
-                  "No restore file not found.");
-      restoreTree = (TTree*) restoreFile->Get(outTreeName.c_str());
-      LogThrowIf( not restoreTree,
-                  "No restore tree not found.");
-    }
-
-    // Create output file and a tree to save accepted points
+    // Create output tree in the existing
     LogInfo << "Adding MCMC tree " << outTreeName
             << " to file " << gFile->GetName()
             << std::endl;
@@ -273,10 +259,26 @@ void MCMCEngine::fit() {
     mcmc.GetProposeStep().SetAcceptanceWindow(window);
 
     // Restore the chain if exist
-    if (restoreTree) {
-      mcmc.Restore(restoreTree);
-      delete restoreFile;
-      LogInfo << "State Restored" << std::endl;
+    std::string restoreName = GlobalVariables::getRestoreName();
+    if (!restoreName.empty()) {
+        // Check for restore file
+        LogInfo << "Restore from: " << restoreName << std::endl;
+        std::unique_ptr<TFile> restoreFile
+            (new TFile(restoreName.c_str(), "old"));
+        if (!restoreFile) {
+            LogInfo << "File to restore was not openned: "
+                    << restoreName << std::endl;
+            std::runtime_error("Old state file not open");
+        }
+        std::string treeName = "FitterEngine/fit/" + outTreeName;
+        TTree* restoreTree = (TTree*) restoreFile->Get(treeName.c_str());
+        if (!restoreTree) {
+            LogInfo << "Tree to restore state is not found"
+                    << treeName << std::endl;
+            std::runtime_error("Old state tree not open");
+        }
+        mcmc.Restore(restoreTree);
+        LogInfo << "State Restored" << std::endl;
     }
     else {
         // Burnin cycles
