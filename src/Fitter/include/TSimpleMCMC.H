@@ -1013,9 +1013,9 @@ public:
         return true;
     }
 
-    /// Fill the output tree with the current state.  This gets the output
-    /// tree as an parameter, but it should not call "tree->Fill()".
+    /// Fill the output tree with the current state.
     bool SaveState(bool fullSave=false) {
+        if (!fullSave) return false;
         fSaveTrials = fTrials;
         fSaveSuccesses = fSuccesses;
         fSaveNextUpdate = fNextUpdate;
@@ -1024,12 +1024,10 @@ public:
         fSaveSigma = fSigma;
         fSaveCentralPoint = fCentralPoint;
         fSaveCentralPointTrials = fCentralPointTrials;
-        if (fullSave) {
-            fSaveCovariance.clear();
-            for (std::size_t i=0; i<fLastPoint.size(); ++i) {
-                for (std::size_t j=0; j<i+1; ++j) {
-                    fSaveCovariance.push_back(fCurrentCov(i,j));
-                }
+        fSaveCovariance.clear();
+        for (std::size_t i=0; i<fLastPoint.size(); ++i) {
+            for (std::size_t j=0; j<i+1; ++j) {
+                fSaveCovariance.push_back(fCurrentCov(i,j));
             }
         }
         fSaveCovarianceTrials = fCovarianceTrials;
@@ -1038,10 +1036,25 @@ public:
     }
 
     /// Notification that the last saved state has been written to the output.
-    /// This can be used by the proposal class to zero out the tree branchs
-    /// (this will limit the output size).
+    /// This can be used by the proposal class to zero out the tree branches.
     bool StateSaved() {
+#ifdef MCMC_ZERO_ADAPTIVE_STEP_SAVED_STATE
+        /// The state of the adaptive step is not usually updated between
+        /// steps, so the same values can be written to the output tree many
+        /// times.  The ROOT compression usually does a pretty good job of
+        /// recovering the space, but this might sometimes reduce the output
+        /// size.
+        fSaveTrials = 0;
+        fSaveSuccesses = 0;
+        fSaveNextUpdate = 0;
+        fSaveAcceptance = 0;
+        fSaveAcceptanceTrials = 0;
+        fSaveSigma = 0;
+        fSaveCentralPoint.clear();
+        fSaveCentralPointTrials = 0;
         fSaveCovariance.clear();
+        fSaveCovarianceTrials = 0;
+#endif
         return false;
     }
 
