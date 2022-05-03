@@ -33,7 +33,7 @@ protected:
   void FillPoints();
 
   // The point value that is associated with the last call to the likelihood.
-  std::vector<double> fPoint;
+  std::vector<float> fPoint;
 };
 #endif
 
