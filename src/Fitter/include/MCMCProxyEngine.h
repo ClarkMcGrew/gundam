@@ -14,33 +14,38 @@ struct MCMCProxyEngine {
     // Will simply call FitterEngine::evalFit() method
     double operator() (const std::vector<double>& fCurrParams) {
 
-	// FitterEngine::evalFit(const double* parArray_) does 2 things to
-	// calculate likelihood
+        // FitterEngine::evalFit(const double* parArray_) does multiple
+        // things to calculate the likelihood
         //
-	// 1. It updates fit parameters _minimizerFitParameterPtr_ value with
-	//    input parArray_
-	// 2. It calculates likelihood by calling
-	//    FitterEngine::updateChi2Cache() updateChi2Cache() does the
-	//    "magic" to calculate _chi2Buffer_ with updated fit parameters
-	//    _minimizerFitParameterPtr_.
+        // 1. It updates fit parameters _minimizerFitParameterPtr_ value with
+        //    input parArray_
+        // 2. It calculates likelihood by calling
+        //    FitterEngine::updateChi2Cache() updateChi2Cache() does the
+        //    "magic" to calculate _chi2Buffer_ with updated fit parameters.
         //
-	// FitterEngine::evalFit(const double* parArray_) does a lot of things
-	// to output timing info
+        // After the likelihood the parameter values have been updated by the
+        // inversion of the eigenvalue decomposition, so the parameter values
+        // change during the evaluation.  Note that this does not change the
+        // values in parArray_.
         //
-	// --- FitterEngine.cpp:653 _convergenceMonitor_, does it affect
-	//     the likelihood calculation?
+        // FitterEngine::evalFit(const double* parArray_) does a lot of things
+        // to output timing info
         //
-	// --- FitterEngine.cpp:668 _chi2HistoryTree_, does it affect
-	//     the likelihood calculation?
-        double likelihood = proxy->evalFit(&fCurrParams[0]);
+        // --- FitterEngine.cpp:653 _convergenceMonitor_, does it affect
+        //     the likelihood calculation?
+        //
+        // --- FitterEngine.cpp:668 _chi2HistoryTree_, does it affect
+        //     the likelihood calculation?
+        double chiSquared = proxy->evalFit(fCurrParams.data());
 
         // If the parameters are invalid an infinite negative value, in
-        // otherwords, a zero probability.
+        // otherwords, a zero probability.  This will happen when one of the
+        // parameters is out of a valid rage after eigenvalue decomposition.
         if (!proxy->ValidParameters()) {
             return -std::numeric_limits<double>::infinity();
         }
 
-        return -0.5 * likelihood;
+        return -0.5 * chiSquared;
     }
 };
 #endif
