@@ -1015,22 +1015,23 @@ public:
 
     /// Fill the output tree with the current state.
     bool SaveState(bool fullSave=false) {
-        if (!fullSave) return false;
         fSaveTrials = fTrials;
         fSaveSuccesses = fSuccesses;
         fSaveNextUpdate = fNextUpdate;
         fSaveAcceptance = fAcceptance;
         fSaveAcceptanceTrials = fAcceptanceTrials;
         fSaveSigma = fSigma;
-        fSaveCentralPoint = fCentralPoint;
         fSaveCentralPointTrials = fCentralPointTrials;
+        fSaveCovarianceTrials = fCovarianceTrials;
+        fSaveCentralPoint.clear();
         fSaveCovariance.clear();
+        if (!fullSave) return false;
+        fSaveCentralPoint = fCentralPoint;
         for (std::size_t i=0; i<fLastPoint.size(); ++i) {
             for (std::size_t j=0; j<i+1; ++j) {
                 fSaveCovariance.push_back(fCurrentCov(i,j));
             }
         }
-        fSaveCovarianceTrials = fCovarianceTrials;
 
         return true;
     }
@@ -1038,6 +1039,7 @@ public:
     /// Notification that the last saved state has been written to the output.
     /// This can be used by the proposal class to zero out the tree branches.
     bool StateSaved() {
+#define MCMC_ZERO_ADAPTIVE_STEP_SAVED_STATE
 #ifdef MCMC_ZERO_ADAPTIVE_STEP_SAVED_STATE
         /// The state of the adaptive step is not usually updated between
         /// steps, so the same values can be written to the output tree many
@@ -1050,10 +1052,10 @@ public:
         fSaveAcceptance = 0;
         fSaveAcceptanceTrials = 0;
         fSaveSigma = 0;
-        fSaveCentralPoint.clear();
         fSaveCentralPointTrials = 0;
-        fSaveCovariance.clear();
         fSaveCovarianceTrials = 0;
+        fSaveCentralPoint.clear();
+        fSaveCovariance.clear();
 #endif
         return false;
     }
