@@ -1050,6 +1050,10 @@ public:
             break;
         }
 
+        MCMC_DEBUG(1) << "Chain state restored from entry "
+                      << elem << "/" << entries
+                      << std::endl;
+
         fTrials = fSaveTrials;
         fSuccesses = fSaveSuccesses;
         fNextUpdate = fSaveNextUpdate;
@@ -1058,6 +1062,13 @@ public:
         fSigma = fSaveSigma;
         fCentralPoint = fSaveCentralPoint;
         fCentralPointTrials = fSaveCentralPointTrials;
+
+        MCMC_DEBUG(1) << "Restored state"
+                      << " T: " << fTrials
+                      << " S: " << fSuccesses
+                      << " A: " << fAcceptance
+                      << " Sig: " << fSigma
+                      << std::endl;
 
         // The covariance was saved in a vector, so it has to be unpacked.
         // This must match the code in SaveState().
@@ -1088,6 +1099,14 @@ public:
         tree->SetBranchAddress("AdaptiveCovariance",NULL);
         tree->SetBranchAddress("AdaptiveCovarianceTrace",NULL);
         tree->SetBranchAddress("AdaptiveCovarianceTrials",NULL);
+
+        MCMC_DEBUG(1) << "Restored state"
+                      << " T: " << fTrials
+                      << " S: " << fSuccesses
+                      << " A: " << fAcceptance
+                      << " Sig: " << fSigma
+                      << " Trace: " << GetCovarianceTrace()
+                      << std::endl;
 
         // Now update the proposal.
         UpdateProposal();
