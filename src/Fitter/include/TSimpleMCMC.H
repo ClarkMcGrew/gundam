@@ -720,11 +720,11 @@ public:
         }
         MCMC_DEBUG(2) << std::endl;
 
-        MCMC_DEBUG(2) << " Update Sigma " << fSigma << " T:" << fSigmaTrace;
+        MCMC_DEBUG(1) << " Update Sigma " << fSigma << " T:" << fSigmaTrace;
         // Adjust the step for the new covariance.
         fSigma = fSigma*std::sqrt(fSigmaTrace/currentTrace);
         fSigmaTrace = currentTrace;
-        MCMC_DEBUG(2) << " -> " << fSigma << " T:" << fSigmaTrace
+        MCMC_DEBUG(1) << " -> " << fSigma << " T:" << fSigmaTrace
                       << std::endl;
 
 
@@ -1042,7 +1042,7 @@ public:
             --elem;
             tree->GetEntry(elem);
             if (fSaveCovariance.size() != covSize) {
-                MCMC_DEBUG(0) << "Covariance not found at entry " << elem
+                MCMC_DEBUG(2) << "Covariance not found at entry " << elem
                               << "/" << entries
                               << std::endl;
                 continue;
@@ -1063,13 +1063,6 @@ public:
         fCentralPoint = fSaveCentralPoint;
         fCentralPointTrials = fSaveCentralPointTrials;
 
-        MCMC_DEBUG(1) << "Restored state"
-                      << " T: " << fTrials
-                      << " S: " << fSuccesses
-                      << " A: " << fAcceptance
-                      << " Sig: " << fSigma
-                      << std::endl;
-
         // The covariance was saved in a vector, so it has to be unpacked.
         // This must match the code in SaveState().
         Vector::const_iterator cov = fSaveCovariance.begin();
@@ -1085,6 +1078,7 @@ public:
                 ++cov;
             }
         }
+        fSigmaTrace = GetCovarianceTrace();
         fCovarianceTrials = fSaveCovarianceTrials;
 
         // Reset the branch addresses.
