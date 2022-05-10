@@ -316,11 +316,13 @@ void MCMCEngine::fit() {
       mcmc.GetProposeStep().UpdateProposal();
       // Run chain in each cycle
       for (int i = 0; i < runLength; ++i) {
-          // Run step
+          // Run step, but do not save the step.  The step isn't saved so the
+          // accepted step can be copied into the points (which will have
+          // any decomposition removed).
           if (mcmc.Step(false)) FillPoints();
           // Save the step.  Check to see if this is the last step of the run,
-          // and if it is, then save the state.
-          mcmc.SaveStep(runLength <= (i+1));
+          // and if it is, then save the full state.
+          mcmc.SaveStep(false);
           if(runLength > 100 && !(i%(runLength/100))){
               LogInfo << "Chain: " << chain
                       << " step: " << i << "/" << runLength << " "
@@ -328,11 +330,18 @@ void MCMCEngine::fit() {
                       << " Trials: "
                       << mcmc.GetProposeStep().GetSuccesses()
                       << "/" << mcmc.GetProposeStep().GetTrials()
-                      << " (" << mcmc.GetProposeStep().GetSigma() << ")"
+                      << " (" << mcmc.GetProposeStep().GetAcceptance()
+                      << ":" << mcmc.GetProposeStep().GetSigma() << ")"
                       << std::endl;
           }
       }
-
+      // Save the final state.  This step should be skipped when analyzing the
+      // chain, the steps can be identified since the covariance is not empty.
+      LogInfo << "Chain: " << chain << " complete"
+              << " Run Length: " << runLength
+              << " -- Saving state"
+              << std::endl;
+      mcmc.SaveStep(true);
     }
     LogInfo << "Finished Running chains" << std::endl;
 
